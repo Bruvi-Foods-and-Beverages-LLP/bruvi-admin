@@ -1,0 +1,356 @@
+@import "tailwindcss";
+
+@theme {
+  /* -------------------------------------------------------------------------- */
+  /* 1. TYPOGRAPHY SCALES (Mapped to Local Variable Fonts in public/fonts/)      */
+  /* -------------------------------------------------------------------------- */
+  --font-serif: var(--font-libre-caslon), "Libre Caslon Text", Georgia, serif;
+  --font-sans: var(--font-manrope), "Manrope", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-display: var(--font-archivo), "Archivo", sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", Menlo, Monaco, monospace;
+
+  /* -------------------------------------------------------------------------- */
+  /* 2. RAW PALETTE STEPS (Foundations — Colour)                                */
+  /* -------------------------------------------------------------------------- */
+  --color-navy-400: #6f8db5;
+  --color-navy-600: #2f5690;
+  --color-navy-800: #1c3a66;
+  --color-navy-900: #0f2340;
+
+  --color-sky-100: #e8f5fd;
+  --color-sky-300: #cde9f9;
+  --color-sky-500: #a9d8f3;
+
+  --color-cream-100: #f7f2e8;
+  --color-cream-300: #eadfcb;
+
+  --color-coffee-100: #f3e8df;
+  --color-coffee-500: #9a6b4f;
+  --color-coffee-700: #6b4430;
+
+  --color-matcha-100: #ebf1de;
+  --color-matcha-500: #8daa57;
+  --color-matcha-700: #566f2c;
+
+  --color-white: #ffffff;
+  --color-gray-50: #f5f7fa;
+  --color-gray-100: #ebeff4;
+  --color-gray-200: #dce2ea;
+  --color-gray-300: #bcc6d3;
+  --color-gray-400: #7f8ca0;
+  --color-gray-500: #64738a;
+  --color-gray-600: #55647a;
+  --color-gray-700: #3f4b5e;
+  --color-gray-900: #18202c;
+
+  /* -------------------------------------------------------------------------- */
+  /* 3. SEMANTIC COLOR ROLES                                                    */
+  /* -------------------------------------------------------------------------- */
+  --color-background: #ffffff;
+  --color-surface: #ffffff;
+  --color-background-subtle: #f5f7fa;
+  --color-surface-brand: #e8f5fd;
+  --color-surface-warm: #f7f2e8;
+  --color-surface-inverse: #0f2340;
+  --color-surface-inverse-raised: rgba(255, 255, 255, 0.08);
+
+  /* Typography Colors */
+  --color-text: #0f2340;
+  --color-text-secondary: #3f4b5e;
+  --color-text-muted: #55647a;
+  --color-text-inverse: #ffffff;
+  --color-text-inverse-secondary: #cde9f9;
+  --color-text-brand: #1c3a66;
+
+  /* Borders & Dividers */
+  --color-border: #dce2ea;
+  --color-border-input: #bcc6d3;
+  --color-border-strong: #7f8ca0;
+
+  /* Action & Focus */
+  --color-primary: #1c3a66;
+  --color-primary-pressed: #0f2340;
+  --color-accent: #a9d8f3;
+  --color-brand-sky: #a9d8f3;
+  --color-on-accent: #0f2340;
+  --color-focus: #2f5690;
+  --color-focus-halo: #cde9f9;
+
+  /* Categories */
+  --color-category-coffee: #6b4430;
+  --color-category-coffee-surface: #f3e8df;
+  --color-category-coffee-surface-dark: #2a1e17;
+  --color-category-matcha: #566f2c;
+  --color-category-matcha-surface: #ebf1de;
+  --color-category-matcha-surface-dark: #1b2816;
+
+  /* Status Tokens */
+  --color-success: #1f7a4d;
+  --color-success-surface: #e3f4ea;
+  --color-success-on-dark: #7fd3a2;
+  --color-warning: #9a5b00;
+  --color-warning-surface: #fdf0d8;
+  --color-error: #c0352b;
+  --color-error-surface: #fce8e6;
+  --color-info: #22629e;
+  --color-info-surface: #e4f0fa;
+  --color-favorite: #c0352b;
+
+  /* -------------------------------------------------------------------------- */
+  /* 4. CORNER RADII                                                            */
+  /* -------------------------------------------------------------------------- */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-xxl: 32px;
+  --radius-pill: 9999px;
+
+  /* -------------------------------------------------------------------------- */
+  /* 5. ELEVATION & SHADOWS                                                     */
+  /* -------------------------------------------------------------------------- */
+  --shadow-raised: 0 1px 2px rgba(15, 35, 64, 0.06), 0 2px 8px rgba(15, 35, 64, 0.06);
+  --shadow-floating: 0 4px 12px rgba(15, 35, 64, 0.08), 0 12px 32px rgba(15, 35, 64, 0.08);
+  --shadow-overlay: 0 8px 24px rgba(15, 35, 64, 0.12), 0 24px 64px rgba(15, 35, 64, 0.16);
+}
+
+/* -------------------------------------------------------------------------- */
+/* 6. TYPOGRAPHY TOKEN UTILITIES (Parity with Mobile & Figma Foundations)     */
+/* -------------------------------------------------------------------------- */
+
+/* Display Sizes: Archivo Variable Font (wdth: 125, wght: 900) */
+.text-display-l {
+  font-family: var(--font-display);
+  font-size: 56px;
+  line-height: 58px;
+  letter-spacing: -1.68px;
+  font-variation-settings: "wdth" 125, "wght" 900;
+  font-weight: 900;
+}
+
+.text-display-m {
+  font-family: var(--font-display);
+  font-size: 40px;
+  line-height: 44px;
+  letter-spacing: -1.2px;
+  font-variation-settings: "wdth" 125, "wght" 900;
+  font-weight: 900;
+}
+
+/* Display S: Used for Page Titles (e.g. "Stores" 32px, wdth: 125, wght: 900) */
+.text-display-s {
+  font-family: var(--font-display);
+  font-size: 32px;
+  line-height: 38px;
+  letter-spacing: -0.96px;
+  font-variation-settings: "wdth" 125, "wght" 900;
+  font-weight: 900;
+}
+
+.text-order-number {
+  font-family: var(--font-display);
+  font-size: 80px;
+  line-height: 1;
+  letter-spacing: -2.4px;
+  font-variation-settings: "wdth" 125, "wght" 900;
+  font-weight: 900;
+}
+
+.text-kiosk-hero {
+  font-family: var(--font-display);
+  font-size: 120px;
+  line-height: 1;
+  letter-spacing: -3.6px;
+  font-variation-settings: "wdth" 125, "wght" 900;
+  font-weight: 900;
+}
+
+/* Price Figures: Archivo Variable Font (wdth: 112, wght: 800, Tabular Figures) */
+.text-price-l {
+  font-family: var(--font-display);
+  font-size: 32px;
+  line-height: 38px;
+  letter-spacing: -0.96px;
+  font-variation-settings: "wdth" 112, "wght" 800;
+  font-feature-settings: "tnum" 1;
+  font-weight: 800;
+}
+
+.text-price-m {
+  font-family: var(--font-display);
+  font-size: 24px;
+  line-height: 32px;
+  letter-spacing: -0.72px;
+  font-variation-settings: "wdth" 112, "wght" 800;
+  font-feature-settings: "tnum" 1;
+  font-weight: 800;
+}
+
+.text-price-s {
+  font-family: var(--font-display);
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: -0.48px;
+  font-variation-settings: "wdth" 112, "wght" 800;
+  font-feature-settings: "tnum" 1;
+  font-weight: 800;
+}
+
+.text-price-xs {
+  font-family: var(--font-display);
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.42px;
+  font-variation-settings: "wdth" 112, "wght" 800;
+  font-feature-settings: "tnum" 1;
+  font-weight: 800;
+}
+
+.text-price-button {
+  font-family: var(--font-display);
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: -0.84px;
+  font-variation-settings: "wdth" 100, "wght" 800;
+  font-feature-settings: "tnum" 1;
+  font-weight: 800;
+}
+
+/* Overline & Editorial: Libre Caslon Text */
+.text-overline-l {
+  font-family: var(--font-serif);
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 1.68px;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.text-overline {
+  font-family: var(--font-serif);
+  font-size: 11px;
+  line-height: 14px;
+  letter-spacing: 1.54px;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.text-tagline {
+  font-family: var(--font-serif);
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 1.96px;
+  font-weight: 400;
+}
+
+/* Headings & Content: Manrope Variable Font */
+.text-heading-l {
+  font-family: var(--font-sans);
+  font-size: 32px;
+  line-height: 38px;
+  letter-spacing: -0.48px;
+  font-weight: 800;
+}
+
+.text-heading-m {
+  font-family: var(--font-sans);
+  font-size: 24px;
+  line-height: 32px;
+  letter-spacing: -0.36px;
+  font-weight: 800;
+}
+
+.text-heading-s {
+  font-family: var(--font-sans);
+  font-size: 20px;
+  line-height: 28px;
+  letter-spacing: -0.3px;
+  font-weight: 700;
+}
+
+.text-title {
+  font-family: var(--font-sans);
+  font-size: 18px;
+  line-height: 26px;
+  font-weight: 700;
+}
+
+.text-body {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+}
+
+.text-body-s {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+}
+
+.text-label {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 700;
+}
+
+.text-label-semi {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+}
+
+.text-label-button {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 700;
+}
+
+.text-caption {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+}
+
+.text-caption-bold {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 700;
+}
+
+/* Base Body Styles */
+body {
+  background-color: var(--color-background-subtle);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Tabular Numeric Utilities */
+.tnum {
+  font-feature-settings: "tnum" 1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Custom Subtle Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}

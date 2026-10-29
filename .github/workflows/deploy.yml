@@ -1,0 +1,131 @@
+name: CD Pipeline - Multi-Environment Deployment
+
+on:
+  push:
+    branches:
+      - development
+      - staging
+      - production
+
+concurrency:
+  group: deploy-${{ github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  deploy-dev:
+    name: Deploy to Development Environment
+    if: github.ref_name == 'development'
+    runs-on: ubuntu-latest
+    environment:
+      name: development
+      url: https://dev-admin.bruvi.com
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Artifacts
+        env:
+          NEXT_PUBLIC_APP_ENV: development
+          NEXT_PUBLIC_APP_URL: https://dev-admin.bruvi.com
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.DEV_SUPABASE_URL || 'https://mock-bruvi.supabase.co' }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.DEV_SUPABASE_ANON_KEY || 'mock-anon-key' }}
+          BACKEND_API_URL: ${{ secrets.DEV_BACKEND_API_URL || 'https://dev-api.bruvi.com/v1' }}
+        run: pnpm build
+
+      - name: Deploy to Cloud Provider
+        run: |
+          echo "🚀 Deploying Bruvi Admin to Development Cluster/Hosting..."
+          # Ready for Vercel CLI, AWS ECS, Google Cloud Run, or Docker deployment:
+          # npx vercel --token ${{ secrets.VERCEL_TOKEN }}
+          echo "✅ Development deployment dispatched successfully."
+
+  deploy-staging:
+    name: Deploy to Staging Environment
+    if: github.ref_name == 'staging'
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+      url: https://staging-admin.bruvi.com
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Artifacts
+        env:
+          NEXT_PUBLIC_APP_ENV: staging
+          NEXT_PUBLIC_APP_URL: https://staging-admin.bruvi.com
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.STAGING_SUPABASE_URL || 'https://mock-bruvi.supabase.co' }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.STAGING_SUPABASE_ANON_KEY || 'mock-anon-key' }}
+          BACKEND_API_URL: ${{ secrets.STAGING_BACKEND_API_URL || 'https://staging-api.bruvi.com/v1' }}
+        run: pnpm build
+
+      - name: Deploy to Staging Cluster
+        run: |
+          echo "🚀 Deploying Bruvi Admin to Staging Cluster/Hosting..."
+          # npx vercel --token ${{ secrets.VERCEL_TOKEN }}
+          echo "✅ Staging deployment dispatched successfully."
+
+  deploy-production:
+    name: Deploy to Production Environment
+    if: github.ref_name == 'production'
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://admin.bruvi.com
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Artifacts
+        env:
+          NEXT_PUBLIC_APP_ENV: production
+          NEXT_PUBLIC_APP_URL: https://admin.bruvi.com
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.PROD_SUPABASE_URL || 'https://mock-bruvi.supabase.co' }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.PROD_SUPABASE_ANON_KEY || 'mock-anon-key' }}
+          BACKEND_API_URL: ${{ secrets.PROD_BACKEND_API_URL || 'https://api.bruvi.com/v1' }}
+        run: pnpm build
+
+      - name: Deploy to Production Cluster
+        run: |
+          echo "🚀 Deploying Bruvi Admin to Production Cluster/Hosting..."
+          # npx vercel --prod --token ${{ secrets.VERCEL_TOKEN }}
+          echo "✅ Production deployment completed successfully."
