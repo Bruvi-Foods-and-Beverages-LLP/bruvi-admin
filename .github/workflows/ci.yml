@@ -102,3 +102,4 @@ jobs:
 
       - name: Build Next.js Application
         run: pnpm build
+

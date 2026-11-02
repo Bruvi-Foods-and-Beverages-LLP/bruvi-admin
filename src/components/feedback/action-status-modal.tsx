@@ -42,13 +42,10 @@ export function toFriendlyErrorMessage(
   } else if (err instanceof Error) {
     rawMessage = err.message;
   } else if (typeof err === "object" && err !== null) {
-    const obj = err as Record<string, any>;
+    const obj = err as Record<string, unknown>;
+    const dataObj = typeof obj.data === "object" && obj.data !== null ? (obj.data as Record<string, unknown>) : null;
     rawMessage =
-      obj.message ||
-      obj.error ||
-      obj.details ||
-      (obj.data && obj.data.message) ||
-      "";
+      String(obj.message || obj.error || obj.details || dataObj?.message || "");
   }
 
   const lower = rawMessage.toLowerCase();

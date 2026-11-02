@@ -12,7 +12,9 @@ async function handler(
 ) {
   const { path } = await params;
   const subpath = path.join("/");
-  const targetUrl = new URL(`${env.BACKEND_API_URL}/${subpath}`);
+  const baseUrl = env.BACKEND_API_URL.replace(/\/+$/, "");
+  const cleanSubpath = subpath.replace(/^\/+/, "");
+  const targetUrl = new URL(`${baseUrl}/${cleanSubpath}`);
 
   // Forward query string
   request.nextUrl.searchParams.forEach((value, key) => {
@@ -20,9 +22,16 @@ async function handler(
   });
 
   const headers = new Headers(request.headers);
-  headers.set("x-internal-secret", env.INTERNAL_API_SECRET);
   headers.set("x-forwarded-host", request.headers.get("host") || "localhost");
   headers.delete("host");
+
+  // Enterprise Token Ingestion:
+  // If no explicit Authorization header was provided in the request,
+  // extract the authenticated token from the secure session cookie.
+  const cookieToken = request.cookies.get("bruvi_admin_token")?.value;
+  if (!headers.get("authorization") && cookieToken && cookieToken.trim().length > 0) {
+    headers.set("authorization", `Bearer ${cookieToken.trim()}`);
+  }
 
   try {
     const backendResponse = await fetch(targetUrl.toString(), {
@@ -33,6 +42,12 @@ async function handler(
     });
 
     const responseHeaders = new Headers(backendResponse.headers);
+
+    // Strip hop-by-hop & compression headers decoded by Node runtime
+    responseHeaders.delete("content-encoding");
+    responseHeaders.delete("content-length");
+    responseHeaders.delete("transfer-encoding");
+    responseHeaders.delete("connection");
 
     return new NextResponse(backendResponse.body, {
       status: backendResponse.status,

@@ -1,4 +1,5 @@
 import { AutocompletePrediction, ParsedAddress, StaticMapOptions } from "@/types/maps";
+import { getCachedGoogleMapsApiKey } from "./google-maps-loader";
 
 /**
  * In-memory LRU cache to prevent redundant API calls for recently fetched places
@@ -52,8 +53,8 @@ export async function searchPlaces(
     const json = await res.json();
     const predictions = json?.data?.data?.predictions || json?.data?.predictions || [];
     return Array.isArray(predictions) ? predictions : [];
-  } catch (error: any) {
-    if (error.name === "AbortError") {
+  } catch (error: unknown) {
+    if (error instanceof Error && error.name === "AbortError") {
       return [];
     }
     console.error("Error searching places:", error);
@@ -159,6 +160,7 @@ export function getStaticMapUrl({
   includeMarker = true,
 }: StaticMapOptions): string {
   const apiKey =
+    getCachedGoogleMapsApiKey() ||
     process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ||
     "AIzaSyBB0jvvnQ5YRme4JPOQQwruPFy7IPLCO2g";
 

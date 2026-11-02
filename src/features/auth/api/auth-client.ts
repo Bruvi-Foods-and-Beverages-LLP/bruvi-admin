@@ -6,6 +6,15 @@ const USER_KEY = "bruvi_hq_admin_user";
 
 export class AdminAuthClient {
   /**
+   * Helper to parse cookie from document.cookie
+   */
+  private static getCookie(name: string): string | null {
+    if (typeof document === "undefined") return null;
+    const match = document.cookie.match(new RegExp(`(^|;\\s*)(${name})=([^;]*)`));
+    return match ? decodeURIComponent(match[3]) : null;
+  }
+
+  /**
    * Authenticate admin via enterprise email and password
    */
   static async login(
@@ -19,7 +28,7 @@ export class AdminAuthClient {
       rememberWorkstation,
     };
 
-    let response: Response | null = null;
+    let response: Response;
     let data: { success?: boolean; message?: string; data?: AdminAuthResponse } | null = null;
 
     try {
@@ -30,40 +39,14 @@ export class AdminAuthClient {
         },
         body: JSON.stringify(payload),
       });
+    } catch {
+      throw new Error("Unable to reach authentication server. Please ensure the backend is running.");
+    }
 
+    try {
       data = await response.json();
     } catch {
-      // Backend server may not be running in isolated dev run; allow mock Super Admin for UI validation
-      if (email === "admin@bruvi.coffee" && (password === "BruviHQ@2026!Enterprise" || password === "BruviHQ@2026!" || password === "admin123456")) {
-        const mockAuth: AdminAuthResponse = {
-          accessToken: "mock_jwt_super_admin_access_token",
-          refreshToken: "mock_jwt_super_admin_refresh_token",
-          tokenFamilyId: "0192e210-aaaa-7000-8000-000000000001",
-          expiresInSeconds: rememberWorkstation ? 28800 : 900,
-          user: {
-            id: "0192e210-aaaa-7000-8000-000000000001",
-            email: "admin@bruvi.coffee",
-            fullName: "Kavya R",
-            role: "SUPER_ADMIN",
-            avatarUrl: null,
-            isActive: true,
-            lastLoginAt: new Date().toISOString(),
-            adminProfile: {
-              department: "HQ Operations",
-              designation: "Chief Operations Officer",
-              permissions: ["*:*"],
-              accessibleOutletIds: ["*"],
-              twoFactorEnabled: false,
-              workstationTrustUntil: rememberWorkstation
-                ? new Date(Date.now() + 30 * 24 * 3600 * 1000).toISOString()
-                : null,
-            },
-          },
-        };
-        this.persistSession(mockAuth);
-        return mockAuth;
-      }
-      throw new Error("Unable to reach authentication server. Please ensure the backend is running.");
+      data = null;
     }
 
     if (!response || !response.ok || !data || !data.success || !data.data) {
@@ -85,8 +68,8 @@ export class AdminAuthClient {
       localStorage.setItem(TOKEN_KEY, auth.accessToken);
       localStorage.setItem(REFRESH_KEY, auth.refreshToken);
       localStorage.setItem(USER_KEY, JSON.stringify(auth.user));
-      // Set session cookie for SSR matching
-      document.cookie = `bruvi_admin_token=${auth.accessToken}; path=/; max-age=${auth.expiresInSeconds}; SameSite=Lax`;
+      const secure = window.location.protocol === "https:" ? "; Secure" : "";
+      document.cookie = `bruvi_admin_token=${auth.accessToken}; path=/; max-age=${auth.expiresInSeconds}; SameSite=Lax${secure}`;
     } catch {
       // localStorage may fail in restricted sandboxes
     }
@@ -106,14 +89,16 @@ export class AdminAuthClient {
   }
 
   /**
-   * Get active token
+   * Get active token (prefers localStorage, falls back to cookie)
    */
   static getToken(): string | null {
     if (typeof window === "undefined") return null;
     try {
-      return localStorage.getItem(TOKEN_KEY);
+      const local = localStorage.getItem(TOKEN_KEY);
+      if (local && local.trim().length > 0) return local;
+      return this.getCookie("bruvi_admin_token");
     } catch {
-      return null;
+      return this.getCookie("bruvi_admin_token");
     }
   }
 

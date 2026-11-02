@@ -18,24 +18,6 @@ interface AuthState {
   hasPermission: (permission: string | string[]) => boolean;
 }
 
-const devSuperAdminUser: AdminUser = {
-  id: "0192e210-aaaa-7000-8000-000000000001",
-  email: "admin@bruvi.coffee",
-  fullName: "Kavya R",
-  role: "SUPER_ADMIN",
-  avatarUrl: null,
-  isActive: true,
-  lastLoginAt: new Date().toISOString(),
-  adminProfile: {
-    department: "HQ Operations",
-    designation: "Chief Operations Officer",
-    permissions: ["*:*"],
-    accessibleOutletIds: ["*"],
-    twoFactorEnabled: false,
-    workstationTrustUntil: null,
-  },
-};
-
 export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   token: null,
@@ -69,44 +51,59 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   initAuth: async () => {
-    const cachedUser = AdminAuthClient.getCachedUser();
     const token = AdminAuthClient.getToken();
 
-    if (token && cachedUser) {
+    if (!token) {
+      set({
+        user: null,
+        token: null,
+        isAuthenticated: false,
+        isLoading: false,
+      });
+      return;
+    }
+
+    // Optimistically load cached user profile to prevent layout shift
+    const cachedUser = AdminAuthClient.getCachedUser();
+    if (cachedUser) {
       set({
         user: cachedUser,
         token,
         isAuthenticated: true,
         isLoading: false,
       });
-
-      // Synchronize latest profile from backend in background
-      AdminAuthClient.fetchCurrentProfile().then((freshUser) => {
-        if (freshUser) {
-          set({ user: freshUser });
-        }
-      }).catch(() => {
-        // Network or authorization error
-      });
-      return;
     }
 
-    if (typeof window !== "undefined" && (document.cookie.includes("bruvi_admin_token") || process.env.NODE_ENV === "development")) {
-      set({
-        user: devSuperAdminUser,
-        token: token || "dev_super_admin_token",
-        isAuthenticated: true,
-        isLoading: false,
-      });
-      return;
+    // Verify cryptographic token validity directly against backend
+    try {
+      const freshUser = await AdminAuthClient.fetchCurrentProfile();
+      if (freshUser) {
+        set({
+          user: freshUser,
+          token: AdminAuthClient.getToken() || token,
+          isAuthenticated: true,
+          isLoading: false,
+        });
+      } else {
+        // Token is invalid or expired and cannot be refreshed
+        await AdminAuthClient.logout();
+        set({
+          user: null,
+          token: null,
+          isAuthenticated: false,
+          isLoading: false,
+        });
+      }
+    } catch {
+      if (!cachedUser) {
+        set({
+          user: null,
+          token: null,
+          isAuthenticated: false,
+          isLoading: false,
+        });
+      }
     }
-
-    set({
-      user: null,
-      token: null,
-      isAuthenticated: false,
-      isLoading: false,
-    });
   },
 
   hasRole: (requiredRoles: string | string[]) => {

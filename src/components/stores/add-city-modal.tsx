@@ -54,9 +54,11 @@ export function AddCityModal({
   const [mapLoaded, setMapLoaded] = React.useState(false);
   const [mapError, setMapError] = React.useState(false);
   const [pinAnimationKey, setPinAnimationKey] = React.useState(0);
+  const [prevIsOpen, setPrevIsOpen] = React.useState(isOpen);
 
   // Initialize or preset when opening modal
-  React.useEffect(() => {
+  if (isOpen !== prevIsOpen) {
+    setPrevIsOpen(isOpen);
     if (isOpen) {
       setError("");
       setMapLoaded(false);
@@ -72,7 +74,7 @@ export function AddCityModal({
         setCoordinates(null);
       }
     }
-  }, [isOpen, initialCity]);
+  }
 
   if (!isOpen) return null;
 
@@ -89,19 +91,6 @@ export function AddCityModal({
     }
     if (typeof place.latitude === "number" && typeof place.longitude === "number") {
       setCoordinates({ latitude: place.latitude, longitude: place.longitude });
-      setPinAnimationKey((prev) => prev + 1);
-    }
-    setError("");
-    setMapLoaded(false);
-    setMapError(false);
-  };
-
-  const selectPresetCity = (preset: CityModel) => {
-    setCityName(preset.name);
-    setStateName(preset.state);
-    setCityCode(preset.code || preset.name.substring(0, 3).toUpperCase());
-    if (preset.latitude && preset.longitude) {
-      setCoordinates({ latitude: preset.latitude, longitude: preset.longitude });
       setPinAnimationKey((prev) => prev + 1);
     }
     setError("");

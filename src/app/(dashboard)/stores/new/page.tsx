@@ -7,7 +7,7 @@ import { useStoresStore } from "@/stores/use-stores-store";
 import { StoreFormCard } from "@/components/stores/store-form-card";
 import { GeofenceMapPreview } from "@/components/stores/geofence-map-preview";
 import { StoreSetupChecklist } from "@/components/stores/store-setup-checklist";
-import { AddCityModal, CityMetadata } from "@/components/stores/add-city-modal";
+import { AddCityModal } from "@/components/stores/add-city-modal";
 import { CityModel } from "@/stores/use-cities-store";
 import { PlaceAutocompleteInput } from "@/components/maps/place-autocomplete-input";
 import {
@@ -128,32 +128,38 @@ export default function CreateStorePage() {
   const cityDropdownRef = React.useRef<HTMLDivElement>(null);
 
   // Synchronize Cities from unified City API (Single Source of Truth)
-  const loadCitiesFromApi = React.useCallback(async () => {
-    try {
-      if (typeof window !== "undefined") {
-        // Purge legacy split-brain local storage cache
-        localStorage.removeItem("bruvi-manual-cities");
-      }
-
-      const res = await fetch("/api/proxy/cities?limit=100&isActive=true");
-      if (res.ok) {
-        const json = await res.json();
-        const remoteList: CityModel[] = json?.data?.data || json?.data || [];
-        if (Array.isArray(remoteList)) {
-          const sorted = [...remoteList].sort((a, b) =>
-            a.name.localeCompare(b.name)
-          );
-          setCities(sorted);
-        }
-      }
-    } catch (err) {
-      console.warn("Could not fetch remote cities from City API:", err);
-    }
-  }, []);
-
   React.useEffect(() => {
-    loadCitiesFromApi();
-  }, [loadCitiesFromApi]);
+    let isCancelled = false;
+
+    async function loadCities() {
+      try {
+        if (typeof window !== "undefined") {
+          // Purge legacy split-brain local storage cache
+          localStorage.removeItem("bruvi-manual-cities");
+        }
+
+        const res = await fetch("/api/proxy/cities?limit=100&isActive=true");
+        if (res.ok) {
+          const json = await res.json();
+          const remoteList: CityModel[] = json?.data?.data || json?.data || [];
+          if (Array.isArray(remoteList) && !isCancelled) {
+            const sorted = [...remoteList].sort((a, b) =>
+              a.name.localeCompare(b.name)
+            );
+            setCities(sorted);
+          }
+        }
+      } catch (err) {
+        console.warn("Could not fetch remote cities from City API:", err);
+      }
+    }
+
+    loadCities();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, []);
 
   // Close city dropdown on outside click
   React.useEffect(() => {
@@ -329,7 +335,7 @@ export default function CreateStorePage() {
       // Synchronize Redux cities slice
       dispatch(
         addCityLocally({
-          id: createdCity.id || `city-${Date.now()}`,
+          id: createdCity.id || `city-${createdCity.name.toLowerCase().replace(/[^a-z0-9]/g, "")}`,
           name: createdCity.name,
           code: createdCity.code || createdCity.name.substring(0, 3).toUpperCase(),
           state: createdCity.state || "",
@@ -379,6 +385,8 @@ export default function CreateStorePage() {
           actionStatus.closeModal();
         },
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -403,6 +411,7 @@ export default function CreateStorePage() {
     }
 
     // 1. Immediately present the high-craft Bruvi loading state
+    setIsSubmitting(true);
     actionStatus.showLoading(
       "Creating Store...",
       `Publishing ${storeName.trim()} in ${city.trim()} to the live network...`
@@ -511,6 +520,8 @@ export default function CreateStorePage() {
           actionStatus.closeModal();
         },
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 

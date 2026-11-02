@@ -4,6 +4,7 @@ import { CommandMenu } from "@/components/layout/command-menu";
 import { OfflineBanner } from "@/components/feedback/offline-banner";
 import { SessionTimeoutModal } from "@/components/feedback/session-timeout-modal";
 import { AuthGuard } from "@/components/auth/auth-guard";
+import { RouteRbacGuard } from "@/components/auth/route-rbac-guard";
 import { ReactNode } from "react";
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
@@ -23,7 +24,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
           {/* Scrollable Page Body */}
           <main className="flex-1 overflow-y-auto p-6 md:p-8">
-            {children}
+            <RouteRbacGuard>{children}</RouteRbacGuard>
           </main>
         </div>
 

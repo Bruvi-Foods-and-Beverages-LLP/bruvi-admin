@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { generateCspHeader } from "@/lib/security/csp";
 
 /**
- * Next.js 16 Proxy Convention (formerly Middleware)
+ * Enterprise Next.js Edge Middleware
  * Runs at the network boundary before requests reach route handlers or server components.
  * Enforces enterprise security headers, CSP nonces, and session-based route protection.
  */
@@ -21,14 +21,12 @@ export function proxy(request: NextRequest) {
 
   // If unauthenticated user attempts to visit protected dashboard routes, redirect to /login
   if (!isAuthenticated && !isAuthPage && !isPublicAsset) {
-    if (process.env.NODE_ENV !== "development") {
-      const redirectUrl = new URL("/login", request.url);
-      const returnPath = pathname + search;
-      if (returnPath !== "/") {
-        redirectUrl.searchParams.set("redirect", returnPath);
-      }
-      return NextResponse.redirect(redirectUrl);
+    const redirectUrl = new URL("/login", request.url);
+    const returnPath = pathname + search;
+    if (returnPath !== "/") {
+      redirectUrl.searchParams.set("redirect", returnPath);
     }
+    return NextResponse.redirect(redirectUrl);
   }
 
   // If already authenticated user visits /login, redirect to executive dashboard

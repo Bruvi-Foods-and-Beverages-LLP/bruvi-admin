@@ -47,9 +47,9 @@ export function InteractiveLocationPickerModal({
   cityName,
 }: InteractiveLocationPickerModalProps) {
   const mapContainerRef = React.useRef<HTMLDivElement>(null);
-  const mapInstanceRef = React.useRef<any>(null);
-  const markerRef = React.useRef<any>(null);
-  const circleRef = React.useRef<any>(null);
+  const mapInstanceRef = React.useRef<google.maps.Map | null>(null);
+  const markerRef = React.useRef<google.maps.Marker | null>(null);
+  const circleRef = React.useRef<google.maps.Circle | null>(null);
 
   const [currentLat, setCurrentLat] = React.useState<number>(initialLatitude);
   const [currentLng, setCurrentLng] = React.useState<number>(initialLongitude);
@@ -63,13 +63,15 @@ export function InteractiveLocationPickerModal({
   const [searchPredictions, setSearchPredictions] = React.useState<AutocompletePrediction[]>([]);
   const [isSearching, setIsSearching] = React.useState(false);
   const [isSearchOpen, setIsSearchOpen] = React.useState(false);
+  const [prevIsOpen, setPrevIsOpen] = React.useState(isOpen);
 
   const lastUserTypedSearchRef = React.useRef<string>("");
   const searchInputRef = React.useRef<HTMLInputElement>(null);
   const searchContainerRef = React.useRef<HTMLDivElement>(null);
 
   // Sync state when modal opens or coordinates change
-  React.useEffect(() => {
+  if (isOpen !== prevIsOpen) {
+    setPrevIsOpen(isOpen);
     if (isOpen) {
       const lat = typeof initialLatitude === "number" && !isNaN(initialLatitude) ? initialLatitude : 18.5481;
       const lng = typeof initialLongitude === "number" && !isNaN(initialLongitude) ? initialLongitude : 73.9030;
@@ -80,9 +82,15 @@ export function InteractiveLocationPickerModal({
       setSearchQuery("");
       setSearchPredictions([]);
       setIsSearchOpen(false);
-      lastUserTypedSearchRef.current = "";
+    }
+  }
 
-      // Seamless continuity: If map instance is already live, pan immediately to the new coordinates
+  // Ref & map pan effects when opening
+  React.useEffect(() => {
+    if (isOpen) {
+      lastUserTypedSearchRef.current = "";
+      const lat = typeof initialLatitude === "number" && !isNaN(initialLatitude) ? initialLatitude : 18.5481;
+      const lng = typeof initialLongitude === "number" && !isNaN(initialLongitude) ? initialLongitude : 73.9030;
       if (mapInstanceRef.current) {
         mapInstanceRef.current.panTo({ lat, lng });
         mapInstanceRef.current.setZoom(17);
@@ -94,7 +102,7 @@ export function InteractiveLocationPickerModal({
         }
       }
     }
-  }, [isOpen, initialLatitude, initialLongitude, initialAddress]);
+  }, [isOpen, initialLatitude, initialLongitude]);
 
   // Handle outside click for search dropdown inside modal
   React.useEffect(() => {
@@ -123,7 +131,7 @@ export function InteractiveLocationPickerModal({
     } finally {
       setIsReverseGeocoding(false);
     }
-  }, []);
+  }, [setResolvedDetails, setCurrentAddress, setIsReverseGeocoding]);
 
   // Initialize interactive Google Map
   React.useEffect(() => {
@@ -197,7 +205,7 @@ export function InteractiveLocationPickerModal({
         circleRef.current = circle;
 
         // Event: Click on map to move marker
-        map.addListener("click", (e: any) => {
+        map.addListener("click", (e: google.maps.MapMouseEvent) => {
           if (!e.latLng) return;
           const newLat = e.latLng.lat();
           const newLng = e.latLng.lng();
@@ -210,13 +218,13 @@ export function InteractiveLocationPickerModal({
         });
 
         // Event: Drag marker
-        marker.addListener("drag", (e: any) => {
+        marker.addListener("drag", (e: google.maps.MapMouseEvent) => {
           if (e.latLng) {
             circle.setCenter(e.latLng);
           }
         });
 
-        marker.addListener("dragend", (e: any) => {
+        marker.addListener("dragend", (e: google.maps.MapMouseEvent) => {
           if (!e.latLng) return;
           const newLat = e.latLng.lat();
           const newLng = e.latLng.lng();
@@ -248,6 +256,7 @@ export function InteractiveLocationPickerModal({
       if (circleRef.current) circleRef.current.setMap(null);
       mapInstanceRef.current = null;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
   // Handle map type toggle
@@ -302,16 +311,11 @@ export function InteractiveLocationPickerModal({
   // Debounced search inside modal - ONLY triggers when actively typed by user
   React.useEffect(() => {
     if (!lastUserTypedSearchRef.current || searchQuery !== lastUserTypedSearchRef.current) {
-      setSearchPredictions([]);
-      setIsSearchOpen(false);
       return;
     }
 
     const trimmed = searchQuery.trim();
     if (!trimmed || trimmed.length < 2) {
-      setSearchPredictions([]);
-      setIsSearchOpen(false);
-      setIsSearching(false);
       return;
     }
 
@@ -451,8 +455,14 @@ export function InteractiveLocationPickerModal({
                 type="text"
                 value={searchQuery}
                 onChange={(e) => {
-                  lastUserTypedSearchRef.current = e.target.value;
-                  setSearchQuery(e.target.value);
+                  const val = e.target.value;
+                  lastUserTypedSearchRef.current = val;
+                  setSearchQuery(val);
+                  if (!val.trim() || val.trim().length < 2) {
+                    setSearchPredictions([]);
+                    setIsSearchOpen(false);
+                    setIsSearching(false);
+                  }
                 }}
                 onFocus={() => {
                   if (searchPredictions.length > 0 && lastUserTypedSearchRef.current) {

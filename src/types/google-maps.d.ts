@@ -11,6 +11,7 @@ declare global {
       type Circle = any;
       type LatLng = any;
       type LatLngLiteral = { lat: number; lng: number };
+      type MapMouseEvent = { latLng?: { lat(): number; lng(): number } | null };
       const Map: any;
       const Marker: any;
       const Circle: any;

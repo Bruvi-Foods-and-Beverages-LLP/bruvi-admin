@@ -1,4 +1,6 @@
 import { ApiResponse, ApiError } from "@/types/api";
+import { AdminAuthClient } from "@/features/auth/api/auth-client";
+import { useAppStore } from "@/stores/use-app-store";
 
 export interface RequestOptions extends RequestInit {
   params?: Record<string, string | number | boolean | undefined>;
@@ -57,15 +59,39 @@ class ApiClient {
     requestHeaders.set("Accept", "application/json");
     requestHeaders.set("x-correlation-id", correlationId);
 
+    // Mandatory Token-Only API Ingestion
+    const token = AdminAuthClient.getToken();
+    if (token && !requestHeaders.has("Authorization")) {
+      requestHeaders.set("Authorization", `Bearer ${token}`);
+    }
+
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
     try {
-      const response = await fetch(url, {
+      let response = await fetch(url, {
         ...restOptions,
         headers: requestHeaders,
         signal: options.signal || controller.signal,
       });
+
+      // Handle session expiration and automatic token rotation
+      if (response.status === 401 && !endpoint.includes("/admin/auth/")) {
+        const refreshedToken = await AdminAuthClient.refreshSession();
+        if (refreshedToken) {
+          requestHeaders.set("Authorization", `Bearer ${refreshedToken}`);
+          response = await fetch(url, {
+            ...restOptions,
+            headers: requestHeaders,
+            signal: options.signal || controller.signal,
+          });
+        } else {
+          // Both access token and refresh token have expired
+          if (typeof window !== "undefined") {
+            useAppStore.getState().setSessionExpired(true);
+          }
+        }
+      }
 
       clearTimeout(timeoutId);
 

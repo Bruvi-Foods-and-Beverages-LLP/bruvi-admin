@@ -42,7 +42,7 @@ jobs:
           NEXT_PUBLIC_APP_URL: https://dev-admin.bruvi.com
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.DEV_SUPABASE_URL || 'https://mock-bruvi.supabase.co' }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.DEV_SUPABASE_ANON_KEY || 'mock-anon-key' }}
-          BACKEND_API_URL: ${{ secrets.DEV_BACKEND_API_URL || 'https://dev-api.bruvi.com/v1' }}
+          BACKEND_API_URL: ${{ secrets.DEV_BACKEND_API_URL || 'http://staging.bruvi.in/v1' }}
         run: pnpm build
 
       - name: Deploy to Cloud Provider
@@ -82,7 +82,7 @@ jobs:
           NEXT_PUBLIC_APP_URL: https://staging-admin.bruvi.com
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.STAGING_SUPABASE_URL || 'https://mock-bruvi.supabase.co' }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.STAGING_SUPABASE_ANON_KEY || 'mock-anon-key' }}
-          BACKEND_API_URL: ${{ secrets.STAGING_BACKEND_API_URL || 'https://staging-api.bruvi.com/v1' }}
+          BACKEND_API_URL: ${{ secrets.STAGING_BACKEND_API_URL || 'http://staging.bruvi.in/v1' }}
         run: pnpm build
 
       - name: Deploy to Staging Cluster
@@ -129,3 +129,4 @@ jobs:
           echo "🚀 Deploying Bruvi Admin to Production Cluster/Hosting..."
           # npx vercel --prod --token ${{ secrets.VERCEL_TOKEN }}
           echo "✅ Production deployment completed successfully."
+

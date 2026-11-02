@@ -49,10 +49,12 @@ export function GeofenceMapPreview({
   }, [hasValidCoords, latitude, longitude]);
 
   // Reset image load state on coordinate change
-  React.useEffect(() => {
+  const [prevUrl, setPrevUrl] = React.useState(staticMapUrl);
+  if (staticMapUrl !== prevUrl) {
+    setPrevUrl(staticMapUrl);
     setMapImageLoaded(false);
     setMapImageError(false);
-  }, [staticMapUrl]);
+  }
 
   const displayCoordinates = React.useMemo(() => {
     if (coordinates) return coordinates;

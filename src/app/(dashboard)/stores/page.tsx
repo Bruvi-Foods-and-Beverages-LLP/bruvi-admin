@@ -3,11 +3,12 @@
 import * as React from "react";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/store";
-import { fetchStores, StoreEntity } from "@/store/slices/stores-slice";
+import { fetchStores } from "@/store/slices/stores-slice";
 import { fetchCities } from "@/store/slices/cities-slice";
 import { StoreIcon } from "@/components/icons";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Search, ChevronDown, ChevronRight, Plus, Star } from "lucide-react";
+import { RbacGuard } from "@/components/auth/rbac-guard";
 import { cn } from "@/lib/utils/cn";
 
 export default function StoresPage() {
@@ -149,13 +150,15 @@ export default function StoresPage() {
           </button>
 
           {/* Add store Primary Button */}
-          <Link
-            href="/stores/new"
-            className="h-9 px-4 rounded-[12px] bg-[#1C3A66] hover:bg-[#0F2340] text-label text-white transition-colors shadow-2xs cursor-pointer flex items-center gap-1.5"
-          >
-            <Plus className="h-4 w-4" />
-            <span>Add store</span>
-          </Link>
+          <RbacGuard roles={["SUPER_ADMIN", "ADMIN"]}>
+            <Link
+              href="/stores/new"
+              className="h-9 px-4 rounded-[12px] bg-[#1C3A66] hover:bg-[#0F2340] text-label text-white transition-colors shadow-2xs cursor-pointer flex items-center gap-1.5"
+            >
+              <Plus className="h-4 w-4" />
+              <span>Add store</span>
+            </Link>
+          </RbacGuard>
         </div>
       </div>
 
@@ -500,13 +503,15 @@ export default function StoresPage() {
 
             {/* Add store button if zero total stores */}
             {stores.length === 0 && (
-              <Link
-                href="/stores/new"
-                className="mt-6 h-9 px-4 rounded-[12px] bg-[#1C3A66] hover:bg-[#0F2340] text-label text-white transition-colors shadow-2xs cursor-pointer flex items-center gap-1.5 font-bold"
-              >
-                <Plus className="h-4 w-4" />
-                <span>Add first store</span>
-              </Link>
+              <RbacGuard roles={["SUPER_ADMIN", "ADMIN"]}>
+                <Link
+                  href="/stores/new"
+                  className="mt-6 h-9 px-4 rounded-[12px] bg-[#1C3A66] hover:bg-[#0F2340] text-label text-white transition-colors shadow-2xs cursor-pointer flex items-center gap-1.5 font-bold"
+                >
+                  <Plus className="h-4 w-4" />
+                  <span>Add first store</span>
+                </Link>
+              </RbacGuard>
             )}
           </div>
         ) : (
@@ -520,13 +525,14 @@ export default function StoresPage() {
                   : "bg-[#FEE2E2] text-[#B91C1C]";
 
               return (
-                <div
+                <Link
                   key={store.id}
+                  href={`/stores/${store.id}`}
                   className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4 px-5 py-3 hover:bg-[#f5f7fa]/60 transition-colors cursor-pointer group"
                 >
                   {/* Store Name & Code */}
                   <div className="w-[302px] shrink-0 flex flex-col">
-                    <span className="text-label text-[#0F2340] truncate">
+                    <span className="text-label text-[#0F2340] group-hover:text-[#1C3A66] transition-colors truncate">
                       {store.name}
                     </span>
                     <span className="text-caption text-[#55647A]">
@@ -569,9 +575,9 @@ export default function StoresPage() {
 
                   {/* Right Chevron */}
                   <div className="w-6 shrink-0 flex justify-end">
-                    <ChevronRight className="h-4 w-4 text-[#7F8CA0] group-hover:text-[#0F2340] transition-colors" />
+                    <ChevronRight className="h-4 w-4 text-[#7F8CA0] group-hover:text-[#0F2340] group-hover:translate-x-0.5 transition-all" />
                   </div>
-                </div>
+                </Link>
               );
             })}
           </div>

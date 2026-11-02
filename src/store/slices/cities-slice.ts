@@ -41,13 +41,13 @@ export const fetchCities = createAsyncThunk(
       }
       const json = await res.json();
       const rawCities = json?.data?.data || json?.data || [];
-      const mapped: CityEntity[] = rawCities.map((c: any) => ({
-        id: c.id,
-        name: c.name,
-        code: c.code,
-        state: c.state || "",
-        country: c.country || "IN",
-        timezone: c.timezone || "Asia/Kolkata",
+      const mapped: CityEntity[] = rawCities.map((c: Record<string, unknown>) => ({
+        id: String(c.id || ""),
+        name: String(c.name || ""),
+        code: String(c.code || ""),
+        state: String(c.state || ""),
+        country: String(c.country || "IN"),
+        timezone: String(c.timezone || "Asia/Kolkata"),
         latitude: c.latitude != null ? Number(c.latitude) : null,
         longitude: c.longitude != null ? Number(c.longitude) : null,
         defaultGeofenceRadiusMeters: Number(c.defaultGeofenceRadiusMeters || 5000),
@@ -67,7 +67,7 @@ export const fetchCities = createAsyncThunk(
  */
 export const createCityThunk = createAsyncThunk(
   "cities/createCity",
-  async (cityPayload: any, { rejectWithValue }) => {
+  async (cityPayload: Record<string, unknown>, { rejectWithValue }) => {
     try {
       const res = await fetch("/api/proxy/cities", {
         method: "POST",

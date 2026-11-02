@@ -41,6 +41,7 @@ export function PlaceAutocompleteInput({
   autoFocus = false,
 }: PlaceAutocompleteInputProps) {
   const [internalValue, setInternalValue] = React.useState(controlledValue || "");
+  const [prevControlled, setPrevControlled] = React.useState(controlledValue);
   const [predictions, setPredictions] = React.useState<AutocompletePrediction[]>([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const [isOpen, setIsOpen] = React.useState(false);
@@ -54,14 +55,18 @@ export function PlaceAutocompleteInput({
   const lastUserTypedValueRef = React.useRef<string>("");
 
   // Sync controlled value
+  if (controlledValue !== undefined && controlledValue !== prevControlled) {
+    setPrevControlled(controlledValue);
+    setInternalValue(controlledValue);
+    setPredictions([]);
+    setIsOpen(false);
+  }
+
   React.useEffect(() => {
-    if (controlledValue !== undefined && controlledValue !== internalValue) {
+    if (controlledValue !== undefined) {
       lastUserTypedValueRef.current = "";
-      setInternalValue(controlledValue);
-      setPredictions([]);
-      setIsOpen(false);
     }
-  }, [controlledValue, internalValue]);
+  }, [controlledValue]);
 
   // Handle outside click
   React.useEffect(() => {
@@ -77,16 +82,11 @@ export function PlaceAutocompleteInput({
   // Debounced places search - ONLY triggers when value was actively typed by user
   React.useEffect(() => {
     if (!lastUserTypedValueRef.current || internalValue !== lastUserTypedValueRef.current) {
-      setPredictions([]);
-      setIsOpen(false);
       return;
     }
 
     const trimmed = internalValue.trim();
     if (!trimmed || trimmed.length < 2) {
-      setPredictions([]);
-      setIsOpen(false);
-      setIsLoading(false);
       return;
     }
 
@@ -120,8 +120,8 @@ export function PlaceAutocompleteInput({
           setIsOpen(results.length > 0);
           setSelectedIndex(-1);
         }
-      } catch (err: any) {
-        if (err.name !== "AbortError") {
+      } catch (err: unknown) {
+        if (err instanceof Error && err.name !== "AbortError") {
           console.error("Autocomplete search error:", err);
         }
       } finally {
@@ -152,6 +152,11 @@ export function PlaceAutocompleteInput({
     const val = e.target.value;
     lastUserTypedValueRef.current = val;
     setInternalValue(val);
+    if (!val.trim() || val.trim().length < 2) {
+      setPredictions([]);
+      setIsOpen(false);
+      setIsLoading(false);
+    }
     onChange?.(val);
   };
 
@@ -232,6 +237,7 @@ export function PlaceAutocompleteInput({
           ref={inputRef}
           id={id}
           type="text"
+          role="combobox"
           autoFocus={autoFocus}
           disabled={disabled}
           value={internalValue}
@@ -241,6 +247,7 @@ export function PlaceAutocompleteInput({
           placeholder={placeholder}
           aria-autocomplete="list"
           aria-expanded={isOpen}
+          aria-controls={`${id || "places"}-listbox`}
           aria-haspopup="listbox"
           className={cn(
             "w-full h-10 pl-10 pr-9 rounded-[12px] bg-white text-body-s text-[#0F2340] placeholder:text-[#7F8CA0] transition-all outline-none",
@@ -276,6 +283,7 @@ export function PlaceAutocompleteInput({
       {/* Autocomplete Predictions Dropdown */}
       {isOpen && predictions.length > 0 && (
         <div
+          id={`${id || "places"}-listbox`}
           role="listbox"
           className="absolute top-full left-0 right-0 mt-1.5 bg-white rounded-[14px] border border-[#dce2ea] shadow-floating p-1.5 z-50 animate-in fade-in zoom-in-95 duration-150 max-h-64 overflow-y-auto custom-scrollbar"
         >

@@ -35,22 +35,10 @@ export function SignInCard() {
   const [loadingChannel, setLoadingChannel] = React.useState<"google" | "email" | null>(null);
 
   // Google Workspace SSO Authentication Handler
-  const handleGoogleSSO = async () => {
-    setFormError(null);
-    setEmailError(undefined);
-    setPasswordError(undefined);
-    setIsLoading(true);
-    setLoadingChannel("google");
-
-    try {
-      // In production: supabase.auth.signInWithOAuth({ provider: 'google', options: { queryParams: { hd: 'bruvi.coffee' } } })
-      await new Promise((resolve) => setTimeout(resolve, 800));
-      router.push(redirectTarget);
-    } catch {
-      setFormError("Google Workspace authentication failed. Please try again.");
-      setIsLoading(false);
-      setLoadingChannel(null);
-    }
+  const handleGoogleSSO = () => {
+    setFormError(
+      "Google Workspace SSO is reserved for Enterprise SAML IdP. Please authenticate using your corporate credentials below."
+    );
   };
 
   // Corporate Email & Password Authentication Handler

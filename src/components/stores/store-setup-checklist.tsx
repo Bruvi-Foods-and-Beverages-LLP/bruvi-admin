@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { Check, Info } from "lucide-react";
-import { cn } from "@/lib/utils/cn";
 
 interface ChecklistItem {
   id: string;

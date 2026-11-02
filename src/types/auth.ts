@@ -11,6 +11,7 @@ export type UserRole =
   | "HQ_OPS"
   | "FINANCE"
   | "MARKETING"
+  | "ADMIN"
   | "SUPER_ADMIN";
 
 /**
@@ -50,18 +51,30 @@ export type DomainCapability =
   | "system:settings";
 
 /**
+ * Granular Admin Profile Data
+ */
+export interface AdminProfileData {
+  department: string;
+  designation: string;
+  permissions: string[];
+  accessibleOutletIds: string[];
+  twoFactorEnabled: boolean;
+  workstationTrustUntil?: string | null;
+}
+
+/**
  * Authenticated HQ Staff User Profile
  */
 export interface AdminUser {
   id: string;
   email: string;
   fullName: string;
-  avatarUrl?: string;
   role: UserRole;
-  assignedStoreId?: string | null; // Null indicates HQ all-store scope
-  permissions: Record<DomainCapability, CapabilityAccessLevel>;
-  is2FAEnabled: boolean;
-  lastLoginAt?: string;
+  avatarUrl?: string | null;
+  isActive: boolean;
+  lastLoginAt?: string | null;
+  adminProfile?: AdminProfileData | null;
+  assignedStoreId?: string | null;
 }
 
 /**

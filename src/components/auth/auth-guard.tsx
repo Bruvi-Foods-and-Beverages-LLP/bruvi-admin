@@ -9,16 +9,17 @@ export interface AuthGuardProps {
   children: React.ReactNode;
 }
 
+const emptySubscribe = () => () => {};
+
 export function AuthGuard({ children }: AuthGuardProps) {
   const router = useRouter();
   const pathname = usePathname();
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const isLoading = useAuthStore((s) => s.isLoading);
   const initAuth = useAuthStore((s) => s.initAuth);
-  const [mounted, setMounted] = React.useState(false);
+  const mounted = React.useSyncExternalStore(emptySubscribe, () => true, () => false);
 
   React.useEffect(() => {
-    setMounted(true);
     initAuth();
   }, [initAuth]);
 
