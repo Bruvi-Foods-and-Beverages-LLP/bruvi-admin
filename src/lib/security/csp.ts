@@ -2,17 +2,17 @@
  * Enterprise Content Security Policy (CSP) Generator
  * Adheres to modern web security standards with strict nonces and zero frame embedding.
  */
-export function generateCspHeader(nonce: string): { cspHeader: string; nonce: string } {
+export function generateCspHeader(nonce?: string): { cspHeader: string; nonce?: string } {
   const isDev =
     process.env.NODE_ENV === "development" ||
     (process.env.NODE_ENV as string) === "staging" ||
     process.env.APP_ENV === "staging" ||
     process.env.NEXT_PUBLIC_APP_ENV === "staging";
 
-  // In development, Next.js hot module reloading requires eval and local websockets
-  const scriptSrc = isDev
-    ? `'self' 'unsafe-eval' 'nonce-${nonce}' https://maps.googleapis.com https://maps.gstatic.com`
-    : `'self' 'nonce-${nonce}' 'strict-dynamic' https://maps.googleapis.com https://maps.gstatic.com`;
+  // Next.js App Router requires 'unsafe-inline' for React Server Components (RSC) streaming
+  // (__next_f.push). Having a nonce directive forces browsers to disable 'unsafe-inline',
+  // which blocks client-side hydration and causes pages to freeze on Suspense fallbacks.
+  const scriptSrc = `'self' 'unsafe-inline' 'unsafe-eval' https://maps.googleapis.com https://maps.gstatic.com`;
 
   const cspDirectives = [
     `default-src 'self'`,
@@ -25,7 +25,7 @@ export function generateCspHeader(nonce: string): { cspHeader: string; nonce: st
     `frame-src 'self' https://www.google.com https://maps.google.com`,
     `frame-ancestors 'none'`,
     `form-action 'self'`,
-    `base-uri 'none'`,
+    `base-uri 'self'`,
     `object-src 'none'`,
   ];
 
