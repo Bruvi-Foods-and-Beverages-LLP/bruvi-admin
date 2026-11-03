@@ -48,12 +48,14 @@ import type { ModifierGroup, ProductStatus } from "@/types/catalog";
 interface ProductEditorProps {
   mode: "create" | "edit";
   productId?: string;
+  /** Create mode only: prefill the form from this product (the Duplicate action). */
+  duplicateFromId?: string;
 }
 
 const formatTime = (d: Date) =>
   d.toLocaleTimeString("en-IN", { hour: "numeric", minute: "2-digit", hour12: true }).toLowerCase();
 
-export function ProductEditor({ mode, productId }: ProductEditorProps) {
+export function ProductEditor({ mode, productId, duplicateFromId }: ProductEditorProps) {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const actionStatus = useActionStatusModal();
@@ -73,6 +75,7 @@ export function ProductEditor({ mode, productId }: ProductEditorProps) {
 
   const initialRef = React.useRef<ProductFormState>(DEFAULT_PRODUCT_FORM);
   const leavingRef = React.useRef(false);
+  const duplicatingRef = React.useRef(false);
 
   const cities = React.useMemo(() => groupStoresByCity(stores), [stores]);
 
@@ -83,10 +86,11 @@ export function ProductEditor({ mode, productId }: ProductEditorProps) {
     (async () => {
       try {
         if (mode === "create") {
-          const [catResult, storeResult, groups] = await Promise.all([
+          const [catResult, storeResult, groups, source] = await Promise.all([
             dispatch(fetchCatalogCategories()).unwrap().catch(() => null),
             dispatch(fetchStores()).unwrap().catch(() => null),
             CatalogApi.getModifierGroups().catch(() => []),
+            duplicateFromId ? CatalogApi.getProductById(duplicateFromId).catch(() => null) : null,
           ]);
           if (cancelled) return;
 
@@ -97,15 +101,23 @@ export function ProductEditor({ mode, productId }: ProductEditorProps) {
           setInitialForm(seeded);
 
           let next = seeded;
-          try {
-            const raw = localStorage.getItem(DRAFT_STORAGE_KEY);
-            if (raw) {
-              const saved = JSON.parse(raw) as { form: ProductFormState; savedAt: string };
-              next = { ...seeded, ...saved.form, categoryId: saved.form.categoryId || seeded.categoryId };
-              setAutosavedAt(formatTime(new Date(saved.savedAt)));
+          if (source) {
+            // Duplicating: copy everything but the photo. The image URL is not shared, because
+            // replacing it on either product would delete the other's image from storage.
+            const copied = productDetailToForm(source);
+            next = { ...copied, name: `${copied.name} (copy)`, imageUrl: null };
+            duplicatingRef.current = true;
+          } else {
+            try {
+              const raw = localStorage.getItem(DRAFT_STORAGE_KEY);
+              if (raw) {
+                const saved = JSON.parse(raw) as { form: ProductFormState; savedAt: string };
+                next = { ...seeded, ...saved.form, categoryId: saved.form.categoryId || seeded.categoryId };
+                setAutosavedAt(formatTime(new Date(saved.savedAt)));
+              }
+            } catch {
+              /* ignore corrupt draft */
             }
-          } catch {
-            /* ignore corrupt draft */
           }
           setModifierGroups(groups);
           setForm(next);
@@ -149,11 +161,11 @@ export function ProductEditor({ mode, productId }: ProductEditorProps) {
     return () => {
       cancelled = true;
     };
-  }, [dispatch, mode, productId]);
+  }, [dispatch, mode, productId, duplicateFromId]);
 
-  // Debounced autosave (create mode only)
+  // Debounced autosave (create mode only; a duplicate never overwrites the saved new-product draft)
   React.useEffect(() => {
-    if (mode !== "create" || !ready || leavingRef.current || !isFormDirty(form)) return;
+    if (mode !== "create" || !ready || leavingRef.current || duplicatingRef.current || !isFormDirty(form)) return;
 
     const t = setTimeout(() => {
       try {
@@ -261,6 +273,7 @@ export function ProductEditor({ mode, productId }: ProductEditorProps) {
           onSecondaryAction: () => {
             actionStatus.closeModal();
             leavingRef.current = false;
+            duplicatingRef.current = false;
             setForm(initialRef.current);
             setSubmitAttempted(false);
             setAutosavedAt(null);
@@ -283,7 +296,7 @@ export function ProductEditor({ mode, productId }: ProductEditorProps) {
       );
 
       try {
-        const diffPayload = buildUpdatePayload(form, initialRef.current);
+        const diffPayload = buildUpdatePayload(initialRef.current, form);
         if (targetStatus && targetStatus !== currentStatus) {
           diffPayload.status = targetStatus;
         }
@@ -491,8 +504,8 @@ export function ProductEditor({ mode, productId }: ProductEditorProps) {
             mode === "create"
               ? () => handleSubmit("DRAFT")
               : currentStatus === "ACTIVE"
-              ? () => handleSubmit("DRAFT")
-              : () => handleSubmit("DRAFT")
+                ? () => handleSubmit("DRAFT")
+                : () => handleSubmit("DRAFT")
           }
           onPublish={
             mode === "create"
