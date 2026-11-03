@@ -70,7 +70,7 @@ export function BasicsSection({ form, setField, nameError }: BasicsSectionProps)
             >
               {form.imageUrl ? (
                 <>
-                  <Image src={form.imageUrl} alt="Product photo" fill unoptimized sizes="160px" className="object-cover" />
+                  <Image src={form.imageUrl} alt="Product photo" fill sizes="160px" className="object-cover" />
                   <button
                     type="button"
                     aria-label="Remove photo"

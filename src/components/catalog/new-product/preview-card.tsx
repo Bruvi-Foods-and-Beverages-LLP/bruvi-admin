@@ -32,7 +32,7 @@ export function PreviewCard({ form, category, menuLabel }: PreviewCardProps) {
       <div className="flex w-full max-w-80 flex-col overflow-hidden rounded-[24px] bg-surface shadow-floating">
         <div className="relative flex h-40 flex-col items-center justify-center gap-2" style={{ backgroundColor: bg }}>
           {form.imageUrl ? (
-            <Image src={form.imageUrl} alt="" fill unoptimized sizes="320px" className="object-cover" />
+            <Image src={form.imageUrl} alt="" fill sizes="320px" className="object-cover" />
           ) : (
             <>
               <FlaskConical className="h-8 w-8" style={{ color: fg }} strokeWidth={1.5} />

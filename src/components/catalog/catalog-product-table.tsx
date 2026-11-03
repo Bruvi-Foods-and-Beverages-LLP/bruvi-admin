@@ -1,8 +1,8 @@
 "use client";
 
 import * as React from "react";
-import Image from "next/image";
 import Link from "next/link";
+import { ProductImage } from "@/components/catalog/product-image";
 import { useAppDispatch, useAppSelector } from "@/store";
 import {
   toggleSelectProduct,
@@ -248,18 +248,7 @@ export function CatalogProductTable() {
                         prefetch
                         className="relative h-10 w-10 rounded-[8px] bg-[#f5f7fa] border border-[#dce2ea] overflow-hidden flex items-center justify-center shrink-0 cursor-pointer hover:opacity-90 transition-opacity"
                       >
-                        {product.imageUrl ? (
-                          <Image
-                            src={product.thumbnailUrl || product.imageUrl}
-                            alt={product.name}
-                            fill
-                            unoptimized
-                            sizes="40px"
-                            className="object-cover"
-                          />
-                        ) : (
-                          <CoffeeIcon size={18} className="text-[#7F8CA0]" />
-                        )}
+                        <ProductImage src={product.imageUrl} alt={product.name} sizes="40px" />
                       </Link>
 
                       {/* Title & Subtitle Stack */}

@@ -1,9 +1,8 @@
 "use client";
 
 import * as React from "react";
-import Image from "next/image";
 import { CatalogProduct } from "@/types/catalog";
-import { CoffeeIcon } from "@/components/icons";
+import { ProductImage } from "@/components/catalog/product-image";
 
 interface ProductSummaryCardProps {
   product: CatalogProduct;
@@ -33,25 +32,12 @@ export function ProductSummaryCard({ product }: ProductSummaryCardProps) {
     "Slow-steeped Đắk Lắk robusta cold brew over condensed milk and ice, crowned with a lightly salted cream foam. Bold, silky, a little savoury — our most-ordered drink.";
 
   // High quality hero asset with local fallback
-  const heroImage =
-    product.imageUrl || "/images/products/salted-cream-cold-brew.png";
 
   return (
     <div className="w-full rounded-[16px] border border-[#DCE2EA] bg-white p-[21px] flex flex-col sm:flex-row gap-6 shadow-2xs font-sans">
       {/* 1. Hero Image 160x160 (Figma 225:90918) */}
       <div className="relative w-[160px] h-[160px] rounded-[12px] bg-[#F5F7FA] border border-[#DCE2EA] overflow-hidden shrink-0 flex items-center justify-center">
-        {heroImage ? (
-          <Image
-            src={heroImage}
-            alt={product.name}
-            fill
-            sizes="160px"
-            unoptimized
-            className="object-cover"
-          />
-        ) : (
-          <CoffeeIcon size={48} className="text-[#7F8CA0]" />
-        )}
+        <ProductImage src={product.imageUrl} alt={product.name} sizes="160px" iconSize={48} />
       </div>
 
       {/* 2. Details Column (Figma 225:90919) */}
