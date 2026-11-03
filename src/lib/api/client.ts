@@ -54,8 +54,11 @@ class ApiClient {
 
     const correlationId = this.generateCorrelationId();
 
+    const isFormData = typeof FormData !== "undefined" && restOptions.body instanceof FormData;
     const requestHeaders = new Headers(headers);
-    requestHeaders.set("Content-Type", "application/json");
+    if (!isFormData && !requestHeaders.has("Content-Type")) {
+      requestHeaders.set("Content-Type", "application/json");
+    }
     requestHeaders.set("Accept", "application/json");
     requestHeaders.set("x-correlation-id", correlationId);
 
@@ -174,6 +177,15 @@ class ApiClient {
 
   public delete<T>(endpoint: string, options?: RequestOptions): Promise<T> {
     return this.request<T>(endpoint, { ...options, method: "DELETE" });
+  }
+
+  public upload<T>(endpoint: string, formData: FormData, options?: RequestOptions): Promise<T> {
+    return this.request<T>(endpoint, {
+      ...options,
+      method: "POST",
+      body: formData,
+      timeoutMs: options?.timeoutMs ?? 60000,
+    });
   }
 }
 

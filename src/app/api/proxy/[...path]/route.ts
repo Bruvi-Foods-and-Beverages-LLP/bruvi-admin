@@ -13,7 +13,14 @@ async function handler(
   const { path } = await params;
   const subpath = path.join("/");
   const baseUrl = env.BACKEND_API_URL.replace(/\/+$/, "");
-  const cleanSubpath = subpath.replace(/^\/+/, "");
+  let cleanSubpath = subpath.replace(/^\/+/, "");
+
+  // If backend API URL does not include /v1 and the subpath does not start with v1,
+  // ensure /v1 prefix is forwarded since all backend controllers are mounted under /v1
+  if (!baseUrl.endsWith("/v1") && !cleanSubpath.startsWith("v1/")) {
+    cleanSubpath = `v1/${cleanSubpath}`;
+  }
+
   const targetUrl = new URL(`${baseUrl}/${cleanSubpath}`);
 
   // Forward query string
