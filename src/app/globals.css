@@ -97,6 +97,13 @@
   --color-info-surface: #e4f0fa;
   --color-favorite: #c0352b;
 
+  /* Controls & Progress (Figma: color/control-off, color/track, category-lab) */
+  --color-diet-veg: #1f8a3b;
+  --color-control-off: #bcc6d3;
+  --color-track: rgba(15, 35, 64, 0.12);
+  --color-category-lab: #566f2c;
+  --color-category-lab-surface: #ebf1de;
+
   /* -------------------------------------------------------------------------- */
   /* 4. CORNER RADII                                                            */
   /* -------------------------------------------------------------------------- */
