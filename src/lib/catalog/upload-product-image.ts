@@ -1,6 +1,7 @@
 import { StorageApi } from "@/lib/api/storage";
+import { IMAGE_UPLOAD_PRESETS } from "@/lib/images/process-image";
 
-export const PRODUCT_IMAGE_MAX_BYTES = 2 * 1024 * 1024; // 2 MB
+export const PRODUCT_IMAGE_MAX_BYTES = IMAGE_UPLOAD_PRESETS.product.maxBytes;
 const ALLOWED_TYPES = ["image/jpeg", "image/png"];
 
 function readDimensions(file: File): Promise<{ width: number; height: number }> {
@@ -25,7 +26,7 @@ export interface UploadProductImageResult {
 }
 
 /**
- * Validates (JPG/PNG, ≤2 MB, 1:1) and uploads to Cloud Storage via backend StorageModule.
+ * Final guard on the cropped/compressed file from ImageCropModal: validates (JPG/PNG, ≤2 MB, 1:1) and uploads to Cloud Storage via backend StorageModule.
  * Returns the public URL and storage path for lifecycle management.
  */
 export async function uploadProductImage(file: File): Promise<UploadProductImageResult> {

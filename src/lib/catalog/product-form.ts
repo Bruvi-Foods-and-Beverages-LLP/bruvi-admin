@@ -82,12 +82,15 @@ export function generateSku(categoryName: string, productName: string): string {
 }
 
 export interface ReadinessItem {
-  key: "basics" | "dietary" | "photo" | "recipe";
+  key: "basics" | "dietary" | "photo";
   label: string;
   done: boolean;
 }
 
-/** Mirrors the backend `readiness_checklist` computed on create. */
+/**
+ * Display-only launch checklist (never blocks saving or publishing).
+ * Recipe linking is left out until the recipe/BOM feature exists.
+ */
 export function getReadiness(form: ProductFormState): ReadinessItem[] {
   return [
     {
@@ -95,12 +98,11 @@ export function getReadiness(form: ProductFormState): ReadinessItem[] {
       label: "Name, descriptions, price, tax",
       done: Boolean(
         form.name.trim() && form.shortDescription.trim() && form.longDescription.trim() &&
-          parsePriceToPaise(form.basePriceRupees) > 0 && form.categoryId
+        parsePriceToPaise(form.basePriceRupees) > 0 && form.categoryId
       ),
     },
     { key: "dietary", label: "Dietary & allergens declared", done: true },
     { key: "photo", label: "Add a product photo", done: Boolean(form.imageUrl) },
-    { key: "recipe", label: "Link a recipe for stock deduction", done: false },
   ];
 }
 

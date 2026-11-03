@@ -2,12 +2,19 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { Loader2, Upload, X } from "lucide-react";
+import { Upload, X } from "lucide-react";
 import { FormCard } from "@/components/ui/form-card";
 import { FormField, FormInput, FormTextarea } from "@/components/ui/form-field";
 import { SHORT_DESCRIPTION_MAX, type ProductFormState } from "@/lib/catalog/product-form";
 import { uploadProductImage } from "@/lib/catalog/upload-product-image";
 import { StorageApi } from "@/lib/api/storage";
+import {
+  IMAGE_UPLOAD_PRESETS,
+  MAX_SOURCE_BYTES,
+  formatBytes,
+  type ProcessedImage,
+} from "@/lib/images/process-image";
+import { ImageCropModal } from "@/components/media/image-crop-modal";
 import { cn } from "@/lib/utils/cn";
 import type { SetField } from "./types";
 
@@ -20,32 +27,41 @@ interface BasicsSectionProps {
 export function BasicsSection({ form, setField, nameError }: BasicsSectionProps) {
   const fileRef = React.useRef<HTMLInputElement>(null);
   const uploadedPathRef = React.useRef<string | null>(null);
-  const [isUploading, setIsUploading] = React.useState(false);
+  const [pendingFile, setPendingFile] = React.useState<File | null>(null);
   const [uploadError, setUploadError] = React.useState<string | undefined>();
+  const preset = IMAGE_UPLOAD_PRESETS.product;
 
-  const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Picking a file only opens the crop modal; nothing is uploaded until the crop is confirmed.
+  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     e.target.value = "";
     if (!file) return;
     setUploadError(undefined);
-    setIsUploading(true);
-    try {
-      if (uploadedPathRef.current) {
-        StorageApi.deleteFile("bruvi-products", uploadedPathRef.current).catch(() => {});
-      }
-      const result = await uploadProductImage(file);
-      uploadedPathRef.current = result.path;
-      setField("imageUrl", result.url);
-    } catch (err) {
-      setUploadError(err instanceof Error ? err.message : "Upload failed");
-    } finally {
-      setIsUploading(false);
+    if (!preset.acceptTypes.includes(file.type)) {
+      setUploadError("Use a JPG, PNG or WebP image.");
+      return;
     }
+    if (file.size > MAX_SOURCE_BYTES) {
+      setUploadError(`Image must be ${formatBytes(MAX_SOURCE_BYTES)} or smaller.`);
+      return;
+    }
+    setPendingFile(file);
+  };
+
+  const handleCroppedUpload = async (image: ProcessedImage) => {
+    const result = await uploadProductImage(image.file);
+    // Only an unsaved upload from this session is ours to delete; saved images are cleaned up by the backend.
+    if (uploadedPathRef.current) {
+      StorageApi.deleteFile("bruvi-products", uploadedPathRef.current).catch(() => { });
+    }
+    uploadedPathRef.current = result.path;
+    setField("imageUrl", result.url);
+    setPendingFile(null);
   };
 
   const handleRemovePhoto = () => {
     if (uploadedPathRef.current) {
-      StorageApi.deleteFile("bruvi-products", uploadedPathRef.current).catch(() => {});
+      StorageApi.deleteFile("bruvi-products", uploadedPathRef.current).catch(() => { });
       uploadedPathRef.current = null;
     }
     setField("imageUrl", null);
@@ -73,6 +89,14 @@ export function BasicsSection({ form, setField, nameError }: BasicsSectionProps)
                   <Image src={form.imageUrl} alt="Product photo" fill sizes="160px" className="object-cover" />
                   <button
                     type="button"
+                    onClick={() => fileRef.current?.click()}
+                    className="absolute inset-x-2 bottom-2 flex h-7 items-center justify-center gap-1.5 rounded-full bg-white/90 text-caption-bold text-text shadow-raised cursor-pointer hover:bg-white"
+                  >
+                    <Upload className="h-3.5 w-3.5" />
+                    Replace
+                  </button>
+                  <button
+                    type="button"
                     aria-label="Remove photo"
                     onClick={handleRemovePhoto}
                     className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-white/90 text-text shadow-raised cursor-pointer"
@@ -84,17 +108,29 @@ export function BasicsSection({ form, setField, nameError }: BasicsSectionProps)
                 <button
                   type="button"
                   onClick={() => fileRef.current?.click()}
-                  disabled={isUploading}
-                  className="flex h-full w-full flex-col items-center justify-center gap-2 p-3 cursor-pointer hover:bg-border/30 disabled:cursor-wait"
+                  className="flex h-full w-full flex-col items-center justify-center gap-2 p-3 cursor-pointer hover:bg-border/30"
                 >
-                  {isUploading ? <Loader2 className="h-6 w-6 animate-spin text-text-muted" /> : <Upload className="h-6 w-6 text-text" />}
-                  <span className="text-label text-text">{isUploading ? "Uploading…" : "Upload photo"}</span>
-                  <span className="text-center text-caption text-text-muted">1:1 · JPG/PNG · 2 MB max</span>
+                  <Upload className="h-6 w-6 text-text" />
+                  <span className="text-label text-text">Upload photo</span>
+                  <span className="text-center text-caption text-text-muted">1:1 · JPG/PNG/WebP · 2 MB max</span>
                 </button>
               )}
             </div>
-            <input ref={fileRef} type="file" accept="image/jpeg,image/png" className="hidden" onChange={handleFile} />
+            <input
+              ref={fileRef}
+              type="file"
+              accept={preset.acceptTypes.join(",")}
+              className="hidden"
+              onChange={handleFile}
+            />
           </FormField>
+          <ImageCropModal
+            file={pendingFile}
+            preset={preset}
+            title="Crop product photo"
+            onCancel={() => setPendingFile(null)}
+            onConfirm={handleCroppedUpload}
+          />
 
           <div className="flex min-w-0 flex-1 flex-col gap-4">
             <FormField

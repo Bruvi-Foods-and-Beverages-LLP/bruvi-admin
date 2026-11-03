@@ -32,7 +32,9 @@ export function ReadinessCard({ items }: { items: ReadinessItem[] }) {
           </li>
         ))}
       </ul>
-      <p className="text-caption text-text-muted">You can save as a draft now and finish the rest before launch.</p>
+      {done < items.length && (
+        <p className="text-caption text-text-muted">You can save as a draft now and finish the rest before launch.</p>
+      )}
     </div>
   );
 }

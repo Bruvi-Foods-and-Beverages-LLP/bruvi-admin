@@ -48,6 +48,13 @@ export function toFriendlyErrorMessage(
       String(obj.message || obj.error || obj.details || dataObj?.message || "");
   }
 
+  // Validation lists ("a.b: msg, c: msg, …") collapse to the first issue so they stay readable
+  // instead of tripping the length check below and falling back to a generic message.
+  const issues = rawMessage.split(/,\s(?=[\w.]+:\s)/);
+  if (issues.length > 1 && /^[\w.]+:\s/.test(issues[0])) {
+    rawMessage = `${issues[0]} (+${issues.length - 1} more)`;
+  }
+
   const lower = rawMessage.toLowerCase();
 
   // Network / Connection drop
