@@ -6,6 +6,7 @@ import storeMenuReducer from "./slices/store-menu-slice";
 import storeHoursReducer from "./slices/store-hours-slice";
 import dashboardReducer from "./slices/dashboard-slice";
 import catalogReducer from "./slices/catalog-slice";
+import ordersReducer from "./slices/orders-slice";
 
 export const store = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ export const store = configureStore({
     storeHours: storeHoursReducer,
     dashboard: dashboardReducer,
     catalog: catalogReducer,
+    orders: ordersReducer,
   },
   devTools:
     process.env.NODE_ENV !== "production" ||
