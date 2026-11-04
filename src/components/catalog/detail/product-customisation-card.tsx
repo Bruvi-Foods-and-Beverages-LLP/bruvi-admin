@@ -106,14 +106,14 @@ export function ProductCustomisationCard({ product }: ProductCustomisationCardPr
 
   return (
     <div className="flex-1 rounded-[16px] border border-[#DCE2EA] bg-white overflow-hidden flex flex-col shadow-2xs font-sans min-h-[348px]">
-      {/* 1. Header (Figma 225:90960 - h: 50px, px-5) */}
+      {/* 1. Header (Figma 225:90960 - Manrope ExtraBold 18px / 26px) */}
       <div className="h-[50px] px-5 flex items-center justify-between border-b border-[#F5F7FA]">
-        <h2 className="text-[18px] leading-[26px] font-extrabold text-[#0F2340]">
+        <h2 className="font-sans text-[18px] leading-[26px] font-extrabold text-[#0F2340]">
           Customisation · {rows.length}
         </h2>
         <Link
           href={`/catalog/${product.id}#customisation`}
-          className="text-[14px] leading-5 font-bold text-[#1C3A66] hover:underline cursor-pointer"
+          className="font-sans text-[14px] leading-5 font-bold text-[#1C3A66] hover:underline cursor-pointer"
         >
           Manage
         </Link>
@@ -126,13 +126,13 @@ export function ProductCustomisationCard({ product }: ProductCustomisationCardPr
             key={idx}
             className="h-8 px-5 flex items-center gap-3 hover:bg-[#F5F7FA]/50 transition-colors"
           >
-            {/* Left: Customisation Name (w: 120px) */}
-            <span className="w-[120px] shrink-0 text-[14px] leading-5 font-bold text-[#0F2340] truncate">
+            {/* Left: Customisation Name (w: 120px - Manrope Bold 14px) */}
+            <span className="w-[120px] shrink-0 font-sans text-[14px] leading-5 font-bold text-[#0F2340] truncate">
               {row.name}
             </span>
 
-            {/* Right: Summary text */}
-            <span className="flex-1 min-w-0 text-[12px] leading-4 font-medium text-[#3F4B5E] truncate">
+            {/* Right: Summary text (Manrope Medium 12px) */}
+            <span className="flex-1 min-w-0 font-sans text-[12px] leading-4 font-medium text-[#3F4B5E] truncate">
               {row.summary}
             </span>
           </div>

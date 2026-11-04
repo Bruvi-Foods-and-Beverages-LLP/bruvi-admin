@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { FormCard } from "@/components/ui/form-card";
 import { FormField, FormInput, FormSelect } from "@/components/ui/form-field";
 import { cn } from "@/lib/utils/cn";
@@ -58,7 +59,14 @@ export function PricingSection({
             htmlFor="product-category"
             required
             error={errors.categoryId}
-            hint="Sets the menu section and card colour."
+            hint={
+              <>
+                Sets the menu section and card colour.{" "}
+                <Link href="/catalog/categories" className="font-bold text-primary hover:underline">
+                  Edit categories
+                </Link>
+              </>
+            }
           >
             <FormSelect
               id="product-category"

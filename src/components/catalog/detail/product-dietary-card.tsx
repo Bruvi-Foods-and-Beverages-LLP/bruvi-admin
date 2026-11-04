@@ -81,8 +81,8 @@ export function ProductDietaryCard({ product }: ProductDietaryCardProps) {
   return (
     <div className="w-full sm:w-[320px] rounded-[16px] border border-[#DCE2EA] bg-white p-[21px] flex flex-col justify-between shadow-2xs font-sans min-h-[348px]">
       <div className="flex flex-col gap-4">
-        {/* Title (Figma 225:90942) */}
-        <h2 className="text-[18px] leading-[26px] font-extrabold text-[#0F2340]">
+        {/* Title (Figma 225:90942 - Manrope ExtraBold 18px / 26px) */}
+        <h2 className="font-sans text-[18px] leading-[26px] font-extrabold text-[#0F2340]">
           Dietary & allergens
         </h2>
 
@@ -94,10 +94,10 @@ export function ProductDietaryCard({ product }: ProductDietaryCardProps) {
             <NonVegIcon className="h-5 w-5 shrink-0" />
           )}
           <div className="flex flex-col">
-            <span className="text-[14px] leading-5 font-bold text-[#0F2340]">
+            <span className="font-sans text-[14px] leading-5 font-bold text-[#0F2340]">
               {isVeg ? (isVegan ? "Vegan" : "Vegetarian") : "Non-vegetarian"}
             </span>
-            <span className="text-[12px] leading-4 font-medium text-[#3F4B5E]">
+            <span className="font-sans text-[12px] leading-4 font-medium text-[#3F4B5E]">
               {vegSubtitle}
             </span>
           </div>
@@ -105,26 +105,26 @@ export function ProductDietaryCard({ product }: ProductDietaryCardProps) {
 
         {/* Allergens Section (Figma 225:90949) */}
         <div className="flex flex-col gap-2 pt-2">
-          <span className="text-[12px] leading-4 font-bold tracking-[0.48px] uppercase text-[#3F4B5E]">
+          <span className="font-sans text-[12px] leading-4 font-bold tracking-[0.48px] uppercase text-[#3F4B5E]">
             Allergens
           </span>
 
           <div className="flex flex-wrap gap-2">
             {/* Milk Badge (Figma 225:90952) */}
             {containsDairy && (
-              <span className="h-6 px-2 rounded-[12px] inline-flex items-center text-[12px] leading-4 font-bold bg-[#FDF0D8] text-[#9A5B00]">
+              <span className="h-6 px-2 rounded-[12px] inline-flex items-center font-sans text-[12px] leading-4 font-bold bg-[#FDF0D8] text-[#9A5B00]">
                 Milk
               </span>
             )}
 
             {/* Tree nuts Chip (Figma 225:90954) */}
-            <span className="h-6 px-[9px] rounded-[12px] border border-[#DCE2EA] inline-flex items-center text-[12px] leading-4 font-medium text-[#3F4B5E]">
+            <span className="h-6 px-[9px] rounded-[12px] border border-[#DCE2EA] inline-flex items-center font-sans text-[12px] leading-4 font-medium text-[#3F4B5E]">
               {containsNuts ? "Tree nuts" : "Tree nuts · via Almond milk"}
             </span>
 
             {/* Caffeine Chip (Figma 225:90956) */}
             {product.isCaffeinated !== false && (
-              <span className="h-6 px-[9px] rounded-[12px] border border-[#DCE2EA] inline-flex items-center text-[12px] leading-4 font-medium text-[#3F4B5E]">
+              <span className="h-6 px-[9px] rounded-[12px] border border-[#DCE2EA] inline-flex items-center font-sans text-[12px] leading-4 font-medium text-[#3F4B5E]">
                 Caffeine {caffeineMg} mg
               </span>
             )}
@@ -133,7 +133,7 @@ export function ProductDietaryCard({ product }: ProductDietaryCardProps) {
       </div>
 
       {/* Footer Helper Text (Figma 225:90958) */}
-      <p className="text-[12px] leading-4 font-medium text-[#55647A] pt-4 mt-auto">
+      <p className="font-sans text-[12px] leading-4 font-medium text-[#55647A] pt-4 mt-auto">
         Shown on app, kiosk and printed receipts.
       </p>
     </div>

@@ -91,6 +91,39 @@ export const CatalogApi = {
   },
 
   /**
+   * Create a new category
+   */
+  async createCategory(payload: {
+    name: string;
+    slug?: string;
+    description?: string | null;
+    displayOrder?: number;
+    colorTheme?: string;
+    bgColorTheme?: string;
+    isActive?: boolean;
+    metadata?: Record<string, unknown>;
+  }): Promise<CategoryItem> {
+    return apiClient.post<CategoryItem>("/admin/catalog/categories", payload);
+  },
+
+  /**
+   * Update a category. `metadata` replaces the stored object, so pass the full merged value.
+   */
+  async updateCategory(
+    id: string,
+    payload: { description?: string | null; metadata?: Record<string, unknown> }
+  ): Promise<CategoryItem> {
+    return apiClient.patch<CategoryItem>(`/admin/catalog/categories/${id}`, payload);
+  },
+
+  /**
+   * Delete a category by ID
+   */
+  async deleteCategory(id: string): Promise<{ success: boolean; message: string }> {
+    return apiClient.delete<{ success: boolean; message: string }>(`/admin/catalog/categories/${id}`);
+  },
+
+  /**
    * Product Variants
    */
   async getVariants(productId: string): Promise<ProductVariant[]> {

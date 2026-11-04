@@ -17,6 +17,12 @@ import {
 } from "@/components/feedback";
 import { StoreAtAGlanceCard } from "@/components/stores/edit/store-at-a-glance-card";
 import { StoreDangerZoneCard } from "@/components/stores/edit/store-danger-zone-card";
+import {
+  StorePublicProfileCard,
+  storePublicProfileFromMetadata,
+  storePublicProfileToMetadata,
+  type StorePublicProfile,
+} from "@/components/stores/edit/store-public-profile-card";
 import { StoreDetailSkeleton } from "@/components/stores/detail/store-detail-skeleton";
 import { useAppDispatch, useAppSelector } from "@/store";
 import {
@@ -70,6 +76,9 @@ export default function EditStorePage({ params }: EditStorePageProps) {
   const [gstin, setGstin] = React.useState("");
   const [fssai, setFssai] = React.useState("");
   const [openDate, setOpenDate] = React.useState("");
+  const [publicProfile, setPublicProfile] = React.useState<StorePublicProfile>(() =>
+    storePublicProfileFromMetadata(undefined)
+  );
 
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [isTogglingStatus, setIsTogglingStatus] = React.useState(false);
@@ -110,6 +119,7 @@ export default function EditStorePage({ params }: EditStorePageProps) {
     setGstin(s.gstin || "");
     setFssai(s.fssaiLicenceNo || "11223344556677");
     setOpenDate(s.openDate || "");
+    setPublicProfile(storePublicProfileFromMetadata(s.metadata));
   }
 
   // Handle location picking from interactive map modal
@@ -214,6 +224,8 @@ export default function EditStorePage({ params }: EditStorePageProps) {
       gstin: gstin.trim() || undefined,
       fssaiLicenceNo: fssai.trim() || undefined,
       openDate: openDate || undefined,
+      // Merged into the existing outlets.metadata by the API
+      metadata: storePublicProfileToMetadata(publicProfile),
     };
 
     try {
@@ -695,6 +707,9 @@ export default function EditStorePage({ params }: EditStorePageProps) {
               </div>
             </div>
           </StoreFormCard>
+
+          {/* Card 5: Customer app profile (public store list & store page) */}
+          <StorePublicProfileCard value={publicProfile} onChange={setPublicProfile} />
 
           {/* Bottom Action Bar */}
           <div className="w-full mt-4 rounded-[16px] bg-surface border border-border p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">

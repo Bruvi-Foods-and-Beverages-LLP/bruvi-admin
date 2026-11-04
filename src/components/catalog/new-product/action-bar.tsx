@@ -59,8 +59,8 @@ export function ActionBar({
             {isArchived
               ? "This product is archived and hidden from all stores."
               : needsAttention
-              ? `${attention.length} item${attention.length > 1 ? "s" : ""} need${attention.length === 1 ? "s" : ""} attention · ${attention[0]}`
-              : "All required details are filled in."}
+                ? `${attention.length} item${attention.length > 1 ? "s" : ""} need${attention.length === 1 ? "s" : ""} attention · ${attention[0]}`
+                : "All required details are filled in."}
           </span>
         </div>
         <span className="pl-[18px] text-caption text-text-muted">

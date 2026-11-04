@@ -66,7 +66,7 @@ export function ProductDetailHeader({
         {/* Left: Breadcrumbs + Title + Badges */}
         <div className="flex flex-col gap-1 min-w-0">
           {/* Breadcrumb (Figma 225:90883) */}
-          <nav aria-label="Breadcrumb" className="text-[14px] leading-5 text-[#3F4B5E]">
+          <nav aria-label="Breadcrumb" className="font-sans text-[14px] leading-5 text-[#3F4B5E]">
             <Link href="/catalog" className="hover:text-[#0F2340] hover:underline transition-colors">
               Catalog
             </Link>{" "}
@@ -83,24 +83,24 @@ export function ProductDetailHeader({
             </Link>
           </nav>
 
-          {/* Product Title (Figma 225:90884) */}
-          <h1 className="text-[32px] leading-[38px] font-extrabold tracking-[-1.03px] text-[#0F2340] font-archivo truncate">
+          {/* Product Title (Figma 225:90884 - Archivo Black 32px / 38px, -0.96px tracking) */}
+          <h1 className="text-display-s text-[#0F2340] truncate">
             {product.name}
           </h1>
 
           {/* Badges Bar (Figma 225:90885) */}
           <div className="flex items-center gap-2 pt-1 flex-wrap">
-            {/* SKU */}
-            <span className="text-[14px] leading-5 text-[#3F4B5E] font-normal">
+            {/* SKU (Manrope Regular 14px) */}
+            <span className="font-sans text-[14px] leading-5 text-[#3F4B5E] font-normal">
               SKU {product.sku}
             </span>
 
             {/* Divider */}
             <div className="w-[1px] h-4 bg-[#BCC6D3]" aria-hidden="true" />
 
-            {/* Category Pill (Figma 225:90888) */}
+            {/* Category Pill (Figma 225:90888 - Manrope Bold 12px) */}
             <span
-              className="h-6 px-2 rounded-[4px] inline-flex items-center text-[12px] leading-4 font-bold"
+              className="h-6 px-2 rounded-[4px] inline-flex items-center font-sans text-[12px] leading-4 font-bold"
               style={{
                 backgroundColor: categoryBgColor,
                 color: categoryColor,
@@ -109,32 +109,32 @@ export function ProductDetailHeader({
               {categoryName}
             </span>
 
-            {/* Status Pill (Figma 225:90890) */}
+            {/* Status Pill (Figma 225:90890 - Manrope Bold 12px) */}
             {isHidden ? (
-              <span className="h-6 px-2 rounded-[12px] inline-flex items-center gap-1.5 text-[12px] leading-4 font-bold bg-[#FDF0D8] text-[#9A5B00]">
+              <span className="h-6 px-2 rounded-[12px] inline-flex items-center gap-1.5 font-sans text-[12px] leading-4 font-bold bg-[#FDF0D8] text-[#9A5B00]">
                 <span className="h-2 w-2 rounded-full bg-[#9A5B00]" />
                 <span>Hidden in {product.hiddenStoresCount || 1} stores</span>
               </span>
             ) : isDraft ? (
-              <span className="h-6 px-2 rounded-[12px] inline-flex items-center gap-1.5 text-[12px] leading-4 font-bold bg-[#EBEFF4] text-[#55647A]">
+              <span className="h-6 px-2 rounded-[12px] inline-flex items-center gap-1.5 font-sans text-[12px] leading-4 font-bold bg-[#EBEFF4] text-[#55647A]">
                 <span className="h-2 w-2 rounded-full bg-[#55647A]" />
                 <span>Draft</span>
               </span>
             ) : isArchived ? (
-              <span className="h-6 px-2 rounded-[12px] inline-flex items-center gap-1.5 text-[12px] leading-4 font-bold bg-[#FEE2E2] text-[#B91C1C]">
+              <span className="h-6 px-2 rounded-[12px] inline-flex items-center gap-1.5 font-sans text-[12px] leading-4 font-bold bg-[#FEE2E2] text-[#B91C1C]">
                 <span className="h-2 w-2 rounded-full bg-[#B91C1C]" />
                 <span>Archived</span>
               </span>
             ) : (
-              <span className="h-6 px-2 rounded-[12px] inline-flex items-center gap-1.5 text-[12px] leading-4 font-bold bg-[#E3F4EA] text-[#1F7A4D]">
+              <span className="h-6 px-2 rounded-[12px] inline-flex items-center gap-1.5 font-sans text-[12px] leading-4 font-bold bg-[#E3F4EA] text-[#1F7A4D]">
                 <span className="h-2 w-2 rounded-full bg-[#1F7A4D]" />
                 <span>Active · 12 stores</span>
               </span>
             )}
 
-            {/* Bestseller Badge (Figma 225:90893) */}
+            {/* Bestseller Badge (Figma 225:90893 - Manrope Bold 12px) */}
             {product.isBestseller && (
-              <span className="h-6 px-2 rounded-[12px] inline-flex items-center gap-1 text-[12px] leading-4 font-bold bg-[#A9D8F3] text-[#0F2340]">
+              <span className="h-6 px-2 rounded-[12px] inline-flex items-center gap-1 font-sans text-[12px] leading-4 font-bold bg-[#A9D8F3] text-[#0F2340]">
                 <StarIcon className="h-4 w-4 text-[#0F2340]" />
                 <span>Bestseller</span>
               </span>
@@ -142,14 +142,14 @@ export function ProductDetailHeader({
           </div>
         </div>
 
-        {/* Right: Duplicate & Edit Buttons (Figma 225:90899) */}
+        {/* Right: Duplicate & Edit Buttons (Figma 225:90899 - Manrope Bold 14px) */}
         <div className="flex items-center gap-2 shrink-0">
           <button
             type="button"
             onClick={() => {
               router.push(`/catalog/new?duplicate=${product.id}`);
             }}
-            className="h-9 px-[17.5px] rounded-[12px] bg-white border-[1.5px] border-[#BCC6D3] text-[#0F2340] text-[14px] leading-5 font-bold hover:bg-[#F5F7FA] transition-colors cursor-pointer"
+            className="h-9 px-[17.5px] rounded-[12px] bg-white border-[1.5px] border-[#BCC6D3] text-[#0F2340] font-sans text-[14px] leading-5 font-bold hover:bg-[#F5F7FA] transition-colors cursor-pointer"
           >
             Duplicate
           </button>
@@ -158,14 +158,14 @@ export function ProductDetailHeader({
             onClick={() => {
               router.push(`/catalog/${product.id}/edit`);
             }}
-            className="h-9 px-4 rounded-[12px] bg-[#1C3A66] hover:bg-[#0F2340] text-white text-[14px] leading-5 font-bold transition-colors cursor-pointer"
+            className="h-9 px-4 rounded-[12px] bg-[#1C3A66] hover:bg-[#0F2340] text-white font-sans text-[14px] leading-5 font-bold transition-colors cursor-pointer"
           >
             Edit product
           </button>
         </div>
       </div>
 
-      {/* 2. Horizontal Tab Bar (Figma 225:90904 - h: 37px, border-b: #DCE2EA, gap: 24px) */}
+      {/* 2. Horizontal Tab Bar (Figma 225:90904 - Manrope Bold 14px) */}
       <div className="w-full border-b border-[#DCE2EA] flex items-center gap-6 pt-2">
         {TABS.map((tab) => {
           const isActive = activeTab === tab.id;
@@ -175,7 +175,7 @@ export function ProductDetailHeader({
               type="button"
               onClick={() => onTabChange?.(tab.id)}
               className={cn(
-                "h-9 px-0 inline-flex items-center text-[14px] leading-5 font-bold transition-all relative cursor-pointer",
+                "h-9 px-0 inline-flex items-center font-sans text-[14px] leading-5 font-bold transition-all relative cursor-pointer",
                 isActive
                   ? "text-[#0F2340] border-b-2 border-[#1C3A66]"
                   : "text-[#3F4B5E] hover:text-[#0F2340] border-b-2 border-transparent"

@@ -120,16 +120,16 @@ export function CatalogFilterBar() {
             {selectedStatus === "ALL"
               ? "Any"
               : selectedStatus === "HIDDEN_IN_STORE"
-              ? "Hidden in store"
-              : selectedStatus === "OUT_OF_STOCK"
-              ? "Out of stock"
-              : selectedStatus === "ACTIVE"
-              ? "Active"
-              : selectedStatus === "DRAFT"
-              ? "Draft"
-              : selectedStatus === "ARCHIVED"
-              ? "Archived"
-              : selectedStatus}
+                ? "Hidden in store"
+                : selectedStatus === "OUT_OF_STOCK"
+                  ? "Out of stock"
+                  : selectedStatus === "ACTIVE"
+                    ? "Active"
+                    : selectedStatus === "DRAFT"
+                      ? "Draft"
+                      : selectedStatus === "ARCHIVED"
+                        ? "Archived"
+                        : selectedStatus}
           </span>
           <ChevronDown className="h-4 w-4 text-[#3F4B5E]" />
         </button>
@@ -181,12 +181,12 @@ export function CatalogFilterBar() {
             {selectedChannel === "ALL"
               ? "All"
               : selectedChannel === "COUNTER"
-              ? "Counter POS"
-              : selectedChannel === "KIOSK"
-              ? "Self Kiosk"
-              : selectedChannel === "APP"
-              ? "Mobile App"
-              : "Table QR"}
+                ? "Counter POS"
+                : selectedChannel === "KIOSK"
+                  ? "Self Kiosk"
+                  : selectedChannel === "APP"
+                    ? "Mobile App"
+                    : "Table QR"}
           </span>
           <ChevronDown className="h-4 w-4 text-[#3F4B5E]" />
         </button>

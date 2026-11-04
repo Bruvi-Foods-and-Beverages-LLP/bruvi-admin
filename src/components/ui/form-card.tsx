@@ -4,12 +4,13 @@ import { cn } from "@/lib/utils/cn";
 interface FormCardProps {
   title: string;
   description: string;
+  action?: React.ReactNode;
   children: React.ReactNode;
   className?: string;
 }
 
 /** Standard admin form section card (shared by Stores and Catalog forms). */
-export function FormCard({ title, description, children, className }: FormCardProps) {
+export function FormCard({ title, description, action, children, className }: FormCardProps) {
   return (
     <div
       className={cn(
@@ -17,9 +18,12 @@ export function FormCard({ title, description, children, className }: FormCardPr
         className
       )}
     >
-      <div className="flex flex-col gap-1">
-        <h2 className="text-title text-text">{title}</h2>
-        <p className="text-body-s text-text-muted">{description}</p>
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex flex-col gap-1">
+          <h2 className="text-title text-text">{title}</h2>
+          <p className="text-body-s text-text-muted">{description}</p>
+        </div>
+        {action && <div className="shrink-0">{action}</div>}
       </div>
       <div>{children}</div>
     </div>

@@ -90,7 +90,7 @@ export default function ProductDetailPage({ params }: PageProps) {
           <div className="h-16 w-16 rounded-full bg-[#EBEFF4] flex items-center justify-center text-[#55647A] mb-4">
             <PackageSearch className="h-8 w-8" />
           </div>
-          <h2 className="font-heading font-extrabold text-[22px] leading-7 text-[#0F2340]">
+          <h2 className="font-display font-black text-[22px] leading-7 text-[#0F2340]">
             Product Not Found
           </h2>
           <p className="max-w-[420px] text-[14px] leading-5 text-[#55647A] mt-2 mb-6">
@@ -168,7 +168,7 @@ export default function ProductDetailPage({ params }: PageProps) {
       {/* Secondary Tab: Recipe */}
       {activeTab === "recipe" && (
         <div className="w-full rounded-[16px] border border-[#DCE2EA] bg-white p-6 shadow-2xs">
-          <h3 className="font-heading font-extrabold text-[18px] text-[#0F2340]">
+          <h3 className="font-sans font-extrabold text-[18px] leading-[26px] text-[#0F2340]">
             Standard Bar Recipe
           </h3>
           <p className="text-[14px] leading-5 text-[#55647A] mt-2">

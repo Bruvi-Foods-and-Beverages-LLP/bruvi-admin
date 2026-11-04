@@ -31,6 +31,13 @@ export const IMAGE_UPLOAD_PRESETS = {
     recommendedMinWidth: 600,
     acceptTypes: ["image/jpeg", "image/png", "image/webp"],
   },
+  store: {
+    aspect: 16 / 9,
+    aspectLabel: "16:9 wide",
+    maxBytes: MAX_UPLOAD_BYTES,
+    recommendedMinWidth: 1200,
+    acceptTypes: ["image/jpeg", "image/png", "image/webp"],
+  },
 } satisfies Record<string, ImageUploadPreset>;
 
 /** Raw files larger than this are rejected before decoding, to keep the tab responsive. */

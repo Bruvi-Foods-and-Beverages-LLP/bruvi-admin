@@ -38,6 +38,7 @@ import { NAV_TABS } from "@/components/catalog/catalog-page-header";
 import { BasicsSection } from "@/components/catalog/new-product/basics-section";
 import { PricingSection } from "@/components/catalog/new-product/pricing-section";
 import { DietarySection } from "@/components/catalog/new-product/dietary-section";
+import { MenuDisplaySection } from "@/components/catalog/new-product/menu-display-section";
 import { ChannelsSection, groupStoresByCity } from "@/components/catalog/new-product/channels-section";
 import { PreviewCard } from "@/components/catalog/new-product/preview-card";
 import { ReadinessCard } from "@/components/catalog/new-product/readiness-card";
@@ -474,6 +475,7 @@ export function ProductEditor({ mode, productId, duplicateFromId }: ProductEdito
                   errors={visibleErrors}
                 />
                 <DietarySection form={form} setField={setField} />
+                <MenuDisplaySection form={form} setField={setField} />
                 <ChannelsSection form={form} setField={setField} cities={cities} isLoadingStores={isLoadingStores} />
               </>
             ) : (

@@ -39,6 +39,12 @@ export interface ProductFormState {
   channelApp: boolean;
   channelQr: boolean;
   storeIds: string[];
+  /** Optional customer-app display fields, stored in products.metadata */
+  menuKicker: string;
+  menuGlyph: string;
+  menuTags: string[];
+  /** Every other metadata key, kept so saving the display fields never drops them */
+  metadataBase: Record<string, unknown>;
 }
 
 export const DEFAULT_PRODUCT_FORM: ProductFormState = {
@@ -62,6 +68,10 @@ export const DEFAULT_PRODUCT_FORM: ProductFormState = {
   channelApp: true,
   channelQr: true,
   storeIds: [],
+  menuKicker: "",
+  menuGlyph: "",
+  menuTags: [],
+  metadataBase: {},
 };
 
 export function parsePriceToPaise(value: string): number {
@@ -106,6 +116,37 @@ export function getReadiness(form: ProductFormState): ReadinessItem[] {
   ];
 }
 
+/** Icons the mobile app can draw for a menu item (BruviIcon glyph names). */
+export const MENU_GLYPHS = ["phin", "leaf", "matcha", "cup", "cold_brew", "bean", "coffee", "croissant"] as const;
+
+const MENU_DISPLAY_KEYS = ["kicker", "glyph", "tags"] as const;
+
+function menuDisplayFromMetadata(metadata: Record<string, unknown> | undefined) {
+  const meta = metadata ?? {};
+  const metadataBase = Object.fromEntries(
+    Object.entries(meta).filter(([key]) => !(MENU_DISPLAY_KEYS as readonly string[]).includes(key))
+  );
+  return {
+    menuKicker: typeof meta.kicker === "string" ? meta.kicker : "",
+    menuGlyph: typeof meta.glyph === "string" ? meta.glyph : "",
+    menuTags: Array.isArray(meta.tags) ? meta.tags.filter((t): t is string => typeof t === "string") : [],
+    metadataBase,
+  };
+}
+
+/**
+ * Full metadata object for the API: the untouched keys plus the display fields.
+ * products.metadata is replaced as a whole on save, so it is always sent complete.
+ */
+export function buildProductMetadata(form: ProductFormState): Record<string, unknown> {
+  const meta: Record<string, unknown> = { ...form.metadataBase };
+  if (form.menuKicker.trim()) meta.kicker = form.menuKicker.trim().toUpperCase();
+  if (form.menuGlyph) meta.glyph = form.menuGlyph;
+  const tags = form.menuTags.map((t) => t.trim().toLowerCase()).filter(Boolean);
+  if (tags.length) meta.tags = Array.from(new Set(tags));
+  return meta;
+}
+
 /**
  * Transforms a full backend ProductDetail DTO into form state for the editor
  */
@@ -136,6 +177,7 @@ export function productDetailToForm(detail: ProductDetail): ProductFormState {
     channelApp: Boolean(detail.channelApp),
     channelQr: Boolean(detail.channelQr),
     storeIds: detail.storeIds || detail.overrides?.filter((ov) => ov.isAvailable).map((ov) => ov.outletId) || [],
+    ...menuDisplayFromMetadata(detail.metadata),
   };
 }
 
@@ -172,6 +214,7 @@ export function buildCreatePayload(
     imageUrl: form.imageUrl,
     modifierGroupIds: form.modifierGroupIds,
     storeIds: form.storeIds,
+    metadata: buildProductMetadata(form),
   };
 }
 
@@ -229,6 +272,14 @@ export function buildUpdatePayload(
 
   if (JSON.stringify(form.storeIds) !== JSON.stringify(initial.storeIds)) {
     payload.storeIds = form.storeIds;
+  }
+
+  if (
+    form.menuKicker !== initial.menuKicker ||
+    form.menuGlyph !== initial.menuGlyph ||
+    JSON.stringify(form.menuTags) !== JSON.stringify(initial.menuTags)
+  ) {
+    payload.metadata = buildProductMetadata(form);
   }
 
   if (form.channelCounter !== initial.channelCounter) payload.channelCounter = form.channelCounter;

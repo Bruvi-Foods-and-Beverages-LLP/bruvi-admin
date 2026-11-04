@@ -29,6 +29,8 @@ export interface StoreEntity {
   salesToday: number;
   rating: number;
   reviewCount?: number;
+  /** Free-form outlet metadata; holds the customer-app profile (prepMinutes, publicPhone, heroImageUrl, amenities) */
+  metadata?: Record<string, unknown>;
 }
 
 export interface StoreOverviewMetrics {
@@ -203,6 +205,7 @@ export const fetchStoreOverview = createAsyncThunk(
         gstin: s.gstin || "",
         fssaiLicenceNo: s.fssaiLicenceNo || s.fssai_licence_no || "",
         openDate: s.openDate || s.open_date || "",
+        metadata: s.metadata && typeof s.metadata === "object" ? (s.metadata as Record<string, unknown>) : {},
         isOpen: s.isOpen ?? (s.status === "OPEN" || s.status === "BUSY"),
         isActive: s.isActive ?? true,
         manager: s.managerName || s.manager || "Lead Barista (TBD)",

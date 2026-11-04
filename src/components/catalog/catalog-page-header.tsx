@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils/cn";
 
 export const NAV_TABS = [
   { label: "Products", href: "/catalog" },
-  { label: "Modifiers", href: "/catalog/modifiers" },
+  { label: "Customisation", href: "/catalog/customisation" },
   { label: "Pricing", href: "/catalog/pricing" },
   { label: "Store overrides", href: "/catalog/store-overrides" },
 ];
