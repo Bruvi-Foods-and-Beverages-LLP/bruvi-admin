@@ -1,0 +1,324 @@
+# Plan: Make the product catalog work end to end (admin ↔ backend ↔ Supabase), with image uploads
+
+## Context
+
+**Your question:** when someone adds a product in the admin panel, does it really create a row in Supabase? Can the products list and an edit screen load everything back over REST? Is the new upload module being used?
+
+**Short answer:** the pieces exist, but they don't connect cleanly. There are data-loss and security bugs, and the upload module isn't used.
+
+### What works today
+- The admin panel's API client sends requests through a proxy route to the NestJS backend: `bruvi_admin/src/lib/api/client.ts` → `/api/proxy/[...path]` → NestJS `v1/admin/catalog/*`.
+- The admin API layer (`src/lib/api/catalog.ts`) and the catalog Redux slice (`src/store/slices/catalog-slice.ts`) make real HTTP calls.
+- The backend has database-backed catalog routes for:
+  - products: list, get, create, update, archive, bulk action, margin
+  - categories, modifier groups and modifiers
+  - store overrides
+- The backend also has a `StorageModule` with upload endpoints (`bruvi_backend/src/modules/storage/`).
+
+### What's broken or missing (verified in the code)
+
+1. **Most of the backend work is uncommitted, and the database tables may not exist yet.**
+   - Not committed: migration `supabase/migrations/20261102000009_create_enterprise_catalog_system.sql`, `src/modules/catalog/schemas/`, `src/modules/storage/`, and the edits to the catalog service and controller.
+   - Unless that migration has been applied to Supabase, a create fails at the database.
+2. **A partial update wipes data.** `UpdateProductSchema = CreateProductSchema.partial()` (`catalog.zod.ts:103`). In Zod 4, the `.default()` values inside a partial schema still get filled in. So a PATCH that only sends `{name}` also does all of this:
+   - resets `status` to DRAFT
+   - turns all four channels back on
+   - resets the dietary flags and sets `metadata` to `{}`
+   - sends `modifierGroupIds: []`, which makes `updateProduct` delete every modifier binding (`catalog.service.ts` around line 560)
+
+   `UpdateCategorySchema` has the same problem.
+3. **Create isn't atomic, and some errors are silently dropped.**
+   - The service inserts the product, then the modifier bindings, then the store overrides as separate calls.
+   - Errors from the binding and override calls are ignored (`catalog.service.ts` lines 457 and 467).
+   - Update never applies `storeIds`.
+4. **Security.**
+   - The catalog service uses the public anon key client (`this.supabase.client`).
+   - Migration 09 grants `ALL TO anon` and adds `USING (true)` "admin" policies, so anyone holding the public key can write the catalog directly.
+   - The admin uploads images straight from the browser, with the anon key, into a separate bucket `product-images` (`src/lib/catalog/upload-product-image.ts`). This bypasses the backend `StorageModule`, which writes to `bruvi-products` with the service-role key.
+5. **The backend sends data in shapes the admin types don't describe.**
+   - `GET /products/:id` returns raw snake_case columns (`...product`), plus `variants`, `modifierGroups` and `overrides` in snake_case, plus `margin`.
+   - `GET /modifiers/groups` returns raw rows, but the admin types it as camelCase `ModifierGroupDetail[]` and works around it with `as unknown as ModifierGroupRow[]`.
+   - `GET /modifiers/groups?productId=` filters on `modifier_groups.product_id`, so it misses groups shared through `product_modifier_groups`.
+6. **Status mismatches.**
+   - The backend accepts only `DRAFT | ACTIVE | ARCHIVED`.
+   - The admin type also allows `PUBLISHED | OUT_OF_STOCK | HIDDEN_IN_STORE`.
+   - `product-modal.tsx` defaults to `PUBLISHED`, which the backend rejects with a 400.
+   - The status filter offers `OUT_OF_STOCK`, which the backend query schema doesn't accept.
+7. **The bulk action shape doesn't match.**
+   - The admin sends `{action, productIds, value}`.
+   - The backend expects `{action, productIds, categoryId | status | priceDeltaPaise | pricePercentage | storeId}`.
+8. **The list footer counts are per page.** `hiddenInStore`, `draft` and `archived` are counted from the current page only (`catalog.service.ts` lines 216–218), not across all products.
+9. **The storage upload response is wrapped twice.** The controller returns `{success, data}`, then the global interceptor wraps it again.
+   - The upload also has no multer size limit and no bucket allow-list.
+10. **Admin-side gaps.**
+    - `createProduct` and `updateProduct` have no pending/fulfilled reducers, so `isSubmitting` never becomes true and the buttons don't show a submitting state.
+    - Create and update payloads are typed `any`.
+    - `apiClient` always sets `Content-Type: application/json`, so it can't send multipart.
+    - Editing uses `ProductModal`, an older form that is missing fields and has the wrong status default.
+11. **Roles.** The catalog routes allow `HQ_OPS`, `SHIFT_LEAD` and `FINANCE`, but admin login only allows `SUPER_ADMIN`, `ADMIN` and `STORE_MANAGER` (`auth.service.ts:601`). Those three roles can't sign in. I'll note this but leave it unchanged.
+
+### Goal
+- Creating a product writes it to Supabase in one atomic step, including its modifier bindings and store availability.
+- The list and a new full-page edit screen load every field through REST, with defaults included.
+- Product photos go through the backend `StorageModule`.
+- The catalog tables can no longer be written with the anon key.
+
+### Your decisions
+- Upload images through the backend storage API.
+- Replace the edit modal with a full `/catalog/[id]` page.
+- Include the security hardening.
+
+---
+
+## Part A — Backend (`bruvi_backend`)
+
+### A1. Commit the work in progress and apply the migration
+- Commit the current uncommitted catalog and storage work as its own commit, separate from the fixes below.
+- Apply migrations to the target Supabase project with `supabase db push`, or the project's usual flow.
+- Confirm the tables and the `v_product_catalog` view exist.
+
+### A2. New migration: `supabase/migrations/20261103000010_harden_catalog_and_upsert_rpc.sql`
+
+**Lock down the catalog tables.** Applies to `categories`, `products`, `product_variants`, `modifier_groups`, `modifiers`, `product_modifier_groups`, `store_product_overrides`, `city_price_rules`, `catalog_audit_logs`, `ingredients` and `product_recipes`.
+- `REVOKE INSERT, UPDATE, DELETE ON <table> FROM anon, authenticated;`
+- Drop the `"Admin full access" … USING (true)` policies from migration 09.
+- Keep the public read policies (`SELECT`) so the mobile menu still works.
+- Writes then happen only through the service role, which bypasses row-level security.
+
+**`fn_admin_upsert_product(p_id uuid, p_product jsonb, p_modifier_group_ids uuid[], p_store_ids uuid[], p_actor text) RETURNS uuid`**
+- `LANGUAGE plpgsql SECURITY INVOKER`, run with the service role, in a single transaction.
+- `p_id` NULL → INSERT. Otherwise UPDATE only the keys present in `p_product`, using `jsonb ? 'key'` checks.
+- `p_modifier_group_ids IS NOT NULL` → replace the rows in `product_modifier_groups`, setting `display_order` from the array position.
+- `p_store_ids IS NOT NULL` → upsert `store_product_overrides (is_available=true)` for the listed outlets, and set `is_available=false` for outlets not in the list.
+- Insert one row into `catalog_audit_logs`.
+- Recompute `readiness_checklist`.
+- Raise `unique_violation` on a duplicate SKU, so the service can map it to a 409.
+- `GRANT EXECUTE … TO service_role` only.
+
+**Fix `modifier_groups` lookups for a product.** The query filter must cover both direct groups and shared ones:
+
+```sql
+product_id = $1 OR id IN (SELECT modifier_group_id FROM product_modifier_groups WHERE product_id=$1)
+```
+
+Do this in the service (see A4); no SQL change is needed.
+
+**Summary counts across all products.** Add a view `v_product_catalog_counts`, or an RPC `fn_product_catalog_counts(p_search, p_category, p_channel)`, that returns `{all, active, draft, archived, hidden_in_store}` for the current filters.
+
+### A3. Zod schemas (`src/modules/catalog/schemas/catalog.zod.ts`)
+- Split each schema into a shape without defaults and a create schema that adds them:
+  - `ProductBaseSchema`: the same fields, with no `.default()`.
+  - `CreateProductSchema = ProductBaseSchema.extend({...defaults})`. Keep the current default values exactly.
+  - `UpdateProductSchema = ProductBaseSchema.partial().strict()`. Update must also accept `storeIds`.
+- Same pattern for categories (`CategoryBaseSchema`), modifier groups and modifiers.
+- Add `UpdateModifierGroupSchema` and `UpdateModifierSchema`. They're already defined; just wire them up.
+- Add `ProductVariantSchema` with `name`, `sku`, `priceDiffPaise`, `isDefault`, `isAvailable`, `displayOrder`.
+- `CatalogQuerySchema.status`: keep `DRAFT | ACTIVE | ARCHIVED | HIDDEN_IN_STORE | ALL`, and remove `OUT_OF_STOCK` from the admin side.
+
+### A4. Catalog service (`src/modules/catalog/catalog.service.ts`)
+
+**Supabase client.**
+- Use `this.supabase.adminClient` (service role) for all admin reads and writes.
+- Keep `this.supabase.client` for the public `home`, `menu` and `menu/products/:id` methods.
+- Add a `private get db()` helper so this choice lives in one place.
+
+**`createProduct` and `updateProduct`.**
+- Build the snake_case product JSON with one `toProductRow(input)` mapper that only includes keys present in the input.
+- Call `rpc('fn_admin_upsert_product', …)`.
+- Map Postgres error `23505` to `ConflictException('SKU already exists')`.
+- Return `getProductById(id)`.
+- Remove the separate insert, binding and override calls, and with them the ignored errors.
+
+**`getProductById`.** Return a camelCase `ProductDetailDto` built by a mapper `mapProductDetail(row)`:
+
+```ts
+{ id, name, slug, sku, categoryId, category:{id,name,slug,colorTheme,bgColorTheme},
+  shortDescription, longDescription, fulfillmentType, prepStation,
+  basePricePaise, basePriceRupees, taxRatePercent, hsnCode, isTaxInclusive,
+  channelCounter, channelKiosk, channelApp, channelQr,
+  isVegetarian, isVegan, containsDairy, containsNuts, containsGluten, isCaffeinated, caffeineMg,
+  status, isBestseller, isLabPilot, imageUrl, displayOrder,
+  scheduledPricePaise, scheduledPriceDate, readinessChecklist, metadata,
+  lastEditedByName, createdAt, updatedAt,
+  variants: [{id,name,sku,priceDiffPaise,isDefault,isAvailable,displayOrder}],
+  modifierGroups: [{id,name,groupType,minSelect,maxSelect,isRequired,displayOrder,customHint,
+                    modifiers:[{id,name,sku,pricePaise,isDefault,isAvailable,displayOrder}]}],
+  modifierGroupIds: string[],
+  storeIds: string[],                 // overrides where is_available = true
+  overrides: [{outletId,outletCode,outletName,city,overridePricePaise,isAvailable,autoHiddenReason,
+               channelCounter,channelKiosk,channelApp,channelQr,effectiveFrom,effectiveTo}],
+  margin }
+```
+
+**`getModifierGroups(productId?)`.**
+- Return camelCase `ModifierGroupDto[]` with nested `modifiers`, mapped the same way as above.
+- When `productId` is given, use the OR filter from A2.
+
+**`getProducts`.**
+- Use the counts RPC or view for `counts`.
+- Honour `outletId`, which the schema already accepts.
+
+**New service methods.**
+- `updateModifierGroup`, `deleteModifierGroup` (refuse if bound to a product → 409), `updateModifier`, `deleteModifier`.
+- Variants: `listVariants`, `createVariant`, `updateVariant`, `deleteVariant`. Only one `isDefault` per product; enforce it in the service.
+- `restoreProduct(id)`: ARCHIVED → DRAFT.
+
+**Image cleanup.** When `imageUrl` changes on update, inject `StorageService` and delete the previous object if it's in `bruvi-products` (parse the path from the public URL). This is best-effort and errors are logged.
+
+### A5. Catalog controller (`catalog.controller.ts`): new routes
+All new routes use the existing guards and roles: SUPER_ADMIN, ADMIN and HQ_OPS for writes.
+
+| Method | Path |
+|---|---|
+| PATCH | `/v1/admin/catalog/modifiers/groups/:id` |
+| DELETE | `/v1/admin/catalog/modifiers/groups/:id` |
+| PATCH | `/v1/admin/catalog/modifiers/items/:id` |
+| DELETE | `/v1/admin/catalog/modifiers/items/:id` |
+| GET | `/v1/admin/catalog/products/:id/variants` |
+| POST | `/v1/admin/catalog/products/:id/variants` |
+| PATCH | `/v1/admin/catalog/variants/:variantId` |
+| DELETE | `/v1/admin/catalog/variants/:variantId` |
+| POST | `/v1/admin/catalog/products/:id/restore` |
+
+- Add Swagger `@ApiOperation` and `@ApiResponse` on each route.
+- Actor for audit: `req.user?.email ?? req.user?.sub`. Also write `last_edited_by_id = req.user?.sub` through the RPC.
+
+### A6. Storage module (`src/modules/storage/`)
+- Controller: return the plain `UploadResult` instead of `{success, data}`, so the interceptor wraps it only once. Same for `getBuckets`.
+- `FileInterceptor('file', { limits: { fileSize: 10 * 1024 * 1024, files: 1 } })`.
+- Service:
+  - add an allow-list `ALLOWED_BUCKETS = ['bruvi-products','bruvi-stores','bruvi-banners']`;
+  - sanitize `folder` against `/^[a-z0-9/_-]{1,64}$/` and reject `..`;
+  - set `upsert: false`.
+- Add `isOwnPublicUrl(url)` and `pathFromPublicUrl(url)` helpers for the catalog's image cleanup. Export `StorageService` from `StorageModule`, then import `StorageModule` in `CatalogModule`.
+
+### A7. Prisma contract (low priority, keeps types honest)
+- In `src/prisma/contract.prisma`, add `@map` to `Ingredient` and `ProductRecipe`.
+- Add `HQ_OPS`, `SHIFT_LEAD` and `FINANCE` to `UserRole` if the DB check allows them; otherwise leave it and note the role gap.
+- The catalog doesn't use Prisma, so this isn't on the critical path.
+
+---
+
+## Part B — Admin (`bruvi_admin`)
+
+### B1. Types (`src/types/catalog.ts`)
+- `ProductStatus = "DRAFT" | "ACTIVE" | "ARCHIVED"`.
+  - "Hidden in N stores" is a derived display state from `hiddenStoresCount`, not a status.
+  - Update the status-pill logic in `catalog-product-table.tsx` to match.
+- Add these types, matching the backend DTOs in A4:
+  - `ProductDetail`
+  - `ProductVariant`
+  - `ModifierGroup` and `ModifierOption` (camelCase)
+  - `StoreOverride`
+  - `ProductCreatePayload`
+  - `ProductUpdatePayload = Partial<ProductCreatePayload>`
+  - `BulkActionPayload`, a discriminated union by `action`
+  - `UploadResult {url, thumbnailUrl, path, bucket, filename, originalName, mimeType, size}`
+- Status filter options: `ALL | ACTIVE | HIDDEN_IN_STORE | DRAFT | ARCHIVED`.
+
+### B2. API client (`src/lib/api/client.ts`)
+- Add `upload<T>(endpoint, formData: FormData)`.
+  - It uses the same auth, refresh-and-retry and timeout as JSON requests, but does **not** set `Content-Type`, so the browser adds the multipart boundary.
+  - Use a 60s timeout for uploads.
+- Refactor the request internals so `body` can be `FormData` and JSON headers are only added for JSON bodies. Don't duplicate the code.
+- The proxy already forwards the body as a blob with the original headers, so no change is needed in `route.ts`.
+
+### B3. API modules
+- `src/lib/api/catalog.ts`:
+  - Type every function with the B1 types.
+  - Remove the `any` payloads and the `res.data || res` fallbacks.
+  - Fix `bulkAction(payload: BulkActionPayload)`.
+  - Add `restoreProduct`, `getVariants`, `createVariant`, `updateVariant` and `deleteVariant`.
+  - `getModifierGroups` returns `ModifierGroup[]`.
+- New `src/lib/api/storage.ts` → `StorageApi.uploadImage(file, { bucket: "bruvi-products", folder: "products" })` and `StorageApi.deleteFile(bucket, path)`. Both go through `apiClient`.
+
+### B4. Image upload (`src/lib/catalog/upload-product-image.ts`)
+- Keep the client-side checks (JPG/PNG, ≤ 2 MB, square 1:1), so the UI stays exactly as it is now.
+- Replace the direct Supabase upload with `StorageApi.uploadImage(file, {bucket:"bruvi-products", folder:"products"})`.
+- Return `{ url, path }`.
+- `basics-section.tsx`:
+  - store `imageUrl`;
+  - keep a local `uploadedPathRef`, so that if the user removes or replaces the photo **before saving**, the admin calls `StorageApi.deleteFile`;
+  - after a save, cleanup happens on the backend (A4).
+- Remove `PRODUCT_IMAGE_BUCKET = "product-images"`. Check whether `src/lib/supabase/client.ts` is still used anywhere; if it isn't, leave it alone (auth may need it later).
+
+### B5. Form model (`src/lib/catalog/product-form.ts`)
+- Add `productDetailToForm(detail: ProductDetail): ProductFormState`. It maps `taxRatePercent` + `hsnCode` back to a `TAX_CLASSES` key, falling back to the closest match.
+- Split `buildCreatePayload` into two:
+  - `buildCreatePayload(form, {status, sku})`. Always send `storeIds` on publish; on a draft, send `storeIds` too, so the rollout choice is saved.
+  - `buildUpdatePayload(initial, form, {status?})`. It sends only the fields that changed, so a PATCH never touches untouched data.
+- Make `generateSku` run once per new product (keep it in state or a ref) instead of on every submit, so retrying a submit doesn't create a different SKU.
+- Set the short-description max to 80 to match the backend, or keep 60 in the UI and the backend stays more permissive. **Choice: keep 60**, since the UI is designed for it.
+
+### B6. Redux slice (`src/store/slices/catalog-slice.ts`)
+- Add `pending`, `fulfilled` and `rejected` reducers for `createProduct`, `updateProduct`, `archiveProduct` and `executeBulkAction` that set `isSubmitting` and `error`.
+- Type the `fetchProductById` result as `ProductDetail`. Add the `restoreProduct` thunk.
+- Remove the defensive `products || items` mapping and the `colorTheme` remap once the backend list shape is confirmed. Keep exactly one mapping: in `CatalogApi.getProducts`, not in the reducer.
+- After a create or update, refresh the list with the current filters (already done) and also set `selectedProduct`.
+
+### B7. Shared product editor component
+- Extract the body of `src/app/(dashboard)/catalog/new/page.tsx` into `src/components/catalog/product-editor/product-editor.tsx` with props `mode: "create" | "edit"` and `productId?: string`.
+- Create mode keeps the current behaviour exactly: localStorage draft autosave, the "Add another" success action, and publish validation.
+- Edit mode:
+  - Bootstrap: `fetchCatalogCategories`, `fetchStores`, `CatalogApi.getModifierGroups()` and `fetchProductById(id)` in parallel, then `productDetailToForm`, stored as both `initialRef` and `form`.
+  - No localStorage autosave.
+  - Header: "Edit product" with breadcrumb `Catalog / Products / {name}`.
+  - Action bar:
+    - Save → `updateProduct(id, buildUpdatePayload(...))`
+    - Publish/Unpublish → status `ACTIVE`/`DRAFT`
+    - Archive → `archiveProduct` (behind a confirm step)
+    - Restore if ARCHIVED
+  - 404 → show an empty state with a link back to `/catalog`.
+- Add a mode-aware label to `ActionBar` (`src/components/catalog/new-product/action-bar.tsx`): `primaryLabel`, plus an optional `onArchive`.
+- Make both nav tabs say "Modifiers": the new page's "Customisation" label vs. the list page's "Modifiers". Move the `NAV_TABS` constant into `catalog-page-header.tsx` and export it for both pages.
+
+### B8. Routes
+- `src/app/(dashboard)/catalog/new/page.tsx` → `<ProductEditor mode="create" />`
+- New `src/app/(dashboard)/catalog/[id]/page.tsx` → `<ProductEditor mode="edit" productId={id} />`, reading the id with `use(params)`, following `stores/[id]/page.tsx`.
+- `catalog-product-table.tsx`: the row click and the "Edit" action use `<Link href={`/catalog/${product.id}`} prefetch>`. Remove the `onEditProduct` prop.
+- `src/app/(dashboard)/catalog/page.tsx`: remove `ProductModal` and the `editingProduct` state.
+- Delete `src/components/catalog/product-modal.tsx`, and also the unused `catalog-header-bar.tsx`.
+
+### B9. Other admin fixes
+- `catalog-bulk-action-bar.tsx`: build a typed `BulkActionPayload` for each action.
+- `catalog-filter-bar.tsx`: status options from B1. The footer reads `counts`, which are now counted across all products.
+- `pricing-section.tsx`: show a "Loading modifiers…" or empty state when `modifierGroups` is empty, and use the camelCase `ModifierGroup` type. Remove `ModifierGroupRow` from `new-product/types.ts`.
+- Variants: the current UI has no variants section, and the plan doesn't invent new UI. Variants are returned by GET and exposed in `CatalogApi` for later use.
+
+---
+
+## Verification
+
+1. **Backend unit tests (Vitest)**, in `src/modules/catalog/catalog.service.spec.ts`:
+   - an `UpdateProductSchema` parse of `{name:"x"}` gives exactly `{name:"x"}` (guards against the defaults regression);
+   - `toProductRow` only includes keys that are present;
+   - `mapProductDetail` maps snake_case to camelCase.
+
+   Run `pnpm test` in `bruvi_backend`.
+2. **Database:**
+   - After `supabase db push`, the following must succeed with the service-role key:
+     ```sql
+     select fn_admin_upsert_product(null, '{"name":"T","sku":"T-1","category_id":"…","base_price_paise":10000}', '{}', '{}', 'test');
+     ```
+   - The same `insert into products` through PostgREST with the anon key must **fail**.
+3. **API smoke test with curl:** log in through `/v1/admin/auth/login`, then:
+   - `POST /v1/admin/storage/upload` (multipart). Expect the envelope wrapped only once, with a `bruvi-products/products/...` URL.
+   - `POST /v1/admin/catalog/products` with that `imageUrl`, `modifierGroupIds` and `storeIds`.
+   - `GET /products/:id`. Check every field, default value, modifier group, `storeIds` and override.
+   - `PATCH {name}`. Confirm the status, channels and modifier bindings are **unchanged**.
+   - `GET /products?status=DRAFT`. Check `counts`.
+4. **Admin build:** `pnpm type-check && pnpm lint` in `bruvi_admin`.
+5. **In the browser** (in-app browser, `pnpm dev` on port 3001):
+   - Products → New product → upload a square PNG (watch the network request to `/api/proxy/admin/storage/upload`) → fill every section → Publish.
+   - The success modal appears → "View products" → the row shows the photo, category, price, channels and Active status.
+   - Click the row → `/catalog/<id>` loads with every field prefilled (including modifier chips and the city toggles) → change only the price → Save.
+   - Reopen and confirm everything else is unchanged.
+   - Archive, then Restore.
+   - Check the Supabase table editor: rows exist in `products`, `product_modifier_groups`, `store_product_overrides` and `catalog_audit_logs`, and the object is in the `bruvi-products` bucket.
+
+## Order of work
+A1 → A2 → A3 → A4/A5/A6 (backend tests and curl) → B1 → B2/B3 → B4 → B5/B6 → B7/B8 → B9 → browser check.
+
+Commits:
+- backend: three commits — work in progress, hardening + RPC, API additions
+- admin: two commits — data layer, editor page

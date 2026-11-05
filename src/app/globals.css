@@ -5,8 +5,11 @@
   /* 1. TYPOGRAPHY SCALES (Mapped to Local Variable Fonts in public/fonts/)      */
   /* -------------------------------------------------------------------------- */
   --font-serif: var(--font-libre-caslon), "Libre Caslon Text", Georgia, serif;
+  --font-caslon: var(--font-libre-caslon), "Libre Caslon Text", Georgia, serif;
   --font-sans: var(--font-manrope), "Manrope", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-manrope: var(--font-manrope), "Manrope", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-display: var(--font-archivo), "Archivo", sans-serif;
+  --font-archivo: var(--font-archivo), "Archivo", sans-serif;
   --font-mono: "JetBrains Mono", "Fira Code", Menlo, Monaco, monospace;
 
   /* -------------------------------------------------------------------------- */
@@ -96,6 +99,13 @@
   --color-info: #22629e;
   --color-info-surface: #e4f0fa;
   --color-favorite: #c0352b;
+
+  /* Controls & Progress (Figma: color/control-off, color/track, category-lab) */
+  --color-diet-veg: #1f8a3b;
+  --color-control-off: #bcc6d3;
+  --color-track: rgba(15, 35, 64, 0.12);
+  --color-category-lab: #566f2c;
+  --color-category-lab-surface: #ebf1de;
 
   /* -------------------------------------------------------------------------- */
   /* 4. CORNER RADII                                                            */
@@ -341,6 +351,30 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
+/* Explicit Local Font Utility Enforcers */
+.font-display,
+.font-archivo {
+  font-family: var(--font-display);
+}
+
+.font-sans,
+.font-manrope {
+  font-family: var(--font-sans);
+}
+
+.font-serif,
+.font-caslon {
+  font-family: var(--font-serif);
+}
+
+/* Numerical Stats & Price Variable Variations (Archivo ExtraBold wdth: 112, wght: 800) */
+.font-metric {
+  font-family: var(--font-display);
+  font-variation-settings: "wdth" 112, "wght" 800;
+  font-feature-settings: "tnum" 1;
+  font-weight: 800;
+}
+
 /* Custom Subtle Scrollbar */
 .custom-scrollbar::-webkit-scrollbar {
   width: 4px;
@@ -354,4 +388,13 @@ body {
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.25);
+}
+
+/* Hide Scrollbar Utility */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }

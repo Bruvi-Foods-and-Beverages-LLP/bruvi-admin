@@ -12,7 +12,8 @@ const envSchema = z.object({
   NEXT_PUBLIC_SUPABASE_URL: z.string().url().default("https://cjqmnpiqhrxzuoaqzvxm.supabase.co"),
   NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1).default("sb_publishable_t7Wkay3rmk9cmon4T1W0fQ_C5QyWfUu"),
   BACKEND_API_URL: z.string().url().default("http://staging.bruvi.in/v1"),
-  INTERNAL_API_SECRET: z.string().default("development-internal-secret"),
+  // Server-only; not sent by the BFF today. No baked-in default: the backend ignores weak values anyway.
+  INTERNAL_API_SECRET: z.string().default(""),
   NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: z.string().default("AIzaSyBB0jvvnQ5YRme4JPOQQwruPFy7IPLCO2g"),
   NODE_ENV: z.enum(["development", "staging", "production", "test"]).default("development"),
 });

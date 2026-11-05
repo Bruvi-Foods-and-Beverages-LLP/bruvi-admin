@@ -29,6 +29,7 @@ export interface StoreMenuItem {
   statusLabel: string;
   statusTone: StoreMenuItemTone;
   imageUrl?: string | null;
+  thumbnailUrl?: string | null;
   displayOrder: number;
   metadata?: Record<string, unknown>;
   createdAt: string;
