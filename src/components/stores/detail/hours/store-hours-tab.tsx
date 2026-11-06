@@ -19,7 +19,7 @@ interface StoreHoursTabProps {
 
 export function StoreHoursTab({ store }: StoreHoursTabProps) {
   const dispatch = useAppDispatch();
-  const { currentStoreHours, isLoading, error } = useAppSelector(
+  const { currentStoreHours, isLoading, error, saveError } = useAppSelector(
     (state) => state.storeHours
   );
 
@@ -66,6 +66,20 @@ export function StoreHoursTab({ store }: StoreHoursTabProps) {
 
   return (
     <div className="flex flex-col gap-6 w-full">
+      {saveError && (
+        <div
+          role="alert"
+          className="flex items-center gap-2 rounded-[12px] border border-error/30 bg-error-surface px-4 py-3 text-body-s text-error"
+        >
+          <AlertCircle className="h-4 w-4 shrink-0" />
+          {saveError}
+        </div>
+      )}
+      {!currentStoreHours.isConfigured && (
+        <div className="rounded-[12px] border border-[#dce2ea] bg-[#fdf0d8] px-4 py-3 text-body-s text-[#9a5b00]">
+          No opening hours are saved for this store yet. Set the weekly hours below and save.
+        </div>
+      )}
       {/* 2-Column Layout (Figma Node 225:87687: 712px Left, 400px Right, gap: 24px) */}
       <div className="flex flex-col lg:flex-row gap-6 items-start w-full">
         {/* Left Column (Figma Node 225:87756: 712px) */}
@@ -77,7 +91,10 @@ export function StoreHoursTab({ store }: StoreHoursTabProps) {
           <ChannelHoursCard channelHours={currentStoreHours.channelHours} />
 
           {/* Special Dates & Holidays Card (Figma Node 225:87917: 712x220) */}
-          <SpecialDatesCard specialDates={currentStoreHours.specialDates} />
+          <SpecialDatesCard
+            specialDates={currentStoreHours.specialDates}
+            storeCode={store.code || store.id}
+          />
         </div>
 
         {/* Right Column (Figma Node 225:87940: 400px) */}

@@ -46,6 +46,7 @@ async function handler(
       headers,
       body: ["GET", "HEAD"].includes(request.method) ? undefined : await request.blob(),
       redirect: "manual",
+      cache: "no-store",
     });
 
     const responseHeaders = new Headers(backendResponse.headers);
@@ -55,6 +56,11 @@ async function handler(
     responseHeaders.delete("content-length");
     responseHeaders.delete("transfer-encoding");
     responseHeaders.delete("connection");
+
+    // Prevent aggressive downstream and client-side caching
+    responseHeaders.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0");
+    responseHeaders.set("Pragma", "no-cache");
+    responseHeaders.set("Expires", "0");
 
     return new NextResponse(backendResponse.body, {
       status: backendResponse.status,

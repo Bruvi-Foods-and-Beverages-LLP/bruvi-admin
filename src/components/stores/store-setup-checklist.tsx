@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { Check, Info } from "lucide-react";
 
 interface ChecklistItem {
@@ -14,65 +13,57 @@ interface ChecklistItem {
 
 interface StoreSetupChecklistProps {
   city?: string;
+  /** Short summary of the saved menu choice, or null when not set up yet */
+  menuSummary: string | null;
+  onSetupMenu: () => void;
+  /** Short summary of the saved opening hours, or null when not set up yet */
+  hoursSummary: string | null;
+  onSetupHours: () => void;
+  managerName?: string;
 }
 
-export function StoreSetupChecklist({ city }: StoreSetupChecklistProps) {
-  const [menuReady, setMenuReady] = React.useState(false);
-  const [hoursSet, setHoursSet] = React.useState(false);
-  const [devicesPaired, setDevicesPaired] = React.useState(false);
-  const [staffInvited, setStaffInvited] = React.useState(false);
-  const [paymentsConnected, setPaymentsConnected] = React.useState(false);
-
+export function StoreSetupChecklist({
+  city,
+  menuSummary,
+  onSetupMenu,
+  hoursSummary,
+  onSetupHours,
+  managerName,
+}: StoreSetupChecklistProps) {
   const items: ChecklistItem[] = [
     {
       id: "menu",
       title: "Menu",
-      description: menuReady
-        ? "Standard catalog template configured"
-        : "Initial menu template · Ready to customize",
-      completed: menuReady,
-      actionText: menuReady ? "Edit" : "Setup",
-      onAction: () => setMenuReady(!menuReady),
+      description: menuSummary ?? "Every catalogue category · Ready to customize",
+      completed: menuSummary !== null,
+      actionText: menuSummary !== null ? "Edit" : "Setup",
+      onAction: onSetupMenu,
     },
     {
       id: "hours",
       title: "Hours",
-      description: hoursSet
-        ? "Operating hours: 7:00 am – 11:00 pm"
-        : "Not set · suggest 7:00 am – 11:00 pm",
-      completed: hoursSet,
-      actionText: hoursSet ? "Edit" : "Set",
-      onAction: () => setHoursSet(!hoursSet),
+      description: hoursSummary ?? "Not set · suggest 7:00 am – 11:00 pm",
+      completed: hoursSummary !== null,
+      actionText: hoursSummary !== null ? "Edit" : "Set",
+      onAction: onSetupHours,
     },
     {
       id: "devices",
       title: "Devices",
-      description: devicesPaired
-        ? "4 paired · POS, KDS, kiosk, printers"
-        : "0 paired · POS, KDS, kiosk, printers",
-      completed: devicesPaired,
-      actionText: devicesPaired ? "Manage" : "Pair",
-      onAction: () => setDevicesPaired(!devicesPaired),
+      description: "Pair POS, KDS, kiosk and printers after the store is created",
+      completed: false,
     },
     {
       id: "staff",
       title: "Staff",
-      description: staffInvited
-        ? "Manager & barista roster configured"
-        : "No manager assigned",
-      completed: staffInvited,
-      actionText: staffInvited ? "View" : "Invite",
-      onAction: () => setStaffInvited(!staffInvited),
+      description: managerName ? `${managerName} (manager)` : "No manager assigned",
+      completed: !!managerName,
     },
     {
       id: "payments",
       title: "Payments",
-      description: paymentsConnected
-        ? "Razorpay sub-account · UPI terminal active"
-        : "Razorpay sub-account · UPI terminal",
-      completed: paymentsConnected,
-      actionText: paymentsConnected ? "Config" : "Connect",
-      onAction: () => setPaymentsConnected(!paymentsConnected),
+      description: "Razorpay sub-account · UPI terminal · not connected yet",
+      completed: false,
     },
   ];
 

@@ -23,7 +23,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           <Topbar />
 
           {/* Scrollable Page Body */}
-          <main className="flex-1 overflow-y-auto p-6 md:p-8">
+          <main className="flex-1 overflow-y-auto px-4 py-5 md:px-5 md:py-6">
             <RouteRbacGuard>{children}</RouteRbacGuard>
           </main>
         </div>

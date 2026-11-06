@@ -15,45 +15,17 @@ interface WeeklyHoursCardProps {
   weeklyHours: DayHours[];
 }
 
-const TIME_OPTIONS = [
-  "6:00 am",
-  "6:30 am",
-  "7:00 am",
-  "7:30 am",
-  "8:00 am",
-  "8:30 am",
-  "9:00 am",
-  "9:30 am",
-  "10:00 am",
-  "10:30 am",
-  "11:00 am",
-  "11:30 am",
-  "12:00 pm",
-  "12:30 pm",
-  "1:00 pm",
-  "1:30 pm",
-  "2:00 pm",
-  "2:30 pm",
-  "3:00 pm",
-  "3:30 pm",
-  "4:00 pm",
-  "4:30 pm",
-  "5:00 pm",
-  "5:30 pm",
-  "6:00 pm",
-  "6:30 pm",
-  "7:00 pm",
-  "7:30 pm",
-  "8:00 pm",
-  "8:30 pm",
-  "9:00 pm",
-  "9:30 pm",
-  "10:00 pm",
-  "10:30 pm",
-  "11:00 pm",
-  "11:30 pm",
-  "12:00 am",
-];
+/** Every half hour of the day, "12:00 am" … "11:30 pm". */
+const TIME_OPTIONS: string[] = Array.from({ length: 48 }, (_, i) => {
+  const h24 = Math.floor(i / 2);
+  const h12 = h24 % 12 === 0 ? 12 : h24 % 12;
+  return `${h12}:${i % 2 === 0 ? "00" : "30"} ${h24 >= 12 ? "pm" : "am"}`;
+});
+
+/** The list plus the stored value when it sits off the half-hour grid (e.g. 6:45 am). */
+function optionsWith(value: string): string[] {
+  return TIME_OPTIONS.includes(value) ? TIME_OPTIONS : [value, ...TIME_OPTIONS];
+}
 
 export function WeeklyHoursCard({ weeklyHours }: WeeklyHoursCardProps) {
   const dispatch = useAppDispatch();
@@ -153,7 +125,7 @@ export function WeeklyHoursCard({ weeklyHours }: WeeklyHoursCardProps) {
                   }
                   className="w-full bg-transparent font-sans font-normal text-[14px] leading-[20px] text-[#0f2340] focus:outline-none cursor-pointer appearance-none pr-4"
                 >
-                  {TIME_OPTIONS.map((time) => (
+                  {optionsWith(day.opens).map((time) => (
                     <option key={time} value={time}>
                       {time}
                     </option>
@@ -184,7 +156,7 @@ export function WeeklyHoursCard({ weeklyHours }: WeeklyHoursCardProps) {
                   }
                   className="w-full bg-transparent font-sans font-normal text-[14px] leading-[20px] text-[#0f2340] focus:outline-none cursor-pointer appearance-none pr-4"
                 >
-                  {TIME_OPTIONS.map((time) => (
+                  {optionsWith(day.closes).map((time) => (
                     <option key={time} value={time}>
                       {time}
                     </option>

@@ -3,13 +3,14 @@
 import * as React from "react";
 import { SpecialDateItem } from "@/types/store-hours";
 import { useAppDispatch } from "@/store";
-import { setAddSpecialDateModalOpen } from "@/store/slices/store-hours-slice";
+import { setAddSpecialDateModalOpen, removeSpecialDate } from "@/store/slices/store-hours-slice";
 
 interface SpecialDatesCardProps {
   specialDates: SpecialDateItem[];
+  storeCode: string;
 }
 
-export function SpecialDatesCard({ specialDates }: SpecialDatesCardProps) {
+export function SpecialDatesCard({ specialDates, storeCode }: SpecialDatesCardProps) {
   const dispatch = useAppDispatch();
 
   return (
@@ -37,6 +38,11 @@ export function SpecialDatesCard({ specialDates }: SpecialDatesCardProps) {
 
       {/* Special Date Rows (Figma Node 225:87924: 710x72 each, padding: 1px 20px 0px 20px, gap: 16px, border-b: #dce2ea) */}
       <div className="divide-y divide-[#dce2ea]">
+        {specialDates.length === 0 && (
+          <p className="px-5 py-6 font-sans font-medium text-[14px] leading-[20px] text-[#55647a]">
+            No special dates yet. Add a holiday or one-off change.
+          </p>
+        )}
         {specialDates.map((item) => (
           <div
             key={item.id}
@@ -76,16 +82,30 @@ export function SpecialDatesCard({ specialDates }: SpecialDatesCardProps) {
             </div>
 
             {/* Right: Hours Override (Manrope Regular 14px / 20px) */}
-            <div className="shrink-0 text-right">
+            <div className="shrink-0 flex items-center gap-3 text-right">
               {item.isShortDay ? (
                 <span className="font-sans font-normal text-[14px] leading-[20px] text-[#9a5b00]">
                   {item.hours}
                 </span>
               ) : (
-                <span className="font-sans font-normal text-[14px] leading-[20px] text-[#0f2340]">
+                <span
+                  className={`font-sans font-normal text-[14px] leading-[20px] ${
+                    item.isClosed ? "italic text-[#7f8ca0]" : "text-[#0f2340]"
+                  }`}
+                >
                   {item.hours}
                 </span>
               )}
+              <button
+                type="button"
+                aria-label={`Remove ${item.title}`}
+                onClick={() =>
+                  dispatch(removeSpecialDate({ storeIdOrCode: storeCode, specialDateId: item.id }))
+                }
+                className="font-sans font-bold text-[12px] leading-[16px] text-[#7f8ca0] hover:text-[#b3261e] transition-colors cursor-pointer"
+              >
+                Remove
+              </button>
             </div>
           </div>
         ))}

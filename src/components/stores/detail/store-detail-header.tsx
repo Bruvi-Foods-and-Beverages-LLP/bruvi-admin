@@ -93,7 +93,7 @@ export function StoreDetailHeader({
 
           {/* Meta Line (Figma Node I225:169460;225:169452) */}
           <p className="text-body-s text-text-muted">
-            {store.code} · {store.type} · {store.city} · Manager {store.manager} · Open {store.hours}
+            {store.code} · {store.type} · {store.city} · Manager {store.manager || "not assigned"} · Open {store.hours}
           </p>
         </div>
 

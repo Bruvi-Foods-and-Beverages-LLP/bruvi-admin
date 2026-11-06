@@ -19,22 +19,17 @@ interface StoreMenuFilterBarProps {
 export function StoreMenuFilterBar({
   searchQuery,
   onSearchChange,
+  categories,
   selectedCategory,
   onSelectCategory,
   unavailableCount,
   filterUnavailableOnly,
   onToggleFilterUnavailable,
 }: StoreMenuFilterBarProps) {
-  // Built-in categories if none provided
-  const categoryChips: { id: string; label: string }[] = [
-    { id: "all", label: "All · 42" },
-    { id: "vietnamese", label: "Vietnamese" },
-    { id: "matcha", label: "Matcha" },
-    { id: "specialty", label: "Specialty" },
-    { id: "bites", label: "Bites" },
-    { id: "lab", label: "LAB" },
-    { id: "addons", label: "Add-ons" },
-  ];
+  const categoryChips: { id: string; label: string }[] = categories.map((c) => ({
+    id: c.id,
+    label: c.id === "all" ? `All · ${c.count}` : c.name,
+  }));
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-2 p-4 sm:px-5 py-4 border-b border-border bg-surface">

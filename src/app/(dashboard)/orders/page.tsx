@@ -20,16 +20,22 @@ export default function OrdersPage() {
   React.useEffect(() => {
     dispatch(fetchOrders());
 
-    // Auto-refresh simulation every 10 seconds (as annotated in Figma 225:101312)
-    const interval = setInterval(() => {
-      dispatch(fetchOrders());
-    }, 10000);
+    // Near-live refresh: customer actions (e.g. "I've picked it up") show up within
+    // seconds. Skipped while the tab is hidden and refreshed as soon as it is visible.
+    const refresh = () => {
+      if (document.visibilityState === "visible") dispatch(fetchOrders());
+    };
+    const interval = setInterval(refresh, 3000);
+    document.addEventListener("visibilitychange", refresh);
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener("visibilitychange", refresh);
+    };
   }, [dispatch]);
 
   return (
-    <div className="flex flex-col gap-6 w-full max-w-[1136px] mx-auto pb-12">
+    <div className="flex flex-col gap-6 w-full max-w-[1136px] mx-auto pb-10">
       {/* 1. Header Bar with Overline, Title, 41 Live Badge, Export & Delayed Filter (Figma 225:101132) */}
       <OrdersPageHeader />
 

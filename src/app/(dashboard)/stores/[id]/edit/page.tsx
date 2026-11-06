@@ -26,12 +26,11 @@ import {
 import { StoreDetailSkeleton } from "@/components/stores/detail/store-detail-skeleton";
 import { useAppDispatch, useAppSelector } from "@/store";
 import {
-  fetchStoreOverview,
+  fetchStoreForEdit,
   updateStoreThunk,
   deleteStoreThunk,
-  StoreEntity,
 } from "@/store/slices/stores-slice";
-import { fetchCities, addCityLocally } from "@/store/slices/cities-slice";
+import { fetchCities, createCityThunk } from "@/store/slices/cities-slice";
 import { ParsedAddress } from "@/types/maps";
 import { Check, ChevronDown, Plus, AlertCircle, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
@@ -50,16 +49,17 @@ export default function EditStorePage({ params }: EditStorePageProps) {
   const actionStatus = useActionStatusModal();
 
   // Redux state
-  const overview = useAppSelector((state) => state.stores.currentStoreOverview);
-  const isOverviewLoading = useAppSelector((state) => state.stores.isOverviewLoading);
+  const store = useAppSelector((state) => state.stores.editStore);
+  const isStoreLoading = useAppSelector((state) => state.stores.isEditLoading);
+  const loadError = useAppSelector((state) => state.stores.editError);
   const citiesFromRedux = useAppSelector((state) => state.cities.cities);
 
   // Form State
-  const [store, setStore] = React.useState<StoreEntity | null>(null);
   const [storeName, setStoreName] = React.useState("");
   const [storeCode, setStoreCode] = React.useState("");
   const [format, setFormat] = React.useState<"Flagship" | "Express" | "Kiosk" | "">("Flagship");
   const [city, setCity] = React.useState("");
+  const [cityId, setCityId] = React.useState<string | undefined>(undefined);
   const [isCityDropdownOpen, setIsCityDropdownOpen] = React.useState(false);
   const [isAddCityModalOpen, setIsAddCityModalOpen] = React.useState(false);
   const [isLocationPickerOpen, setIsLocationPickerOpen] = React.useState(false);
@@ -68,14 +68,13 @@ export default function EditStorePage({ params }: EditStorePageProps) {
   const [latitude, setLatitude] = React.useState<number | null>(null);
   const [longitude, setLongitude] = React.useState<number | null>(null);
   const [postalCode, setPostalCode] = React.useState("");
-  const [stateName, setStateName] = React.useState("Karnataka");
+  const [stateName, setStateName] = React.useState("");
   const [geofenceRadius, setGeofenceRadius] = React.useState(50);
   const [phone, setPhone] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [manager, setManager] = React.useState("");
   const [gstin, setGstin] = React.useState("");
   const [fssai, setFssai] = React.useState("");
-  const [openDate, setOpenDate] = React.useState("");
   const [publicProfile, setPublicProfile] = React.useState<StorePublicProfile>(() =>
     storePublicProfileFromMetadata(undefined)
   );
@@ -90,35 +89,34 @@ export default function EditStorePage({ params }: EditStorePageProps) {
   const markTouched = (field: string) => setTouched((p) => ({ ...p, [field]: true }));
   const [prevStoreId, setPrevStoreId] = React.useState<string | undefined>(undefined);
 
-  // Load store overview and cities on mount
+  // Load the store record and the city list on mount
   React.useEffect(() => {
     if (storeId) {
-      dispatch(fetchStoreOverview(storeId));
+      dispatch(fetchStoreForEdit(storeId));
       dispatch(fetchCities());
     }
   }, [dispatch, storeId]);
 
-  // Sync form state when store overview arrives
-  if (overview?.store && overview.store.id !== prevStoreId) {
-    setPrevStoreId(overview.store.id);
-    const s = overview.store;
-    setStore(s);
+  // Fill the form once, when this store's record arrives
+  if (store && store.id !== prevStoreId) {
+    setPrevStoreId(store.id);
+    const s = store;
     setStoreName(s.name || "");
     setStoreCode(s.code || "");
     setFormat(s.type === "Flagship" || s.type === "Express" || s.type === "Kiosk" ? s.type : "Flagship");
     setCity(s.city || s.cityName || "");
+    setCityId(s.cityId || undefined);
     setAddress(s.addressLine1 || "");
-    setLatitude(s.latitude ?? 12.9784);
-    setLongitude(s.longitude ?? 77.6408);
+    setLatitude(s.latitude ?? null);
+    setLongitude(s.longitude ?? null);
     setPostalCode(s.postalCode || "");
-    setStateName(s.state || "Karnataka");
+    setStateName(s.state || "");
     setGeofenceRadius(s.geofenceRadiusMeters || 50);
     setPhone(s.phone || "");
     setEmail(s.email || "");
     setManager(s.manager || "");
     setGstin(s.gstin || "");
-    setFssai(s.fssaiLicenceNo || "11223344556677");
-    setOpenDate(s.openDate || "");
+    setFssai(s.fssaiLicenceNo || "");
     setPublicProfile(storePublicProfileFromMetadata(s.metadata));
   }
 
@@ -143,26 +141,41 @@ export default function EditStorePage({ params }: EditStorePageProps) {
     if (parsed.city && !city) setCity(parsed.city);
   };
 
-  // Add City callback
+  // Add City callback: saves the city to the network before using it
   const handleAddCity = async (newCity: CityMetadata) => {
-    dispatch(
-      addCityLocally({
-        id: `city-${Date.now()}`,
+    setIsAddCityModalOpen(false);
+    const res = await dispatch(
+      createCityThunk({
         name: newCity.name,
         code: newCity.code || newCity.name.slice(0, 3).toUpperCase(),
         state: newCity.state,
+        country: newCity.country || "IN",
+        timezone: newCity.timezone || "Asia/Kolkata",
         latitude: newCity.latitude,
         longitude: newCity.longitude,
-        isActive: true,
+        defaultGeofenceRadiusMeters: newCity.defaultGeofenceRadiusMeters,
       })
     );
-    setCity(newCity.name);
-    if (newCity.latitude && newCity.longitude) {
-      setLatitude(newCity.latitude);
-      setLongitude(newCity.longitude);
+    if (!createCityThunk.fulfilled.match(res)) {
+      const reason = res.payload as { message?: string } | string | undefined;
+      actionStatus.showError({
+        title: "Could not add city",
+        description:
+          (typeof reason === "string" ? reason : reason?.message) ||
+          "The city was not saved. Please try again.",
+        primaryActionLabel: "Dismiss",
+        onPrimaryAction: actionStatus.closeModal,
+      });
+      return;
     }
-    if (newCity.state) setStateName(newCity.state);
-    setIsAddCityModalOpen(false);
+    const created = res.payload;
+    setCity(created.name);
+    setCityId(created.id);
+    if (created.latitude != null && created.longitude != null) {
+      setLatitude(created.latitude);
+      setLongitude(created.longitude);
+    }
+    if (created.state) setStateName(created.state);
   };
 
   // Validations
@@ -176,6 +189,9 @@ export default function EditStorePage({ params }: EditStorePageProps) {
   const isGstinValid = !gstin || /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/i.test(gstin.trim());
   const isFssaiValid = !fssai || /^\d{14}$/.test(fssai.trim());
 
+  const postalChanged = postalCode.trim() !== (store?.postalCode ?? "");
+  const isPostalValid = !postalChanged || /^\d{6}$/.test(postalCode.trim());
+
   const attentionFields: string[] = [];
   if (!isNameValid) attentionFields.push("Store name");
   if (!isCodeValid) attentionFields.push("Store code");
@@ -186,6 +202,7 @@ export default function EditStorePage({ params }: EditStorePageProps) {
   if (!isEmailValid) attentionFields.push("Email");
   if (!isGstinValid) attentionFields.push("GSTIN");
   if (!isFssaiValid) attentionFields.push("FSSAI");
+  if (!isPostalValid) attentionFields.push("Postal code (6 digits)");
 
   // Save changes handler
   const handleSaveChanges = async () => {
@@ -201,32 +218,53 @@ export default function EditStorePage({ params }: EditStorePageProps) {
       return;
     }
 
+    // Send only what changed, so a save never rewrites untouched fields
+    const payload: Record<string, unknown> = {};
+    const current = store;
+    const diff = (key: string, next: unknown, prev: unknown) => {
+      if (next !== prev) payload[key] = next;
+    };
+    const sameCoord = (a: number | null, b?: number) =>
+      a !== null && b !== undefined && Math.abs(a - b) < 1e-7;
+    if (current) {
+      diff("name", storeName.trim(), current.name);
+      diff("code", storeCode.trim().toUpperCase(), current.code);
+      diff("format", format, current.type);
+      diff("city", city.trim(), current.city);
+      if (cityId && cityId !== current.cityId) payload.cityId = cityId;
+      diff("addressLine1", address.trim(), current.addressLine1 ?? "");
+      if (latitude !== null && !sameCoord(latitude, current.latitude)) payload.latitude = latitude;
+      if (longitude !== null && !sameCoord(longitude, current.longitude)) payload.longitude = longitude;
+      diff("geofenceRadiusMeters", geofenceRadius, current.geofenceRadiusMeters ?? 50);
+      if (postalChanged && postalCode.trim()) payload.postalCode = postalCode.trim();
+      if (stateName && stateName !== current.state) payload.state = stateName;
+      diff("phone", phone.trim(), current.phone ?? "");
+      diff("email", email.trim(), current.email ?? "");
+      diff("managerName", manager.trim(), current.manager ?? "");
+      diff("gstin", gstin.trim(), current.gstin ?? "");
+      if (fssai.trim() && fssai.trim() !== (current.fssaiLicenceNo ?? "")) {
+        payload.fssaiLicenceNo = fssai.trim();
+      }
+      const nextMeta = storePublicProfileToMetadata(publicProfile);
+      const prevMeta = storePublicProfileToMetadata(storePublicProfileFromMetadata(current.metadata));
+      // Merged into the existing outlets.metadata by the API
+      if (JSON.stringify(nextMeta) !== JSON.stringify(prevMeta)) payload.metadata = nextMeta;
+    }
+
+    if (Object.keys(payload).length === 0) {
+      actionStatus.showSuccess({
+        title: "No changes to save",
+        description: "Everything is already up to date.",
+        autoDismissMs: 1500,
+      });
+      return;
+    }
+
     setIsSubmitting(true);
     actionStatus.showLoading(
       "Saving store changes...",
       "Updating store configuration, geofence, and contact details across Bruvi services."
     );
-
-    const payload = {
-      name: storeName.trim(),
-      code: storeCode.trim().toUpperCase(),
-      format,
-      city: city.trim(),
-      addressLine1: address.trim(),
-      latitude: latitude ?? undefined,
-      longitude: longitude ?? undefined,
-      geofenceRadiusMeters: geofenceRadius,
-      postalCode: postalCode.trim() || undefined,
-      state: stateName,
-      phone: phone.trim(),
-      email: email.trim(),
-      managerName: manager.trim() || undefined,
-      gstin: gstin.trim() || undefined,
-      fssaiLicenceNo: fssai.trim() || undefined,
-      openDate: openDate || undefined,
-      // Merged into the existing outlets.metadata by the API
-      metadata: storePublicProfileToMetadata(publicProfile),
-    };
 
     try {
       const resultAction = await dispatch(
@@ -236,7 +274,7 @@ export default function EditStorePage({ params }: EditStorePageProps) {
       if (updateStoreThunk.fulfilled.match(resultAction)) {
         actionStatus.showSuccess({
           title: "Store changes saved successfully!",
-          description: `Store "${payload.name}" (${payload.code}) has been updated.`,
+          description: `Store "${storeName.trim()}" (${storeCode.trim().toUpperCase()}) has been updated.`,
           autoDismissMs: 1800,
           primaryActionLabel: "View Store",
           onPrimaryAction: () => {
@@ -291,21 +329,11 @@ export default function EditStorePage({ params }: EditStorePageProps) {
       const res = await dispatch(
         updateStoreThunk({
           id: store.id,
-          payload: { status: newStatus, isOpen: newStatus === "OPEN" },
+          payload: { status: newStatus },
         })
       );
 
       if (updateStoreThunk.fulfilled.match(res)) {
-        setStore((prev) =>
-          prev
-            ? {
-                ...prev,
-                status: newStatus === "OPEN" ? "Open" : "Closed",
-                isOpen: newStatus === "OPEN",
-              }
-            : null
-        );
-
         actionStatus.showSuccess({
           title: `Store ${newStatus === "CLOSED" ? "closed" : "reopened"} successfully`,
           description: `Store visibility and channels have been updated.`,
@@ -368,11 +396,30 @@ export default function EditStorePage({ params }: EditStorePageProps) {
     }
   };
 
-  if (isOverviewLoading && !store) {
+  if (isStoreLoading && !store) {
     return <StoreDetailSkeleton />;
   }
 
-  const lastEditedDateFormatted = "18 Sep";
+  if (!store) {
+    return (
+      <div className="flex flex-col gap-3 max-w-[1136px] w-full py-12 items-start">
+        <h1 className="text-display-s text-text tracking-tight">Store not found</h1>
+        <p className="text-body-s text-text-muted">
+          {loadError || "This store could not be loaded."}
+        </p>
+        <Link
+          href="/stores"
+          className="flex h-9 px-4 items-center justify-center rounded-[12px] border-[1.5px] border-border-input bg-surface text-label text-text hover:bg-gray-50 transition-all font-bold"
+        >
+          Back to stores
+        </Link>
+      </div>
+    );
+  }
+
+  const lastEditedDateFormatted = store.updatedAt
+    ? new Date(store.updatedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short" })
+    : null;
 
   return (
     <div className="flex flex-col gap-6 max-w-[1136px] w-full pb-12">
@@ -406,7 +453,7 @@ export default function EditStorePage({ params }: EditStorePageProps) {
 
           {/* Subtitle Meta (Figma Node 225:87365) */}
           <p className="text-body-s text-text-muted">
-            {store?.name || storeName || "BRUVI Store"} · {store?.code || storeCode || "CODE"} · last edited {lastEditedDateFormatted} by Kavya R.
+            {store?.name || storeName || "BRUVI Store"} · {store?.code || storeCode || "CODE"} · {lastEditedDateFormatted ? `last edited ${lastEditedDateFormatted}` : "not edited yet"}
           </p>
         </div>
 
@@ -533,6 +580,7 @@ export default function EditStorePage({ params }: EditStorePageProps) {
                           type="button"
                           onClick={() => {
                             setCity(c.name);
+                            setCityId(c.id);
                             if (c.latitude && c.longitude) {
                               setLatitude(c.latitude);
                               setLongitude(c.longitude);
@@ -766,14 +814,7 @@ export default function EditStorePage({ params }: EditStorePageProps) {
         {/* Right Sidebar Area (400px - Store at a glance + Danger zone) */}
         <div className="w-full lg:w-[400px] shrink-0 flex flex-col gap-5">
           {/* 1. Store at a glance (Figma Node 225:87480) */}
-          {store && (
-            <StoreAtAGlanceCard
-              store={store}
-              devicesCount={9}
-              attentionCount={store.status === "Busy mode" ? 1 : 0}
-              staffCount={14}
-            />
-          )}
+          <StoreAtAGlanceCard store={store} />
 
           {/* 2. Danger zone (Figma Node 225:87495) */}
           {store && (
@@ -801,8 +842,8 @@ export default function EditStorePage({ params }: EditStorePageProps) {
         isOpen={isLocationPickerOpen}
         onClose={() => setIsLocationPickerOpen(false)}
         onConfirm={handleLocationPicked}
-        initialLatitude={latitude ?? 12.9784}
-        initialLongitude={longitude ?? 77.6408}
+        initialLatitude={latitude ?? store.latitude ?? 20.5937}
+        initialLongitude={longitude ?? store.longitude ?? 78.9629}
         initialAddress={address}
         initialRadius={geofenceRadius}
         cityName={city}

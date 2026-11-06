@@ -127,24 +127,51 @@
 }
 
 /* -------------------------------------------------------------------------- */
+/* FLUID HIGH-DENSITY ENTERPRISE ROOT SCALING                                 */
+/* -------------------------------------------------------------------------- */
+:root {
+  /* Default base font size configured to match 110% scale at 100% browser zoom.
+     Matches Figma 1440px desktop design visual density perfectly at standard 100% zoom. */
+  font-size: 15.5px;
+}
+
+@media (min-width: 1440px) {
+  :root {
+    font-size: 16px;
+  }
+}
+
+@media (min-width: 1680px) {
+  :root {
+    font-size: 16.5px;
+  }
+}
+
+@media (max-height: 650px) {
+  :root {
+    font-size: 14.5px;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
 /* 6. TYPOGRAPHY TOKEN UTILITIES (Parity with Mobile & Figma Foundations)     */
 /* -------------------------------------------------------------------------- */
 
 /* Display Sizes: Archivo Variable Font (wdth: 125, wght: 900) */
 .text-display-l {
   font-family: var(--font-display);
-  font-size: 56px;
-  line-height: 58px;
-  letter-spacing: -1.68px;
+  font-size: 3.5rem;
+  line-height: 3.625rem;
+  letter-spacing: -0.105rem;
   font-variation-settings: "wdth" 125, "wght" 900;
   font-weight: 900;
 }
 
 .text-display-m {
   font-family: var(--font-display);
-  font-size: 40px;
-  line-height: 44px;
-  letter-spacing: -1.2px;
+  font-size: 2.5rem;
+  line-height: 2.75rem;
+  letter-spacing: -0.075rem;
   font-variation-settings: "wdth" 125, "wght" 900;
   font-weight: 900;
 }
@@ -152,27 +179,27 @@
 /* Display S: Used for Page Titles (e.g. "Stores" 32px, wdth: 125, wght: 900) */
 .text-display-s {
   font-family: var(--font-display);
-  font-size: 32px;
-  line-height: 38px;
-  letter-spacing: -0.96px;
+  font-size: 2rem;
+  line-height: 2.375rem;
+  letter-spacing: -0.06rem;
   font-variation-settings: "wdth" 125, "wght" 900;
   font-weight: 900;
 }
 
 .text-order-number {
   font-family: var(--font-display);
-  font-size: 80px;
+  font-size: 5rem;
   line-height: 1;
-  letter-spacing: -2.4px;
+  letter-spacing: -0.15rem;
   font-variation-settings: "wdth" 125, "wght" 900;
   font-weight: 900;
 }
 
 .text-kiosk-hero {
   font-family: var(--font-display);
-  font-size: 120px;
+  font-size: 7.5rem;
   line-height: 1;
-  letter-spacing: -3.6px;
+  letter-spacing: -0.225rem;
   font-variation-settings: "wdth" 125, "wght" 900;
   font-weight: 900;
 }
@@ -180,9 +207,9 @@
 /* Price Figures: Archivo Variable Font (wdth: 112, wght: 800, Tabular Figures) */
 .text-price-l {
   font-family: var(--font-display);
-  font-size: 32px;
-  line-height: 38px;
-  letter-spacing: -0.96px;
+  font-size: 2rem;
+  line-height: 2.375rem;
+  letter-spacing: -0.06rem;
   font-variation-settings: "wdth" 112, "wght" 800;
   font-feature-settings: "tnum" 1;
   font-weight: 800;
@@ -190,9 +217,9 @@
 
 .text-price-m {
   font-family: var(--font-display);
-  font-size: 24px;
-  line-height: 32px;
-  letter-spacing: -0.72px;
+  font-size: 1.5rem;
+  line-height: 2rem;
+  letter-spacing: -0.045rem;
   font-variation-settings: "wdth" 112, "wght" 800;
   font-feature-settings: "tnum" 1;
   font-weight: 800;
@@ -200,9 +227,9 @@
 
 .text-price-s {
   font-family: var(--font-display);
-  font-size: 16px;
-  line-height: 24px;
-  letter-spacing: -0.48px;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  letter-spacing: -0.03rem;
   font-variation-settings: "wdth" 112, "wght" 800;
   font-feature-settings: "tnum" 1;
   font-weight: 800;
@@ -210,9 +237,9 @@
 
 .text-price-xs {
   font-family: var(--font-display);
-  font-size: 14px;
-  line-height: 20px;
-  letter-spacing: -0.42px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  letter-spacing: -0.026rem;
   font-variation-settings: "wdth" 112, "wght" 800;
   font-feature-settings: "tnum" 1;
   font-weight: 800;
@@ -220,9 +247,9 @@
 
 .text-price-button {
   font-family: var(--font-display);
-  font-size: 18px;
-  line-height: 24px;
-  letter-spacing: -0.84px;
+  font-size: 1.125rem;
+  line-height: 1.5rem;
+  letter-spacing: -0.0525rem;
   font-variation-settings: "wdth" 100, "wght" 800;
   font-feature-settings: "tnum" 1;
   font-weight: 800;
@@ -231,108 +258,108 @@
 /* Overline & Editorial: Libre Caslon Text */
 .text-overline-l {
   font-family: var(--font-serif);
-  font-size: 12px;
-  line-height: 16px;
-  letter-spacing: 1.68px;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  letter-spacing: 0.105rem;
   font-weight: 400;
   text-transform: uppercase;
 }
 
 .text-overline {
   font-family: var(--font-serif);
-  font-size: 11px;
-  line-height: 14px;
-  letter-spacing: 1.54px;
+  font-size: 0.6875rem;
+  line-height: 0.875rem;
+  letter-spacing: 0.096rem;
   font-weight: 400;
   text-transform: uppercase;
 }
 
 .text-tagline {
   font-family: var(--font-serif);
-  font-size: 14px;
-  line-height: 20px;
-  letter-spacing: 1.96px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  letter-spacing: 0.1225rem;
   font-weight: 400;
 }
 
 /* Headings & Content: Manrope Variable Font */
 .text-heading-l {
   font-family: var(--font-sans);
-  font-size: 32px;
-  line-height: 38px;
-  letter-spacing: -0.48px;
+  font-size: 2rem;
+  line-height: 2.375rem;
+  letter-spacing: -0.03rem;
   font-weight: 800;
 }
 
 .text-heading-m {
   font-family: var(--font-sans);
-  font-size: 24px;
-  line-height: 32px;
-  letter-spacing: -0.36px;
+  font-size: 1.5rem;
+  line-height: 2rem;
+  letter-spacing: -0.0225rem;
   font-weight: 800;
 }
 
 .text-heading-s {
   font-family: var(--font-sans);
-  font-size: 20px;
-  line-height: 28px;
-  letter-spacing: -0.3px;
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  letter-spacing: -0.01875rem;
   font-weight: 700;
 }
 
 .text-title {
   font-family: var(--font-sans);
-  font-size: 18px;
-  line-height: 26px;
+  font-size: 1.125rem;
+  line-height: 1.625rem;
   font-weight: 700;
 }
 
 .text-body {
   font-family: var(--font-sans);
-  font-size: 16px;
-  line-height: 24px;
+  font-size: 1rem;
+  line-height: 1.5rem;
   font-weight: 400;
 }
 
 .text-body-s {
   font-family: var(--font-sans);
-  font-size: 14px;
-  line-height: 20px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
   font-weight: 400;
 }
 
 .text-label {
   font-family: var(--font-sans);
-  font-size: 14px;
-  line-height: 20px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
   font-weight: 700;
 }
 
 .text-label-semi {
   font-family: var(--font-sans);
-  font-size: 14px;
-  line-height: 20px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
   font-weight: 600;
 }
 
 .text-label-button {
   font-family: var(--font-sans);
-  font-size: 16px;
-  line-height: 20px;
+  font-size: 1rem;
+  line-height: 1.25rem;
   font-weight: 700;
 }
 
 .text-caption {
   font-family: var(--font-sans);
-  font-size: 12px;
-  line-height: 16px;
+  font-size: 0.75rem;
+  line-height: 1rem;
   font-weight: 500;
 }
 
 .text-caption-bold {
   font-family: var(--font-sans);
-  font-size: 12px;
-  line-height: 16px;
+  font-size: 0.75rem;
+  line-height: 1rem;
   font-weight: 700;
 }
 

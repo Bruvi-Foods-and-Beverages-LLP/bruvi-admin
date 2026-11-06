@@ -25,7 +25,7 @@ export interface ChannelHoursItem {
   typeLabel: string;
   badge?: string | null;
   timeRange: string;
-  cutoffMinutesBeforeClose?: number;
+  cutoffMinutesBeforeClose: number;
 }
 
 export interface SpecialDateItem {
@@ -38,6 +38,7 @@ export interface SpecialDateItem {
   hours: string;
   isShortDay: boolean;
   isNormalHours: boolean;
+  isClosed: boolean;
 }
 
 export interface CustomerPreview {
@@ -58,14 +59,14 @@ export interface StoreHoursEntity {
   timezone: string;
   timezoneLabel: string;
   currentTimeFormatted: string;
+  isConfigured: boolean;
   customerPreview: CustomerPreview;
   updatedAt: string;
 }
 
 export interface UpdateStoreHoursPayload {
   weeklyHours?: DayHours[];
-  channelHours?: ChannelHoursItem[];
-  specialDates?: SpecialDateItem[];
+  channelHours?: Pick<ChannelHoursItem, "channelId" | "cutoffMinutesBeforeClose">[];
   timezone?: string;
   timezoneLabel?: string;
 }
@@ -74,14 +75,13 @@ export interface CopyHoursPayload {
   targetStoreCodes: string[];
 }
 
+export type SpecialDateMode = "CLOSED" | "CUSTOM" | "NORMAL";
+
 export interface AddSpecialDatePayload {
-  month: string;
-  day: number;
   date: string;
   title: string;
-  subtitle: string;
-  hours: string;
-  isShortDay?: boolean;
-  isNormalHours?: boolean;
+  mode: SpecialDateMode;
+  opens?: string;
+  closes?: string;
+  note?: string;
 }
-

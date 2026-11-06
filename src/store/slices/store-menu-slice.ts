@@ -4,6 +4,7 @@ import {
   StoreMenuItem,
   UpdateStoreMenuItemPayload,
   BulkStoreMenuPayload,
+  UpdateStoreMenuCategoryPayload,
 } from "@/types/store-menu";
 
 interface StoreMenuState {
@@ -15,6 +16,7 @@ interface StoreMenuState {
   filterUnavailableOnly: boolean;
   selectedItemIds: string[];
   isSubmitting: boolean;
+  categoryError: string | null;
   pushStatus: {
     success: boolean;
     message: string;
@@ -29,8 +31,9 @@ const initialState: StoreMenuState = {
   searchQuery: "",
   selectedCategory: "all",
   filterUnavailableOnly: false,
-  selectedItemIds: ["SP-VBXU", "AD-VANS"], // Pre-select the 2 unavailable items as shown in Figma design
+  selectedItemIds: [],
   isSubmitting: false,
+  categoryError: null,
   pushStatus: null,
 };
 
@@ -83,6 +86,37 @@ export const updateStoreMenuItem = createAsyncThunk(
   }
 );
 
+export const updateStoreMenuCategory = createAsyncThunk(
+  "storeMenu/updateStoreMenuCategory",
+  async (
+    {
+      storeId,
+      categoryId,
+      payload,
+    }: { storeId: string; categoryId: string; payload: UpdateStoreMenuCategoryPayload },
+    { rejectWithValue }
+  ) => {
+    try {
+      const res = await fetch(
+        `/api/proxy/stores/${encodeURIComponent(storeId)}/menu-categories/${encodeURIComponent(categoryId)}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }
+      );
+      if (!res.ok) {
+        const errJson = await res.json().catch(() => ({}));
+        return rejectWithValue(errJson.message || "Failed to update category");
+      }
+      const json = await res.json();
+      return (json.data || json) as StoreMenuFeed;
+    } catch (err) {
+      return rejectWithValue(err instanceof Error ? err.message : "Unable to update category");
+    }
+  }
+);
+
 export const bulkUpdateStoreMenu = createAsyncThunk(
   "storeMenu/bulkUpdateStoreMenu",
   async (
@@ -125,7 +159,7 @@ export const pushStoreMenuToDevices = createAsyncThunk(
         return rejectWithValue(errJson.message || "Failed to push menu to devices");
       }
       const json = await res.json();
-      return (json.data || json) as { success: boolean; pushedToDevices: number; timestamp: string };
+      return (json.data || json) as { queued: boolean; reason: string };
     } catch (err) {
       return rejectWithValue(err instanceof Error ? err.message : "Unable to push menu to devices");
     }
@@ -161,6 +195,9 @@ const storeMenuSlice = createSlice({
     clearSelection(state) {
       state.selectedItemIds = [];
     },
+    clearCategoryError(state) {
+      state.categoryError = null;
+    },
     dismissPushStatus(state) {
       state.pushStatus = null;
     },
@@ -168,9 +205,15 @@ const storeMenuSlice = createSlice({
   extraReducers: (builder) => {
     // fetchStoreMenu
     builder
-      .addCase(fetchStoreMenu.pending, (state) => {
+      .addCase(fetchStoreMenu.pending, (state, action) => {
         state.isLoading = true;
         state.error = null;
+        const cur = state.currentStoreMenu?.store;
+        if (cur && cur.id !== action.meta.arg && cur.code !== action.meta.arg) {
+          state.currentStoreMenu = null;
+          state.selectedItemIds = [];
+          state.selectedCategory = "all";
+        }
       })
       .addCase(fetchStoreMenu.fulfilled, (state, action) => {
         state.isLoading = false;
@@ -195,6 +238,21 @@ const storeMenuSlice = createSlice({
         state.currentStoreMenu.unavailableCount = state.currentStoreMenu.items.filter(
           (i) => i.status !== "AVAILABLE"
         ).length;
+      });
+
+    // updateStoreMenuCategory: the server returns the whole feed with fresh counts and labels
+    builder
+      .addCase(updateStoreMenuCategory.pending, (state) => {
+        state.isSubmitting = true;
+        state.categoryError = null;
+      })
+      .addCase(updateStoreMenuCategory.fulfilled, (state, action) => {
+        state.isSubmitting = false;
+        state.currentStoreMenu = action.payload;
+      })
+      .addCase(updateStoreMenuCategory.rejected, (state, action) => {
+        state.isSubmitting = false;
+        state.categoryError = (action.payload as string) || "Failed to update category";
       });
 
     // bulkUpdateStoreMenu
@@ -226,10 +284,11 @@ const storeMenuSlice = createSlice({
       })
       .addCase(pushStoreMenuToDevices.fulfilled, (state, action) => {
         state.isSubmitting = false;
+        const { queued, reason } = action.payload;
         state.pushStatus = {
-          success: true,
-          message: `Successfully pushed menu update to ${action.payload.pushedToDevices} store devices.`,
-          timestamp: action.payload.timestamp,
+          success: queued,
+          message: queued ? "Menu update queued for store devices." : reason || "Device sync is not available yet.",
+          timestamp: new Date().toISOString(),
         };
       })
       .addCase(pushStoreMenuToDevices.rejected, (state, action) => {
@@ -251,6 +310,7 @@ export const {
   selectAllItems,
   clearSelection,
   dismissPushStatus,
+  clearCategoryError,
 } = storeMenuSlice.actions;
 
 export default storeMenuSlice.reducer;

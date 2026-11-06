@@ -8,6 +8,20 @@ import {
   addSpecialDate,
 } from "@/store/slices/store-hours-slice";
 
+const TIME_OPTIONS: string[] = Array.from({ length: 48 }, (_, i) => {
+  const h24 = Math.floor(i / 2);
+  const h12 = h24 % 12 === 0 ? 12 : h24 % 12;
+  return `${h12}:${i % 2 === 0 ? "00" : "30"} ${h24 >= 12 ? "pm" : "am"}`;
+});
+
+function todayIso(offsetDays = 0): string {
+  const d = new Date();
+  d.setDate(d.getDate() + offsetDays);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
+const tomorrowIso = () => todayIso(1);
+
 interface AddSpecialDateModalProps {
   currentStoreCode: string;
 }
@@ -21,11 +35,13 @@ export function AddSpecialDateModal({
   );
 
   const [title, setTitle] = React.useState("");
-  const [date, setDate] = React.useState("2026-11-14");
-  const [type, setType] = React.useState<"short" | "normal">("short");
-  const [hours, setHours] = React.useState("8:00 am – 6:00 pm");
-  const [subtitle, setSubtitle] = React.useState("Special holiday hours");
+  const [date, setDate] = React.useState(tomorrowIso);
+  const [type, setType] = React.useState<"short" | "normal" | "closed">("short");
+  const [opens, setOpens] = React.useState("8:00 am");
+  const [closes, setCloses] = React.useState("6:00 pm");
+  const [subtitle, setSubtitle] = React.useState("");
   const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [formError, setFormError] = React.useState<string | null>(null);
 
   if (!isOpen) return null;
 
@@ -35,31 +51,30 @@ export function AddSpecialDateModal({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title || !date) return;
-
-    const parsedDate = new Date(date);
-    const month = parsedDate.toLocaleString("en-US", { month: "short" });
-    const day = parsedDate.getDate();
-
+    if (!title.trim() || !date) return;
+    if (type === "short" && opens === closes) {
+      setFormError("Opening and closing time cannot be the same.");
+      return;
+    }
+    setFormError(null);
     setIsSubmitting(true);
     try {
       await dispatch(
         addSpecialDate({
           storeIdOrCode: currentStoreCode,
           payload: {
-            month,
-            day,
             date,
-            title,
-            subtitle,
-            hours: type === "normal" ? "Normal hours" : hours,
-            isShortDay: type === "short",
-            isNormalHours: type === "normal",
+            title: title.trim(),
+            mode: type === "closed" ? "CLOSED" : type === "normal" ? "NORMAL" : "CUSTOM",
+            ...(type === "short" ? { opens, closes } : {}),
+            ...(subtitle.trim() ? { note: subtitle.trim() } : {}),
           },
         })
       ).unwrap();
-    } catch {
-      // Handled by redux
+      setTitle("");
+      setSubtitle("");
+    } catch (err) {
+      setFormError(typeof err === "string" ? err : "Could not add the special date.");
     } finally {
       setIsSubmitting(false);
     }
@@ -113,6 +128,7 @@ export function AddSpecialDateModal({
             <input
               type="date"
               required
+              min={todayIso()}
               value={date}
               onChange={(e) => setDate(e.target.value)}
               className="w-full h-10 rounded-[10px] border border-[#bcc6d3] bg-surface px-3 font-sans text-[14px] font-medium text-[#0f2340] focus:outline-none focus:ring-2 focus:ring-[#1c3a66]/20 shadow-2xs"
@@ -123,7 +139,7 @@ export function AddSpecialDateModal({
             <label className="block font-sans text-[13px] font-bold text-[#0f2340] mb-1.5">
               Operating Schedule
             </label>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-3 gap-2">
               <button
                 type="button"
                 onClick={() => setType("short")}
@@ -133,7 +149,7 @@ export function AddSpecialDateModal({
                     : "bg-surface border-[#dce2ea] text-[#0f2340] hover:bg-gray-50"
                 }`}
               >
-                Custom / Short day
+                Short day
               </button>
               <button
                 type="button"
@@ -146,36 +162,64 @@ export function AddSpecialDateModal({
               >
                 Normal hours
               </button>
+              <button
+                type="button"
+                onClick={() => setType("closed")}
+                className={`h-9 rounded-[10px] border font-sans text-[13px] font-bold transition-all cursor-pointer ${
+                  type === "closed"
+                    ? "bg-[#1c3a66] text-white border-[#1c3a66]"
+                    : "bg-surface border-[#dce2ea] text-[#0f2340] hover:bg-gray-50"
+                }`}
+              >
+                Closed
+              </button>
             </div>
           </div>
 
           {type === "short" && (
-            <div>
-              <label className="block font-sans text-[13px] font-bold text-[#0f2340] mb-1.5">
-                Special Hours
-              </label>
-              <input
-                type="text"
-                value={hours}
-                onChange={(e) => setHours(e.target.value)}
-                placeholder="e.g. 8:00 am – 6:00 pm"
-                className="w-full h-10 rounded-[10px] border border-[#bcc6d3] bg-surface px-3 font-sans text-[14px] font-medium text-[#0f2340] focus:outline-none focus:ring-2 focus:ring-[#1c3a66]/20 shadow-2xs"
-              />
+            <div className="grid grid-cols-2 gap-3">
+              {([
+                ["Opens", opens, setOpens],
+                ["Closes", closes, setCloses],
+              ] as const).map(([label, value, setValue]) => (
+                <div key={label}>
+                  <label className="block font-sans text-[13px] font-bold text-[#0f2340] mb-1.5">
+                    {label}
+                  </label>
+                  <select
+                    value={value}
+                    onChange={(e) => setValue(e.target.value)}
+                    className="w-full h-10 rounded-[10px] border border-[#bcc6d3] bg-surface px-3 font-sans text-[14px] font-medium text-[#0f2340] focus:outline-none focus:ring-2 focus:ring-[#1c3a66]/20 shadow-2xs cursor-pointer"
+                  >
+                    {TIME_OPTIONS.map((t) => (
+                      <option key={t} value={t}>
+                        {t}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              ))}
             </div>
           )}
 
           <div>
             <label className="block font-sans text-[13px] font-bold text-[#0f2340] mb-1.5">
-              Subtitle / Channel Note
+              Note (optional)
             </label>
             <input
               type="text"
               value={subtitle}
               onChange={(e) => setSubtitle(e.target.value)}
-              placeholder="e.g. Tue · short day · app & delivery follow"
+              placeholder="e.g. App and delivery follow"
               className="w-full h-10 rounded-[10px] border border-[#bcc6d3] bg-surface px-3 font-sans text-[14px] font-medium text-[#0f2340] focus:outline-none focus:ring-2 focus:ring-[#1c3a66]/20 shadow-2xs"
             />
           </div>
+
+          {formError && (
+            <p role="alert" className="font-sans text-[13px] font-medium text-error">
+              {formError}
+            </p>
+          )}
 
           {/* Action Buttons */}
           <div className="flex items-center justify-end gap-3 pt-3 border-t border-[#dce2ea] mt-2">

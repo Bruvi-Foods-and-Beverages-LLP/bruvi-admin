@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { fetchOrderById } from "@/store/slices/orders-slice";
 import { OrderStatusBadge } from "@/components/orders/order-status-badge";
@@ -11,8 +12,39 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 
+import { OrdersApi } from "@/lib/api/orders";
+import type { BackendOrderDetail, NextAction } from "@/features/orders/types";
+
 interface PageProps {
   params: Promise<{ id: string }>;
+}
+
+const PRODUCT_IMAGE_FALLBACKS: Record<string, string> = {
+  "salted cream": "/images/menu/figma_salted_cream.png",
+  "salted cream cold brew": "/images/menu/figma_salted_cream.png",
+  "ca phe sua da": "/images/menu/ca_phe_sua_da.jpg",
+  "cà phê sữa đá": "/images/menu/ca_phe_sua_da.jpg",
+  "bac xiu": "/images/menu/bac_xiu.jpg",
+  "bạc xỉu": "/images/menu/bac_xiu.jpg",
+  "coconut coffee": "/images/menu/coconut_coffee.png",
+  "egg coffee": "/images/menu/egg_coffee.png",
+  "matcha latte": "/images/menu/matcha_latte.jpg",
+  "phin den": "/images/menu/phin_den.png",
+  "phin đen": "/images/menu/phin_den.png",
+  "banh mi": "/images/menu/banh_mi_paneer.png",
+  "bánh mì": "/images/menu/banh_mi_paneer.png",
+  "vanilla": "/images/menu/vanilla_bac_xiu.png",
+};
+
+function getProductImage(item: { productName?: string; image?: string; imageUrl?: string }): string | null {
+  if (item.image) return item.image;
+  if (item.imageUrl) return item.imageUrl;
+
+  const lower = (item.productName || "").toLowerCase().trim();
+  for (const [key, path] of Object.entries(PRODUCT_IMAGE_FALLBACKS)) {
+    if (lower.includes(key)) return path;
+  }
+  return "/images/menu/figma_salted_cream.png";
 }
 
 export default function OrderDetailPage({ params }: PageProps) {
@@ -21,11 +53,58 @@ export default function OrderDetailPage({ params }: PageProps) {
 
   const dispatch = useAppDispatch();
   const { selectedOrder, isLoading, error } = useAppSelector((state) => state.orders);
+  const [backendDetail, setBackendDetail] = React.useState<BackendOrderDetail | null>(null);
   const [isCancelModalOpen, setIsCancelModalOpen] = React.useState(false);
+
+  const loadDetail = React.useCallback(async () => {
+    try {
+      const raw = await OrdersApi.getOrderDetailRaw(orderId);
+      setBackendDetail(raw);
+    } catch {}
+  }, [orderId]);
 
   React.useEffect(() => {
     dispatch(fetchOrderById(orderId));
-  }, [dispatch, orderId]);
+    loadDetail();
+  }, [dispatch, orderId, loadDetail]);
+
+  const handleTransition = async (action: NextAction) => {
+    if (action.action === "CANCEL") {
+      setIsCancelModalOpen(true);
+      return;
+    }
+
+    try {
+      await OrdersApi.transitionStatus(selectedOrder?.id || orderId, action.targetStatus, backendDetail?.version);
+      await loadDetail();
+      dispatch(fetchOrderById(orderId));
+    } catch (err: any) {
+      if (err?.statusCode === 409) {
+        alert("Order status was modified concurrently. Refetching latest status.");
+        await loadDetail();
+        dispatch(fetchOrderById(orderId));
+      } else {
+        alert(err.message || "Failed to update order status");
+      }
+    }
+  };
+
+  const handleContact = () => {
+    if (selectedOrder?.customerPhone) {
+      window.location.href = `tel:${selectedOrder.customerPhone.replace(/[^0-9+]/g, "")}`;
+    } else {
+      alert(`Customer phone number not available for order ${selectedOrder?.orderNumber}`);
+    }
+  };
+
+  const handleResendReceipt = async () => {
+    try {
+      await OrdersApi.resendReceipt(selectedOrder?.id || orderId);
+      alert(`Receipt resent for order ${selectedOrder?.orderNumber}.`);
+    } catch (err: any) {
+      alert(err.message || "Failed to resend receipt");
+    }
+  };
 
   if (isLoading && !selectedOrder) {
     return (
@@ -71,16 +150,26 @@ export default function OrderDetailPage({ params }: PageProps) {
   }
 
   const order = selectedOrder;
-  const profile = order.customerProfile || {
-    initials: order.customerName.charAt(0).toUpperCase(),
-    name: order.customerName,
-    phone: order.customerPhone || "+91 ••••• 83435 · since Mar 2025",
-    memberSince: "Mar 2025",
-    tier: "Gold" as const,
-    points: "1,240",
-    totalOrders: 38,
-    lifetimeSpend: "₹14,860",
-    note: "Usually orders Salted Cream Large with oat milk · no complaints on file",
+
+  const rawPhone = backendDetail?.customer?.phone || order.customerPhone || "";
+  const phoneDigits = rawPhone.replace(/[^0-9]/g, "");
+  const last5 = phoneDigits.length >= 5 ? phoneDigits.slice(-5) : phoneDigits || "83435";
+  const memberSince = backendDetail?.customer?.memberSince || order.customerProfile?.memberSince || "Nov 2026";
+  const maskedPhone = `+91 ••••• ${last5} · since ${memberSince}`;
+
+  const profile = {
+    initials:
+      backendDetail?.customer?.initials ||
+      order.customerProfile?.initials ||
+      (order.customerName || "V").slice(0, 2).toUpperCase(),
+    name: backendDetail?.customer?.name || order.customerProfile?.name || order.customerName || "Valued Customer",
+    phone: maskedPhone,
+    memberSince,
+    tier: (backendDetail?.customer?.tier as any) || order.customerProfile?.tier || ("Gold" as const),
+    points: backendDetail?.customer?.points || order.customerProfile?.points || "1,240",
+    totalOrders: backendDetail?.customer?.totalOrders || order.customerProfile?.totalOrders || 1,
+    lifetimeSpend: backendDetail?.customer?.lifetimeSpend || order.customerProfile?.lifetimeSpend || `₹${order.totalAmount}`,
+    note: backendDetail?.customer?.note || order.customerProfile?.note || `Usually orders ${order.items?.[0]?.productName || "Cold Brew"} · no complaints on file`,
   };
 
   const timelineEvents = order.timeline || [
@@ -99,11 +188,11 @@ export default function OrderDetailPage({ params }: PageProps) {
   };
 
   return (
-    <div className="flex flex-col gap-6 w-full max-w-[1136px] mx-auto pb-12">
+    <div className="flex flex-col gap-6 w-full max-w-[1200px] mx-auto px-8 py-6 pb-12">
       {/* 1. Header Bar (Figma 225:101514) */}
       <div className="w-full flex flex-col md:flex-row items-start md:items-end justify-between gap-4">
         {/* Left: Breadcrumbs & Title */}
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1 min-w-0">
           <div className="flex items-center gap-1.5 text-body-s text-text-secondary">
             <Link href="/orders" className="hover:text-[#0f2340] transition-colors">
               Orders
@@ -112,24 +201,57 @@ export default function OrderDetailPage({ params }: PageProps) {
             <span>{order.orderNumber}</span>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex items-center gap-3 flex-wrap">
             <h1 className="text-display-s font-display font-black text-[#0f2340] tracking-[-1.2px]">
               {order.orderNumber}
             </h1>
             <OrderStatusBadge status={order.status} />
-            <span className="text-body-s text-text-secondary">
-              {order.channel} · {order.storeName} · {order.customerName} · placed {order.time} am
+            <span className="text-body-s text-text-secondary whitespace-nowrap">
+              {order.channel} · {order.storeName} · {order.customerName} · placed {order.time.replace(/\s*(am|pm)\s*(am|pm)/i, ' $1')}
             </span>
           </div>
         </div>
 
         {/* Right: Actions Bar (Figma 225:101522) */}
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center gap-2 shrink-0 flex-nowrap overflow-x-auto max-w-full pb-1 md:pb-0">
+          {/* Dynamic Next Actions driven by backend state machine */}
+          {backendDetail?.nextActions && backendDetail.nextActions.length > 0 ? (
+            backendDetail.nextActions.map((action) => (
+              <button
+                key={action.action}
+                type="button"
+                onClick={() => handleTransition(action)}
+                className={cn(
+                  "h-9 px-3.5 rounded-[12px] text-label font-bold transition-colors cursor-pointer shadow-2xs whitespace-nowrap flex items-center justify-center",
+                  action.variant === "primary"
+                    ? "bg-[#1c3a66] hover:bg-[#0f2340] active:bg-[#091628] text-white"
+                    : action.variant === "danger"
+                    ? "bg-white border-[1.5px] border-[#bcc6d3] text-[#c0352b] hover:bg-[#fce8e6]/40"
+                    : "bg-white border-[1.5px] border-[#bcc6d3] text-[#0f2340] hover:bg-[#f5f7fa]"
+                )}
+              >
+                {action.label}
+              </button>
+            ))
+          ) : (
+            <>
+              {order.status !== "Cancelled" && (
+                <button
+                  type="button"
+                  onClick={() => setIsCancelModalOpen(true)}
+                  className="h-9 px-3.5 rounded-[12px] bg-white border-[1.5px] border-[#bcc6d3] text-label font-bold text-[#c0352b] hover:bg-[#fce8e6]/40 transition-colors cursor-pointer shadow-2xs whitespace-nowrap"
+                >
+                  Cancel order
+                </button>
+              )}
+            </>
+          )}
+
           {/* Contact */}
           <button
             type="button"
-            onClick={() => alert(`Calling customer ${order.customerName}...`)}
-            className="h-9 px-[17.5px] rounded-[12px] bg-white border-[1.5px] border-[#bcc6d3] text-label text-[#0f2340] hover:bg-[#f5f7fa] active:bg-[#ebeff4] transition-colors cursor-pointer shadow-2xs"
+            onClick={handleContact}
+            className="h-9 px-3.5 rounded-[12px] bg-white border-[1.5px] border-[#bcc6d3] text-label font-bold text-[#0f2340] hover:bg-[#f5f7fa] active:bg-[#ebeff4] transition-colors cursor-pointer shadow-2xs whitespace-nowrap"
           >
             Contact
           </button>
@@ -137,27 +259,16 @@ export default function OrderDetailPage({ params }: PageProps) {
           {/* Resend receipt */}
           <button
             type="button"
-            onClick={() => alert(`Receipt resent for order ${order.orderNumber}.`)}
-            className="h-9 px-[17.5px] rounded-[12px] bg-white border-[1.5px] border-[#bcc6d3] text-label text-[#0f2340] hover:bg-[#f5f7fa] active:bg-[#ebeff4] transition-colors cursor-pointer shadow-2xs"
+            onClick={handleResendReceipt}
+            className="h-9 px-3.5 rounded-[12px] bg-white border-[1.5px] border-[#bcc6d3] text-label font-bold text-[#0f2340] hover:bg-[#f5f7fa] active:bg-[#ebeff4] transition-colors cursor-pointer shadow-2xs whitespace-nowrap"
           >
             Resend receipt
           </button>
 
-          {/* Cancel order */}
-          {order.status !== "Cancelled" && (
-            <button
-              type="button"
-              onClick={() => setIsCancelModalOpen(true)}
-              className="h-9 px-[17.5px] rounded-[12px] bg-white border-[1.5px] border-[#bcc6d3] text-label text-[#c0352b] hover:bg-[#fce8e6]/40 transition-colors cursor-pointer shadow-2xs"
-            >
-              Cancel order
-            </button>
-          )}
-
           {/* Refund */}
           <Link
             href={`/orders/${order.orderNumber}/refund`}
-            className="h-9 px-4 rounded-[12px] bg-[#1c3a66] hover:bg-[#0f2340] active:bg-[#091628] text-label text-white transition-colors cursor-pointer shadow-2xs flex items-center justify-center"
+            className="h-9 px-4 rounded-[12px] bg-[#1c3a66] hover:bg-[#0f2340] active:bg-[#091628] text-label font-bold text-white transition-colors cursor-pointer shadow-2xs whitespace-nowrap flex items-center justify-center"
           >
             Refund
           </Link>
@@ -182,45 +293,65 @@ export default function OrderDetailPage({ params }: PageProps) {
 
             {/* Items List */}
             <div className="flex flex-col divide-y divide-[#dce2ea]">
-              {order.items.map((item, idx) => (
-                <div key={item.id || idx} className="px-5 py-4 flex items-start gap-4">
-                  {/* Thumbnail Badge (56x56) */}
-                  <div className="w-14 h-14 rounded-[12px] bg-[#f5f7fa] border border-[#dce2ea] flex items-center justify-center shrink-0 text-[#6b4430]">
-                    {idx % 2 === 0 ? <PhinIcon size={24} /> : <CoffeeIcon size={24} />}
-                  </div>
+              {order.items.map((item, idx) => {
+                const imgSrc = getProductImage(item);
+                return (
+                  <div key={item.id || idx} className="px-5 py-4 flex items-center gap-4">
+                    {/* Thumbnail Badge (56x56) */}
+                    <div className="w-14 h-14 rounded-[12px] bg-[#f7f2e8] border border-[#dce2ea] overflow-hidden relative shrink-0 flex items-center justify-center">
+                      {imgSrc ? (
+                        <Image
+                          src={imgSrc}
+                          alt={item.productName}
+                          fill
+                          sizes="56px"
+                          className="object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-[#6b4430]">
+                          {idx % 2 === 0 ? <PhinIcon size={24} /> : <CoffeeIcon size={24} />}
+                        </div>
+                      )}
+                    </div>
 
-                  {/* Middle Column */}
-                  <div className="flex-1 flex flex-col gap-1 min-w-0">
-                    <span className="text-[16px] leading-6 font-bold text-[#0f2340]">
-                      {item.quantity}× {item.productName}
-                    </span>
+                    {/* Middle Column */}
+                    <div className="flex-1 flex flex-col gap-1 min-w-0">
+                      <span className="text-[16px] leading-6 font-bold text-[#0f2340]">
+                        {item.quantity}× {item.productName}
+                      </span>
 
-                    {/* Modifiers row */}
-                    {item.modifiers && item.modifiers.length > 0 && (
-                      <div className="flex flex-wrap gap-1 mt-0.5">
-                        {item.modifiers.map((mod, mi) => (
-                          <div
-                            key={mi}
-                            className="h-6 px-2 rounded-[12px] bg-[#f5f7fa] border border-[#dce2ea] text-caption-bold text-[#3f4b5e] flex items-center whitespace-nowrap"
-                          >
-                            <span>{mod}</span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
+                      {/* Modifiers row */}
+                      {item.modifiers && item.modifiers.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-0.5">
+                          {item.modifiers.map((mod, mi) => (
+                            <div
+                              key={mi}
+                              className="h-6 px-2 rounded-[4px] bg-[#f5f7fa] border border-[#dce2ea] text-caption-bold text-[#55647a] flex items-center whitespace-nowrap"
+                            >
+                              <span>{mod}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                      {item.instructions && (
+                        <span className="text-[12px] leading-4 font-medium text-text-secondary">
+                          Note: “{item.instructions}”
+                        </span>
+                      )}
+                    </div>
 
-                  {/* Price Column */}
-                  <div className="text-right shrink-0 flex flex-col items-end">
-                    <span className="text-price-s font-display font-extrabold text-[#0f2340] tnum">
-                      ₹{item.totalPrice}
-                    </span>
-                    <span className="text-caption text-text-secondary">
-                      ₹{item.unitPrice} each
-                    </span>
+                    {/* Price Column */}
+                    <div className="text-right shrink-0 flex flex-col items-end">
+                      <span className="text-price-s font-display font-extrabold text-[#0f2340] tnum">
+                        ₹{item.totalPrice}
+                      </span>
+                      <span className="text-caption text-text-secondary">
+                        ₹{item.unitPrice} each
+                      </span>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             {/* Totals Summary Block (Figma 225:101569, bg #f5f7fa) */}
@@ -313,7 +444,7 @@ export default function OrderDetailPage({ params }: PageProps) {
             </div>
 
             {/* Customer Note Box */}
-            <div className="p-3 rounded-[12px] bg-[#f5f7fa] border border-[#dce2ea] flex items-center gap-2">
+            <div className="p-3 rounded-[16px] bg-[#f5f7fa] border border-[#dce2ea] flex items-center gap-2">
               <span className="text-body-s text-text-secondary">Customer note:</span>
               <span className="text-body-s font-bold text-[#0f2340]">
                 {order.customerNote || "“Please write Saisubbireddy on the cups”"}
@@ -427,7 +558,7 @@ export default function OrderDetailPage({ params }: PageProps) {
             </div>
 
             {/* SLA Alert Box (Figma 225:101659, bg #fdf0d8) */}
-            <div className="mt-2 p-3 rounded-[12px] bg-[#fdf0d8] border border-[#f0dfbe] flex flex-col gap-2">
+            <div className="mt-2 p-3 rounded-[16px] bg-[#fdf0d8] border border-[#f0dfbe] flex flex-col gap-2">
               <div className="flex items-center justify-between text-caption-bold text-[#9a5b00]">
                 <span>{slaInfo.elapsedText}</span>
                 <span>{slaInfo.busyModeText}</span>

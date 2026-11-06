@@ -6,34 +6,15 @@ import { setTab, fetchOrders } from "@/store/slices/orders-slice";
 import { Download } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 
+import { OrdersApi } from "@/lib/api/orders";
+
 export function OrdersPageHeader() {
   const dispatch = useAppDispatch();
   const { counts, updatedAt, filters } = useAppSelector((state) => state.orders);
 
   const handleExport = () => {
-    // Generate CSV export of current filtered orders
-    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-    const blob = new Blob(
-      [
-        "Order,Time,Store,Channel,Customer,Items,Total,Payment,Status,Make\n" +
-          "C-218,9:38,Indiranagar,Counter,Saisubbireddy,3,725,UPI,Preparing,—\n" +
-          "C-216,9:38,Indiranagar,Counter,Walk-in,2,420,UPI,Cancelled,—\n" +
-          "K112,9:36,Indiranagar,Kiosk K1,Guest,3,756,UPI,Ready,4:48\n" +
-          "A-112,9:35,Bandra,App,Ishaan Kapoor,2,540,Card,Preparing,—\n" +
-          "C-094,9:33,Cyber Hub,Counter,Walk-in,1,270,Cash,Delayed,9:12\n" +
-          "A-047,9:31,Indiranagar,App,Saisubbireddy,3,966,UPI,Preparing,—\n" +
-          "K058,9:30,Koramangala,Kiosk K1,Guest,2,470,UPI,Completed,4:21\n" +
-          "Q-31,9:28,Indiranagar,QR dine-in,Table 4,4,977,UPI,Delayed 14m,14:00\n" +
-          "C-205,9:08,Indiranagar,Counter,Guest,2,420,UPI,Part refund,3:55\n",
-      ],
-      { type: "text/csv;charset=utf-8;" }
-    );
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `bruvi-orders-${timestamp}.csv`;
-    link.click();
-    URL.revokeObjectURL(url);
+    const exportUrl = OrdersApi.getExportUrl(filters);
+    window.open(exportUrl, "_blank");
   };
 
   const handleDelayedClick = () => {
@@ -58,9 +39,9 @@ export function OrdersPageHeader() {
             Orders
           </h1>
           {/* 41 Live Badge with Pulse Dot (Figma 225:101137) */}
-          <div className="inline-flex h-6 items-center gap-1.5 rounded-[12px] bg-[#e3f4ea] px-2 text-caption-bold text-[#1f7a4d] select-none">
+          <div className="inline-flex h-6 items-center gap-1.5 rounded-[12px] bg-[#e3f4ea] px-2 text-caption-bold text-[#1f7a4d] select-none font-sans [font-variation-settings:'wght'_700]">
             <span className="h-2 w-2 rounded-full bg-[#1f7a4d] animate-pulse" />
-            <span>{counts.live} live</span>
+            <span>{(counts?.live ?? 0).toLocaleString("en-IN")} live</span>
           </div>
         </div>
       </div>
@@ -71,7 +52,7 @@ export function OrdersPageHeader() {
         <button
           type="button"
           onClick={handleExport}
-          className="h-9 px-[17.5px] rounded-[12px] bg-white border-[1.5px] border-[#bcc6d3] text-label text-[#0f2340] hover:bg-[#f5f7fa] active:bg-[#ebeff4] transition-colors cursor-pointer flex items-center justify-center gap-1.5 shadow-2xs"
+          className="h-9 px-[17.5px] rounded-[12px] bg-white border-[1.5px] border-[#bcc6d3] text-label text-[#0f2340] hover:bg-[#f5f7fa] active:bg-[#ebeff4] transition-colors cursor-pointer flex items-center justify-center gap-1.5 shadow-2xs font-sans [font-variation-settings:'wght'_700]"
         >
           <Download className="h-4 w-4 text-[#55647a]" />
           <span>Export</span>
@@ -82,13 +63,13 @@ export function OrdersPageHeader() {
           type="button"
           onClick={handleDelayedClick}
           className={cn(
-            "h-9 px-4 rounded-[12px] text-label text-white transition-all cursor-pointer flex items-center justify-center gap-2 shadow-2xs",
+            "h-9 px-4 rounded-[12px] text-label text-white transition-all cursor-pointer flex items-center justify-center gap-2 shadow-2xs font-sans [font-variation-settings:'wght'_700]",
             filters.tab === "DELAYED"
               ? "bg-[#c0352b] ring-2 ring-[#c0352b]/30"
               : "bg-[#1c3a66] hover:bg-[#0f2340]"
           )}
         >
-          <span>Delayed orders · {counts.delayed}</span>
+          <span>Delayed orders · {(counts?.delayed ?? 0).toLocaleString("en-IN")}</span>
         </button>
       </div>
     </div>

@@ -24,7 +24,7 @@ export function OrdersTableSkeleton() {
       {Array.from({ length: 8 }).map((_, i) => (
         <div
           key={i}
-          className="h-14 px-5 flex items-center gap-4 border-b border-[#dce2ea] last:border-b-0"
+          className="h-13 px-5 flex items-center gap-4 border-b border-[#dce2ea] last:border-b-0"
         >
           {/* Order No */}
           <div className="w-16">

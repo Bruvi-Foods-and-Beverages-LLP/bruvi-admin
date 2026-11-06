@@ -2,142 +2,161 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { CatalogProduct, ModifierGroupDetail } from "@/types/catalog";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { fetchModifierGroups } from "@/store/slices/modifier-groups-slice";
+import { CatalogApi } from "@/lib/api/catalog";
+import { formatRupees } from "@/lib/catalog/modifier-groups";
+import { RbacGuard } from "@/components/auth/rbac-guard";
+import { Skeleton } from "@/components/ui/skeleton";
+import type { CatalogProduct, ModifierGroupDetail, ProductModifierBinding } from "@/types/catalog";
+import { ProductCustomisationModal } from "./product-customisation-modal";
 
 interface ProductCustomisationCardProps {
   product: CatalogProduct;
 }
 
-interface CustomisationRow {
-  name: string;
-  summary: string;
-}
+/** "Default Large · 3 options from +₹40 · Hot hidden" built from the group and this product's settings. */
+function bindingSummary(binding: ProductModifierBinding, group: ModifierGroupDetail | undefined): string {
+  const optionName = new Map(binding.options.map((o) => [o.id, o.name]));
+  const visible = binding.options.filter((o) => !binding.hiddenModifierIds.includes(o.id));
+  const parts: string[] = [];
 
-const DEFAULT_ROWS: CustomisationRow[] = [
-  { name: "Size", summary: "Regular · Large +₹40 · Jumbo +₹70" },
-  { name: "Temperature", summary: "Iced only" },
-  { name: "Ice level", summary: "Default Regular · all 4 levels" },
-  { name: "Coffee strength", summary: "Default 1 shot · max 4 · +₹60 each" },
-  { name: "Sweetness", summary: "Default Regular · condensed milk" },
-  { name: "Milk + amount", summary: "Condensed · Oat/Almond +₹50" },
-  { name: "Cream cap", summary: "Salted cream · default Regular" },
-  { name: "Flavours", summary: "0 pumps · max 4 · +₹30 each" },
-  { name: "Instructions", summary: "On · 60 chars · barista reviews" },
-];
-
-function buildModifierSummary(group: any): CustomisationRow {
-  const name = group.name || "Customization";
-  const modifiers = group.modifiers || group.options || [];
-
-  if (modifiers.length === 0) {
-    return { name, summary: group.customHint || "Standard option" };
+  if (binding.groupType === "TEXT") {
+    parts.push(group?.maxLength ? `Note · ${group.maxLength} chars` : "Note");
+    if (group?.hint) parts.push(group.hint);
+    return parts.join(" · ");
   }
 
-  // Format summaries by modifier type
-  if (name.toLowerCase().includes("size")) {
-    const summary = modifiers
-      .map((m: any) => {
-        const extra = m.price_paise || m.pricePaise;
-        const extraRs = extra ? ` +₹${Math.round(extra / 100)}` : "";
-        return `${m.name.replace(/\s*\(.*\)/, "")}${extraRs}`;
-      })
-      .join(" · ");
-    return { name, summary: summary || "Regular · Large +₹40 · Jumbo +₹70" };
-  }
+  const def = binding.defaultModifierId
+    ? optionName.get(binding.defaultModifierId)
+    : visible.find((o) => o.isDefault)?.name;
+  if (visible.length === 1) parts.push(`${visible[0].name} only`);
+  else if (def) parts.push(`Default ${def}`);
 
-  if (name.toLowerCase().includes("temperature")) {
-    const defaultMod = modifiers.find((m: any) => m.is_default || m.isDefault);
-    return { name, summary: defaultMod ? `${defaultMod.name} only` : "Iced only" };
+  const prices = (group?.modifiers ?? [])
+    .filter((m) => visible.some((v) => v.id === m.id) && m.pricePaise > 0)
+    .map((m) => m.pricePaise);
+  if (binding.groupType === "COUNT" && group) {
+    const max = Math.max(...group.modifiers.map((m) => m.maxQuantity ?? 1));
+    const unit = group.unitLabel ? ` ${group.unitLabel}s` : "";
+    parts.push(`max ${max}${unit}`);
+    if (prices.length) parts.push(`+${formatRupees(Math.min(...prices))} each`);
+  } else if (visible.length > 1) {
+    parts.push(`${visible.length} options`);
+    if (prices.length) parts.push(`from +${formatRupees(Math.min(...prices))}`);
   }
-
-  if (name.toLowerCase().includes("ice")) {
-    return { name, summary: "Default Regular · all 4 levels" };
+  if (binding.hiddenModifierIds.length > 0 && visible.length > 1) {
+    parts.push(`${binding.hiddenModifierIds.length} hidden`);
   }
-
-  if (name.toLowerCase().includes("sweet")) {
-    return { name, summary: "Default Regular · condensed milk" };
-  }
-
-  if (name.toLowerCase().includes("milk")) {
-    return { name, summary: "Condensed · Oat/Almond +₹50" };
-  }
-
-  if (name.toLowerCase().includes("toppings")) {
-    return { name: "Cream cap", summary: "Salted cream · default Regular" };
-  }
-
-  if (name.toLowerCase().includes("espresso") || name.toLowerCase().includes("shot")) {
-    return { name: "Coffee strength", summary: "Default 1 shot · max 4 · +₹60 each" };
-  }
-
-  const defaultMod = modifiers.find((m: any) => m.is_default || m.isDefault) || modifiers[0];
-  const summary = `${defaultMod?.name || "Standard"}${modifiers.length > 1 ? ` · ${modifiers.length} options` : ""}`;
-  return { name, summary };
+  return parts.join(" · ");
 }
 
 /**
- * Customisation · 9 Card (Figma 225:90959)
- * High-density rows listing options, price deltas, and modifier constraints
+ * Customisation card (Figma 225:90959): the groups this product offers, with its own defaults.
  */
 export function ProductCustomisationCard({ product }: ProductCustomisationCardProps) {
-  // If product has bound modifier groups from DB, map them, otherwise fallback to standard 9 rows
-  const dbGroups = product.modifierGroups || (product as any).modifier_groups;
+  const dispatch = useAppDispatch();
+  const groups = useAppSelector((s) => s.modifierGroups.groups);
+  const [bindings, setBindings] = React.useState<ProductModifierBinding[] | null>(null);
+  const [error, setError] = React.useState<string | null>(null);
+  const [managing, setManaging] = React.useState(false);
+  const [reload, setReload] = React.useState(0);
 
-  let rows: CustomisationRow[] = DEFAULT_ROWS;
+  React.useEffect(() => {
+    if (groups.length === 0) void dispatch(fetchModifierGroups());
+  }, [dispatch, groups.length]);
 
-  if (dbGroups && Array.isArray(dbGroups) && dbGroups.length > 0) {
-    const mapped = dbGroups.map(buildModifierSummary);
-    // Fill remaining rows if needed to maintain structure or use mapped
-    if (mapped.length >= 7) {
-      // Merge with Flavours and Instructions if missing
-      const hasFlavours = mapped.some((r) => r.name.toLowerCase().includes("flavour"));
-      const hasInstructions = mapped.some((r) => r.name.toLowerCase().includes("instruction"));
+  React.useEffect(() => {
+    let alive = true;
+    CatalogApi.getProductModifierBindings(product.id)
+      .then((rows) => {
+        if (alive) {
+          setBindings(rows);
+          setError(null);
+        }
+      })
+      .catch((e: unknown) => {
+        if (alive) setError(e instanceof Error ? e.message : "Could not load customisation");
+      });
+    return () => {
+      alive = false;
+    };
+  }, [product.id, reload]);
 
-      const augmented = [...mapped];
-      if (!hasFlavours) {
-        augmented.push({ name: "Flavours", summary: "0 pumps · max 4 · +₹30 each" });
-      }
-      if (!hasInstructions) {
-        augmented.push({ name: "Instructions", summary: "On · 60 chars · barista reviews" });
-      }
-      rows = augmented;
-    }
-  }
+  const groupById = new Map(groups.map((g) => [g.id, g]));
 
   return (
-    <div className="flex-1 rounded-[16px] border border-[#DCE2EA] bg-white overflow-hidden flex flex-col shadow-2xs font-sans min-h-[348px]">
-      {/* 1. Header (Figma 225:90960 - Manrope ExtraBold 18px / 26px) */}
-      <div className="h-[50px] px-5 flex items-center justify-between border-b border-[#F5F7FA]">
-        <h2 className="font-sans text-[18px] leading-[26px] font-extrabold text-[#0F2340]">
-          Customisation · {rows.length}
+    <div
+      id="customisation"
+      className="flex min-h-[348px] flex-1 flex-col overflow-hidden rounded-[16px] border border-border bg-surface font-sans shadow-2xs"
+    >
+      <div className="flex h-[50px] items-center justify-between border-b border-background-subtle px-5">
+        <h2 className="text-[18px] leading-[26px] font-extrabold text-text">
+          Customisation · {bindings?.length ?? 0}
         </h2>
-        <Link
-          href={`/catalog/${product.id}#customisation`}
-          className="font-sans text-[14px] leading-5 font-bold text-[#1C3A66] hover:underline cursor-pointer"
-        >
-          Manage
-        </Link>
-      </div>
-
-      {/* 2. List of Rows (Figma 225:90963 - h: 32px each, px-5) */}
-      <div className="flex flex-col divide-y divide-[#DCE2EA] py-0 pb-2">
-        {rows.map((row, idx) => (
-          <div
-            key={idx}
-            className="h-8 px-5 flex items-center gap-3 hover:bg-[#F5F7FA]/50 transition-colors"
+        <RbacGuard roles={["SUPER_ADMIN", "ADMIN", "HQ_OPS"]}>
+          <button
+            type="button"
+            onClick={() => setManaging(true)}
+            disabled={bindings === null}
+            className="cursor-pointer text-[14px] leading-5 font-bold text-text-brand hover:underline disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {/* Left: Customisation Name (w: 120px - Manrope Bold 14px) */}
-            <span className="w-[120px] shrink-0 font-sans text-[14px] leading-5 font-bold text-[#0F2340] truncate">
-              {row.name}
-            </span>
-
-            {/* Right: Summary text (Manrope Medium 12px) */}
-            <span className="flex-1 min-w-0 font-sans text-[12px] leading-4 font-medium text-[#3F4B5E] truncate">
-              {row.summary}
-            </span>
-          </div>
-        ))}
+            Manage
+          </button>
+        </RbacGuard>
       </div>
+
+      {error ? (
+        <div className="flex flex-col items-center gap-2 px-5 py-10 text-center">
+          <p className="text-[14px] leading-5 text-error">{error}</p>
+          <button
+            type="button"
+            onClick={() => setReload((n) => n + 1)}
+            className="cursor-pointer text-[14px] font-bold text-text-brand hover:underline"
+          >
+            Retry
+          </button>
+        </div>
+      ) : bindings === null ? (
+        <div className="flex flex-col gap-3 px-5 py-4">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <Skeleton key={i} className="h-4 w-full" />
+          ))}
+        </div>
+      ) : bindings.length === 0 ? (
+        <p className="px-5 py-10 text-center text-[14px] leading-5 text-text-muted">
+          Customers can’t customise this product yet. Use Manage to attach modifier groups.
+        </p>
+      ) : (
+        <div className="flex flex-col divide-y divide-border pb-2">
+          {bindings.map((b) => (
+            <Link
+              key={b.modifierGroupId}
+              href={`/catalog/customisation/${b.modifierGroupId}`}
+              className="flex min-h-8 items-center gap-3 px-5 py-1.5 transition-colors hover:bg-background-subtle"
+            >
+              <span className="w-[120px] shrink-0 truncate text-[14px] leading-5 font-bold text-text">{b.name}</span>
+              <span className="min-w-0 flex-1 truncate text-[12px] leading-4 font-medium text-text-secondary">
+                {bindingSummary(b, groupById.get(b.modifierGroupId))}
+              </span>
+            </Link>
+          ))}
+        </div>
+      )}
+
+      {managing && bindings && (
+        <ProductCustomisationModal
+          productId={product.id}
+          productName={product.name}
+          bindings={bindings}
+          groups={groups}
+          onClose={() => setManaging(false)}
+          onSaved={(next) => {
+            setBindings(next);
+            setManaging(false);
+          }}
+        />
+      )}
     </div>
   );
 }

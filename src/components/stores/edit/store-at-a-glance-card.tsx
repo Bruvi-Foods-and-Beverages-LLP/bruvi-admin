@@ -5,17 +5,9 @@ import { StoreEntity } from "@/store/slices/stores-slice";
 
 interface StoreAtAGlanceCardProps {
   store: StoreEntity;
-  devicesCount?: number;
-  attentionCount?: number;
-  staffCount?: number;
 }
 
-export function StoreAtAGlanceCard({
-  store,
-  devicesCount = 9,
-  attentionCount = 0,
-  staffCount = 14,
-}: StoreAtAGlanceCardProps) {
+export function StoreAtAGlanceCard({ store }: StoreAtAGlanceCardProps) {
   const isBusy = store.status === "Busy mode";
   const isOpen = store.status === "Open" || store.isOpen;
 
@@ -29,7 +21,7 @@ export function StoreAtAGlanceCard({
 
   // Formatted launch date e.g. "12 Mar 2023"
   const formattedOpenDate = React.useMemo(() => {
-    if (!store.openDate) return "12 Mar 2023";
+    if (!store.openDate) return "Not set";
     try {
       const d = new Date(store.openDate);
       if (isNaN(d.getTime())) return store.openDate;
@@ -39,7 +31,7 @@ export function StoreAtAGlanceCard({
         year: "numeric",
       });
     } catch {
-      return store.openDate || "12 Mar 2023";
+      return store.openDate || "Not set";
     }
   }, [store.openDate]);
 
@@ -67,16 +59,14 @@ export function StoreAtAGlanceCard({
         {/* Row 3: Devices */}
         <div className="flex items-center justify-between text-body-s">
           <span className="text-text-muted">Devices</span>
-          <span className="text-text">
-            {devicesCount} paired · {attentionCount === 0 ? "all operational" : `${attentionCount} needs attention`}
-          </span>
+          <span className="text-text-muted">Not set up yet</span>
         </div>
 
         {/* Row 4: Staff */}
         <div className="flex items-center justify-between text-body-s">
           <span className="text-text-muted">Staff</span>
-          <span className="text-text">
-            {staffCount} · {store.manager || "Lead Barista"} (manager)
+          <span className={store.manager ? "text-text" : "text-text-muted"}>
+            {store.manager ? `${store.manager} (manager)` : "No manager assigned"}
           </span>
         </div>
       </div>

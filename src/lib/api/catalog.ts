@@ -5,11 +5,17 @@ import {
   CategoryMetric,
   CategoryItem,
   CatalogQueryFilters,
-  ModifierGroup,
+  ModifierGroupDetail,
+  ModifierGroupPayload,
+  ModifierOptionPayload,
+  ModifierStockEntry,
+  ProductModifierBinding,
   ProductCreatePayload,
   ProductUpdatePayload,
   BulkActionPayload,
   ProductVariant,
+  ProductPerformance,
+  ProductPerformanceFilters,
 } from "@/types/catalog";
 
 export const CatalogApi = {
@@ -34,6 +40,22 @@ export const CatalogApi = {
    */
   async getProductById(id: string): Promise<ProductDetail> {
     return apiClient.get<ProductDetail>(`/admin/catalog/products/${id}`);
+  },
+
+  /**
+   * Real sales performance (7-day trend, margin, top store, top modifier) for one product
+   */
+  async getProductPerformance(
+    id: string,
+    filters: ProductPerformanceFilters = {},
+  ): Promise<ProductPerformance> {
+    return apiClient.get<ProductPerformance>(`/admin/catalog/products/${id}/performance`, {
+      params: {
+        outletIds: filters.outletIds?.length ? filters.outletIds.join(",") : undefined,
+        channel: filters.channel,
+        days: filters.days,
+      },
+    });
   },
 
   /**
@@ -74,13 +96,85 @@ export const CatalogApi = {
     );
   },
 
-  /**
-   * Get modifier groups (all or filtered by productId)
-   */
-  async getModifierGroups(productId?: string): Promise<ModifierGroup[]> {
-    return apiClient.get<ModifierGroup[]>("/admin/catalog/modifiers/groups", {
+  // ---------------------------------------------------------------------------
+  // Modifier groups & options (/admin/catalog/modifiers)
+  // ---------------------------------------------------------------------------
+
+  async getModifierGroups(productId?: string): Promise<ModifierGroupDetail[]> {
+    return apiClient.get<ModifierGroupDetail[]>("/admin/catalog/modifiers/groups", {
       params: productId ? { productId } : undefined,
     });
+  },
+
+  async getModifierGroupById(id: string): Promise<ModifierGroupDetail> {
+    return apiClient.get<ModifierGroupDetail>(`/admin/catalog/modifiers/groups/${id}`);
+  },
+
+  async createModifierGroup(payload: ModifierGroupPayload & { name: string }): Promise<ModifierGroupDetail> {
+    return apiClient.post<ModifierGroupDetail>("/admin/catalog/modifiers/groups", payload);
+  },
+
+  async updateModifierGroup(id: string, payload: ModifierGroupPayload): Promise<ModifierGroupDetail> {
+    return apiClient.patch<ModifierGroupDetail>(`/admin/catalog/modifiers/groups/${id}`, payload);
+  },
+
+  async deleteModifierGroup(id: string): Promise<{ success: boolean }> {
+    return apiClient.delete<{ success: boolean }>(`/admin/catalog/modifiers/groups/${id}`);
+  },
+
+  async duplicateModifierGroup(id: string): Promise<ModifierGroupDetail> {
+    return apiClient.post<ModifierGroupDetail>(`/admin/catalog/modifiers/groups/${id}/duplicate`);
+  },
+
+  async reorderModifierGroups(ids: string[]): Promise<ModifierGroupDetail[]> {
+    return apiClient.put<ModifierGroupDetail[]>("/admin/catalog/modifiers/groups/order", { ids });
+  },
+
+  async createModifierOption(
+    payload: ModifierOptionPayload & { modifierGroupId: string; name: string },
+  ): Promise<ModifierGroupDetail> {
+    return apiClient.post<ModifierGroupDetail>("/admin/catalog/modifiers/items", payload);
+  },
+
+  async updateModifierOption(id: string, payload: ModifierOptionPayload): Promise<ModifierGroupDetail> {
+    return apiClient.patch<ModifierGroupDetail>(`/admin/catalog/modifiers/items/${id}`, payload);
+  },
+
+  async deleteModifierOption(id: string): Promise<ModifierGroupDetail> {
+    return apiClient.delete<ModifierGroupDetail>(`/admin/catalog/modifiers/items/${id}`);
+  },
+
+  async reorderModifierOptions(groupId: string, ids: string[]): Promise<ModifierGroupDetail> {
+    return apiClient.put<ModifierGroupDetail>(`/admin/catalog/modifiers/groups/${groupId}/items/order`, { ids });
+  },
+
+  /** Groups attached to a product, with its defaults and hidden options */
+  async getProductModifierBindings(productId: string): Promise<ProductModifierBinding[]> {
+    return apiClient.get<ProductModifierBinding[]>(`/admin/catalog/products/${productId}/modifier-groups`);
+  },
+
+  async setProductModifierBindings(
+    productId: string,
+    groups: Pick<
+      ProductModifierBinding,
+      "modifierGroupId" | "defaultModifierId" | "hiddenModifierIds" | "isRequiredOverride" | "maxSelectOverride" | "includedQuantityOverride"
+    >[],
+  ): Promise<ProductModifierBinding[]> {
+    return apiClient.put<ProductModifierBinding[]>(`/admin/catalog/products/${productId}/modifier-groups`, { groups });
+  },
+
+  /** Options marked out at one store */
+  async getModifierStock(outletId: string): Promise<ModifierStockEntry[]> {
+    return apiClient.get<ModifierStockEntry[]>("/admin/catalog/modifiers/availability", {
+      params: { outletId },
+    });
+  },
+
+  async setModifierStock(
+    outletId: string,
+    items: { modifierId: string; isAvailable: boolean; reason?: string | null }[],
+  ): Promise<ModifierStockEntry[]> {
+    return apiClient.put<ModifierStockEntry[]>("/admin/catalog/modifiers/availability", { outletId, items });
   },
 
   /**

@@ -31,6 +31,8 @@ export interface StoreEntity {
   reviewCount?: number;
   /** Free-form outlet metadata; holds the customer-app profile (prepMinutes, publicPhone, heroImageUrl, amenities) */
   metadata?: Record<string, unknown>;
+  /** ISO timestamp of the last saved change */
+  updatedAt?: string;
 }
 
 export interface StoreOverviewMetrics {
@@ -84,6 +86,10 @@ export interface StoreOverviewMetrics {
 interface StoresState {
   stores: StoreEntity[];
   currentStoreOverview: StoreOverviewMetrics | null;
+  /** Lean copy of one store for the edit form (no sales or chart queries) */
+  editStore: StoreEntity | null;
+  isEditLoading: boolean;
+  editError: string | null;
   isLoading: boolean;
   isOverviewLoading: boolean;
   isSubmitting: boolean;
@@ -97,6 +103,9 @@ interface StoresState {
 const initialState: StoresState = {
   stores: [],
   currentStoreOverview: null,
+  editStore: null,
+  isEditLoading: true,
+  editError: null,
   isLoading: true,
   isOverviewLoading: true,
   isSubmitting: false,
@@ -106,6 +115,64 @@ const initialState: StoresState = {
   selectedCityFilter: "All",
   selectedStatusFilter: "All",
 };
+
+/** Maps one store payload from the API into the admin's store shape. Missing values stay empty. */
+export function mapStoreFromApi(s: Record<string, unknown>): StoreEntity {
+  const num = (v: unknown): number | undefined => {
+    const n = Number(v);
+    return v === null || v === undefined || v === "" || !Number.isFinite(n) ? undefined : n;
+  };
+  const status = s.status;
+  return {
+    id: String(s.id || ""),
+    name: String(s.name || ""),
+    code: String(s.code || ""),
+    type: (s.format as string) || "Flagship",
+    cityId: (s.cityId || s.city_id) as string | undefined,
+    cityName: String(s.cityName || s.city || ""),
+    city: String(s.cityName || s.city || ""),
+    state: String(s.state || ""),
+    postalCode: String(s.postalCode || s.postal_code || ""),
+    addressLine1: String(s.addressLine1 || s.address_line1 || ""),
+    addressLine2: (s.addressLine2 || s.address_line2 || null) as string | null,
+    latitude: num(s.latitude),
+    longitude: num(s.longitude),
+    geofenceRadiusMeters: num(s.geofenceRadiusMeters) ?? 50,
+    phone: String(s.phone || ""),
+    email: String(s.email || ""),
+    gstin: String(s.gstin || ""),
+    fssaiLicenceNo: String(s.fssaiLicenceNo || s.fssai_licence_no || ""),
+    openDate: String(s.openDate || s.open_date || ""),
+    metadata: s.metadata && typeof s.metadata === "object" ? (s.metadata as Record<string, unknown>) : {},
+    isOpen: (s.isOpen as boolean) ?? (status === "OPEN" || status === "BUSY"),
+    isActive: (s.isActive as boolean) ?? true,
+    manager: String(s.managerName || s.manager || ""),
+    hours: String(s.hours || "Hours not set"),
+    // The label follows the real status; a stale free-text note ("Open") must never override it
+    status:
+      status === "OPEN"
+        ? "Open"
+        : status === "BUSY"
+        ? "Busy mode"
+        : status === "NEEDS_ATTENTION"
+        ? "Needs attention"
+        : status === "CLOSED"
+        ? "Closed"
+        : status === "DRAFT"
+        ? "Draft"
+        : String(s.statusDetail || "Open"),
+    statusDetail: String(
+      status === "OPEN" || !status
+        ? s.statusDetail || "Open"
+        : String(s.statusDetail || "").toLowerCase() === "open" || !s.statusDetail
+        ? String(status).charAt(0) + String(status).slice(1).toLowerCase().replace("_", " ")
+        : s.statusDetail,
+    ),
+    salesToday: Number(s.salesToday || s.sales_today || 0),
+    rating: Number(s.rating) || 0,
+    updatedAt: s.updatedAt ? String(s.updatedAt) : undefined,
+  };
+}
 
 /**
  * Async Thunk to fetch live stores from the central backend API
@@ -121,45 +188,9 @@ export const fetchStores = createAsyncThunk(
       }
       const json = await res.json();
       const rawStores = json?.data?.data || json?.data || [];
-      const mapped: StoreEntity[] = rawStores.map((rawItem: unknown) => {
-        const s = rawItem as Record<string, unknown>;
-        return {
-          id: String(s.id || ""),
-          name: String(s.name || ""),
-          code: String(s.code || ""),
-          type: (s.format as string) || "Flagship",
-          cityId: (s.cityId || s.city_id) as string | undefined,
-          cityName: String(s.cityName || s.city || ""),
-          city: String(s.cityName || s.city || ""),
-          state: (s.state as string) || "Karnataka",
-          postalCode: String(s.postalCode || s.postal_code || ""),
-          addressLine1: String(s.addressLine1 || s.address_line1 || ""),
-          addressLine2: (s.addressLine2 || s.address_line2 || null) as string | null,
-          latitude: s.latitude ? Number(s.latitude) : undefined,
-          longitude: s.longitude ? Number(s.longitude) : undefined,
-          geofenceRadiusMeters: Number(s.geofenceRadiusMeters || 50),
-          phone: String(s.phone || ""),
-          email: String(s.email || ""),
-          gstin: String(s.gstin || ""),
-          fssaiLicenceNo: String(s.fssaiLicenceNo || s.fssai_licence_no || ""),
-          openDate: String(s.openDate || s.open_date || ""),
-          isOpen: (s.isOpen as boolean) ?? (s.status === "OPEN" || s.status === "BUSY"),
-          isActive: (s.isActive as boolean) ?? true,
-          manager: String(s.managerName || s.manager || "Lead Barista (TBD)"),
-          hours: String(s.hours || "7:00 am – 11:00 pm"),
-          status:
-            s.status === "OPEN"
-              ? "Open"
-              : s.status === "BUSY"
-              ? "Busy mode"
-              : s.status === "NEEDS_ATTENTION"
-              ? "Needs attention"
-              : String(s.statusDetail || "Open"),
-          statusDetail: String(s.statusDetail || (s.status === "OPEN" ? "Open" : s.status || "Open")),
-          salesToday: Number(s.salesToday || s.sales_today || 0),
-          rating: Number(s.rating || 5.0),
-        };
-      });
+      const mapped: StoreEntity[] = rawStores.map((rawItem: unknown) =>
+        mapStoreFromApi(rawItem as Record<string, unknown>)
+      );
       return mapped;
     } catch (err) {
       return rejectWithValue(
@@ -186,41 +217,7 @@ export const fetchStoreOverview = createAsyncThunk(
       const s = data.store || {};
 
       const mappedStore: StoreEntity = {
-        id: s.id,
-        name: s.name,
-        code: s.code,
-        type: s.format || "Flagship",
-        cityId: s.cityId || s.city_id,
-        cityName: s.cityName || s.city || "",
-        city: s.cityName || s.city || "",
-        state: s.state || "Karnataka",
-        postalCode: s.postalCode || s.postal_code || "",
-        addressLine1: s.addressLine1 || s.address_line1 || "",
-        addressLine2: s.addressLine2 || s.address_line2 || null,
-        latitude: s.latitude ? Number(s.latitude) : 12.9784,
-        longitude: s.longitude ? Number(s.longitude) : 77.6408,
-        geofenceRadiusMeters: s.geofenceRadiusMeters || 50,
-        phone: s.phone || "",
-        email: s.email || "",
-        gstin: s.gstin || "",
-        fssaiLicenceNo: s.fssaiLicenceNo || s.fssai_licence_no || "",
-        openDate: s.openDate || s.open_date || "",
-        metadata: s.metadata && typeof s.metadata === "object" ? (s.metadata as Record<string, unknown>) : {},
-        isOpen: s.isOpen ?? (s.status === "OPEN" || s.status === "BUSY"),
-        isActive: s.isActive ?? true,
-        manager: s.managerName || s.manager || "Lead Barista (TBD)",
-        hours: s.hours || "7:00 am – 11:00 pm",
-        status:
-          s.status === "OPEN"
-            ? "Open"
-            : s.status === "BUSY"
-            ? "Busy mode"
-            : s.status === "NEEDS_ATTENTION"
-            ? "Needs attention"
-            : s.statusDetail || "Open",
-        statusDetail: s.statusDetail || "Open",
-        salesToday: Number(s.salesToday || s.sales_today || 0),
-        rating: Number(s.rating || 5.0),
+        ...mapStoreFromApi(s),
         reviewCount: data.kpi?.reviewCount || 0,
       };
 
@@ -229,7 +226,7 @@ export const fetchStoreOverview = createAsyncThunk(
         kpi: data.kpi || {
           netSalesToday: 0,
           netSalesChangePercent: 0,
-          netSalesRank: "New",
+          netSalesRank: "No sales yet",
           ordersCount: 0,
           aov: 0,
           queueCount: 0,
@@ -237,7 +234,7 @@ export const fetchStoreOverview = createAsyncThunk(
           makeTimeFormatted: "--",
           makeTimeTargetFormatted: "4:30",
           makeTimeDiffFormatted: "Target: 4:30",
-          rating: 5.0,
+          rating: 0,
           reviewCount: 0,
         },
         hourlySales: data.hourlySales || [],
@@ -250,13 +247,13 @@ export const fetchStoreOverview = createAsyncThunk(
           dineInQr: { count: 0, sales: 0 },
         },
         liveChannels: data.liveChannels || {
-          counter: { status: "ONLINE", detail: "2 of 2 POS online" },
-          appPickup: { status: "ONLINE", detail: "Active" },
-          kiosk: { status: "ONLINE", detail: "K1 · K2 online" },
-          dineInQr: { status: "ONLINE", detail: "14 tables · 3 occupied" },
-          bruviDelivery: { status: "ONLINE", detail: "On · 3 out now · 8 riders" },
-          partnerDelivery: { status: "OFFLINE", detail: "Off" },
-          updatedAt: "Just now",
+          counter: { status: "OFFLINE", detail: "Not set up yet" },
+          appPickup: { status: "OFFLINE", detail: "Unavailable" },
+          kiosk: { status: "OFFLINE", detail: "Not set up yet" },
+          dineInQr: { status: "OFFLINE", detail: "Not set up yet" },
+          bruviDelivery: { status: "OFFLINE", detail: "Not set up yet" },
+          partnerDelivery: { status: "OFFLINE", detail: "Not set up yet" },
+          updatedAt: "",
         },
         recentIssues: data.recentIssues || [],
       };
@@ -266,6 +263,27 @@ export const fetchStoreOverview = createAsyncThunk(
       return rejectWithValue(
         err instanceof Error ? err.message : "Unable to reach store overview API"
       );
+    }
+  }
+);
+
+/**
+ * Fetches just the store record for the edit form. The overview endpoint also computes live sales,
+ * hourly charts and ranking, none of which the form needs.
+ */
+export const fetchStoreForEdit = createAsyncThunk(
+  "stores/fetchStoreForEdit",
+  async (idOrCode: string, { rejectWithValue }) => {
+    try {
+      const res = await fetch(`/api/proxy/stores/${encodeURIComponent(idOrCode)}`);
+      if (!res.ok) {
+        const errorJson = await res.json().catch(() => ({}));
+        return rejectWithValue(errorJson.message || `Store '${idOrCode}' not found`);
+      }
+      const json = await res.json();
+      return mapStoreFromApi((json?.data || json) as Record<string, unknown>);
+    } catch (err) {
+      return rejectWithValue(err instanceof Error ? err.message : "Unable to reach store API");
     }
   }
 );
@@ -298,7 +316,7 @@ export const createStoreThunk = createAsyncThunk(
         cityId: created.cityId || storePayload.cityId,
         cityName: created.cityName || created.city || storePayload.cityName,
         city: created.cityName || created.city || storePayload.cityName,
-        state: created.state || storePayload.state || "Karnataka",
+        state: created.state || storePayload.state || "",
         postalCode: created.postalCode || storePayload.postalCode || "",
         addressLine1: created.addressLine1 || storePayload.addressLine1 || "",
         addressLine2: created.addressLine2 || storePayload.addressLine2 || null,
@@ -308,12 +326,12 @@ export const createStoreThunk = createAsyncThunk(
         phone: created.phone || storePayload.phone || "",
         email: created.email || storePayload.email || "",
         gstin: created.gstin || storePayload.gstin || "",
-        manager: created.managerName || storePayload.managerName || "Lead Barista (TBD)",
-        hours: created.hours || "7:00 am – 11:00 pm",
+        manager: created.managerName || storePayload.managerName || "",
+        hours: created.hours || "Hours not set",
         status: "Open",
         statusDetail: "Open",
         salesToday: 0,
-        rating: 5.0,
+        rating: 0,
       };
 
       return mapped;
@@ -415,7 +433,8 @@ export const storesSlice = createSlice({
   extraReducers: (builder) => {
     // fetchStores
     builder.addCase(fetchStores.pending, (state) => {
-      state.isLoading = true;
+      // Background refreshes keep the current rows on screen instead of flashing a skeleton
+      if (state.stores.length === 0) state.isLoading = true;
       state.error = null;
     });
     builder.addCase(fetchStores.fulfilled, (state, action) => {
@@ -429,8 +448,11 @@ export const storesSlice = createSlice({
     });
 
     // fetchStoreOverview
-    builder.addCase(fetchStoreOverview.pending, (state) => {
-      state.isOverviewLoading = true;
+    builder.addCase(fetchStoreOverview.pending, (state, action) => {
+      const current = state.currentStoreOverview?.store;
+      const isSameStore =
+        current && [current.id, current.code].includes(action.meta.arg);
+      if (!isSameStore) state.isOverviewLoading = true;
       state.overviewError = null;
     });
     builder.addCase(fetchStoreOverview.fulfilled, (state, action) => {
@@ -441,6 +463,24 @@ export const storesSlice = createSlice({
     builder.addCase(fetchStoreOverview.rejected, (state, action) => {
       state.isOverviewLoading = false;
       state.overviewError = (action.payload as string) || "Failed to load store overview";
+    });
+
+    // fetchStoreForEdit
+    builder.addCase(fetchStoreForEdit.pending, (state, action) => {
+      const current = state.editStore;
+      if (!current || ![current.id, current.code].includes(action.meta.arg)) {
+        state.editStore = null;
+        state.isEditLoading = true;
+      }
+      state.editError = null;
+    });
+    builder.addCase(fetchStoreForEdit.fulfilled, (state, action) => {
+      state.isEditLoading = false;
+      state.editStore = action.payload;
+    });
+    builder.addCase(fetchStoreForEdit.rejected, (state, action) => {
+      state.isEditLoading = false;
+      state.editError = (action.payload as string) || "Failed to load store";
     });
 
     // createStoreThunk
@@ -465,36 +505,22 @@ export const storesSlice = createSlice({
     });
     builder.addCase(updateStoreThunk.fulfilled, (state, action) => {
       state.isSubmitting = false;
-      const updated = action.payload;
-      const idx = state.stores.findIndex((s) => s.id === updated.id);
-      if (idx !== -1) {
-        state.stores[idx] = {
-          ...state.stores[idx],
-          name: updated.name || state.stores[idx].name,
-          code: updated.code || state.stores[idx].code,
-          type: updated.format || state.stores[idx].type,
-          city: updated.city || updated.cityName || state.stores[idx].city,
-          addressLine1: updated.addressLine1 || state.stores[idx].addressLine1,
-          phone: updated.phone || state.stores[idx].phone,
-          email: updated.email || state.stores[idx].email,
-          manager: updated.managerName || state.stores[idx].manager,
-          status: updated.status || state.stores[idx].status,
-        };
+      const saved = mapStoreFromApi(action.payload as Record<string, unknown>);
+      // Keep list-only live figures (sales, hours label, rating) that the save response doesn't carry
+      const merge = (prev: StoreEntity): StoreEntity => ({
+        ...prev,
+        ...saved,
+        hours: prev.hours,
+        salesToday: prev.salesToday,
+        rating: prev.rating,
+        reviewCount: prev.reviewCount,
+      });
+      const idx = state.stores.findIndex((s) => s.id === saved.id);
+      if (idx !== -1) state.stores[idx] = merge(state.stores[idx]);
+      if (state.currentStoreOverview?.store.id === saved.id) {
+        state.currentStoreOverview.store = merge(state.currentStoreOverview.store);
       }
-      if (state.currentStoreOverview && state.currentStoreOverview.store.id === updated.id) {
-        state.currentStoreOverview.store = {
-          ...state.currentStoreOverview.store,
-          name: updated.name || state.currentStoreOverview.store.name,
-          code: updated.code || state.currentStoreOverview.store.code,
-          type: updated.format || state.currentStoreOverview.store.type,
-          city: updated.city || updated.cityName || state.currentStoreOverview.store.city,
-          addressLine1: updated.addressLine1 || state.currentStoreOverview.store.addressLine1,
-          phone: updated.phone || state.currentStoreOverview.store.phone,
-          email: updated.email || state.currentStoreOverview.store.email,
-          manager: updated.managerName || state.currentStoreOverview.store.manager,
-          status: updated.status || state.currentStoreOverview.store.status,
-        };
-      }
+      if (state.editStore?.id === saved.id) state.editStore = merge(state.editStore);
       state.error = null;
     });
     builder.addCase(updateStoreThunk.rejected, (state, action) => {

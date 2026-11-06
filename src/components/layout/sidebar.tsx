@@ -61,7 +61,7 @@ export function Sidebar() {
   }, []);
 
   // Dynamic user data
-  const displayName = user?.fullName || "Kavya R.";
+  const displayName = user?.fullName || "Admin";
   const displayRole = user?.adminProfile?.designation || user?.role || "Ops Director";
   const userInitials = getInitials(displayName);
 
@@ -91,7 +91,7 @@ export function Sidebar() {
           }
         }}
         className={cn(
-          "w-full h-8 px-3 rounded-[12px] flex items-center gap-3 select-none transition-all duration-150 group",
+          "w-full h-7.5 px-2.5 rounded-[10px] flex items-center gap-2.5 select-none transition-all duration-150 group",
           active
             ? "bg-white/[0.08] text-white"
             : "text-[#CDE9F9] hover:bg-white/[0.08] hover:text-white"
@@ -103,11 +103,11 @@ export function Sidebar() {
             active ? "text-[#A9D8F3]" : "text-[#9FB6D6] group-hover:text-[#A9D8F3]"
           )}
         >
-          <BruviIcon name={item.iconName} size={20} />
+          <BruviIcon name={item.iconName} size={18} />
         </span>
         <span
           className={cn(
-            "text-[14px] leading-5 truncate font-sans",
+            "text-[13px] leading-4.5 truncate font-sans",
             active ? "font-bold text-white" : "font-semibold text-[#CDE9F9] group-hover:text-white"
           )}
         >
@@ -131,21 +131,21 @@ export function Sidebar() {
       {/* Main Sidebar Shell (Figma Node 225:193303: 240px width, #1C3A66 background, 20px 12px padding) */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-50 flex flex-col w-[240px] h-full bg-[#1C3A66] py-5 px-3 transition-transform duration-200 ease-in-out lg:static lg:translate-x-0 shrink-0 select-none overflow-hidden",
+          "fixed inset-y-0 left-0 z-50 flex flex-col w-[228px] h-full bg-[#1C3A66] py-3.5 px-2.5 transition-transform duration-200 ease-in-out lg:static lg:translate-x-0 shrink-0 select-none overflow-hidden",
           isSidebarCollapsed ? "-translate-x-full lg:translate-x-0" : "translate-x-0"
         )}
       >
         {/* Top Brand Lockup (Figma Frame 225:193209) */}
-        <div className="flex items-center justify-between px-3 pb-4 shrink-0">
+        <div className="flex items-center justify-between px-2 pb-2.5 shrink-0">
           <Link href="/" className="flex items-center gap-2 group">
             {/* Bruvi Wordmark Vector (99x24 in Figma) */}
             <div className="text-white flex items-center">
-              <WordmarkIcon width={99} height={24} color="#FFFFFF" />
+              <WordmarkIcon width={92} height={22} color="#FFFFFF" />
             </div>
 
             {/* HQ Pill Tag (34x20 rounded-4px, #A9D8F3 fill, #0F2340 text) */}
-            <div className="w-[34px] h-[20px] rounded-[4px] bg-[#A9D8F3] flex items-center justify-center shrink-0">
-              <span className="font-sans font-extrabold text-[11px] leading-[14px] text-[#0F2340] tracking-wider">
+            <div className="w-[30px] h-[18px] rounded-[4px] bg-[#A9D8F3] flex items-center justify-center shrink-0">
+              <span className="font-sans font-extrabold text-[10px] leading-[12px] text-[#0F2340] tracking-wider">
                 HQ
               </span>
             </div>
@@ -162,9 +162,9 @@ export function Sidebar() {
         </div>
 
         {/* Scrollable Navigation Area (gap: 4px between frames) */}
-        <div className="flex-1 overflow-y-auto overflow-x-hidden flex flex-col gap-1 pr-0.5 custom-scrollbar">
-          {/* 1. Standalone Dashboard Item with 20% extra vertical breathing space around it */}
-          <div className="my-1.5 shrink-0">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden flex flex-col gap-0.5 pr-0.5 custom-scrollbar">
+          {/* 1. Standalone Dashboard Item with breathing space */}
+          <div className="my-0.5 shrink-0">
             {renderNavItem(DASHBOARD_ITEM)}
           </div>
 
@@ -177,16 +177,16 @@ export function Sidebar() {
             if (!hasVisibleItems) return null;
 
             return (
-              <div key={section.title} className="flex flex-col gap-1">
+              <div key={section.title} className="flex flex-col gap-0.5">
                 {/* Section Overline (Figma: Libre Caslon Text Regular 11px, #9FB6D6, uppercase, 1.54px letter spacing) */}
-                <div className="h-[26px] px-3 flex items-end pb-1 shrink-0">
-                  <span className="font-serif font-normal text-[11px] leading-[14px] text-[#9FB6D6] uppercase tracking-[0.14em]">
+                <div className="h-[20px] px-2.5 flex items-end pb-0.5 shrink-0">
+                  <span className="font-serif font-normal text-[10px] leading-[13px] text-[#9FB6D6] uppercase tracking-[0.14em]">
                     {section.title}
                   </span>
                 </div>
 
                 {/* Section Items */}
-                <div className="flex flex-col gap-1">
+                <div className="flex flex-col gap-0.5">
                   {section.items.map((item) => renderNavItem(item))}
                 </div>
               </div>
@@ -195,28 +195,28 @@ export function Sidebar() {
         </div>
 
         {/* Spacer before profile card */}
-        <div className="h-3 shrink-0" />
+        <div className="h-1.5 shrink-0" />
 
-        {/* Bottom Profile Info Card (Figma Node 225:193237: 216x60px, rounded-12px, #FFFFFF 8% fill, 12px padding) */}
+        {/* Bottom Profile Info Card (Figma Node 225:193237) */}
         <div className="relative shrink-0" ref={profileRef}>
           <button
             type="button"
             onClick={() => setIsProfileOpen((prev) => !prev)}
-            className="w-full h-[60px] rounded-[12px] bg-white/[0.08] p-3 flex items-center gap-3 cursor-pointer hover:bg-white/[0.12] transition-colors text-left focus:outline-none focus:ring-2 focus:ring-[#A9D8F3]/50"
+            className="w-full h-[50px] rounded-[10px] bg-white/[0.08] p-2 flex items-center gap-2.5 cursor-pointer hover:bg-white/[0.12] transition-colors text-left focus:outline-none focus:ring-2 focus:ring-[#A9D8F3]/50"
             aria-expanded={isProfileOpen}
             aria-label="Staff profile menu"
           >
-            {/* Avatar Circle (36x36, rounded-18px, #A9D8F3 fill, #0F2340 initials) */}
-            <div className="w-9 h-9 min-w-9 min-h-9 rounded-full bg-[#A9D8F3] text-[#0F2340] flex items-center justify-center font-sans font-extrabold text-[14px] leading-5 shrink-0 shadow-xs">
+            {/* Avatar Circle */}
+            <div className="w-7.5 h-7.5 min-w-7.5 min-h-7.5 rounded-full bg-[#A9D8F3] text-[#0F2340] flex items-center justify-center font-sans font-extrabold text-[12px] leading-4 shrink-0 shadow-xs">
               {userInitials}
             </div>
 
             {/* Dynamic Staff Information */}
             <div className="flex flex-col min-w-0 flex-1">
-              <span className="font-sans font-bold text-[14px] leading-5 text-white truncate">
+              <span className="font-sans font-bold text-[13px] leading-4 text-white truncate">
                 {displayName}
               </span>
-              <span className="font-sans font-medium text-[12px] leading-4 text-[#9FB6D6] truncate">
+              <span className="font-sans font-medium text-[11px] leading-3.5 text-[#9FB6D6] truncate">
                 {displayRole}
               </span>
             </div>
