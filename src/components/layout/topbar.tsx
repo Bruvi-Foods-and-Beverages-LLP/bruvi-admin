@@ -10,7 +10,7 @@ export function Topbar() {
   const toggleSidebar = useAppStore((s) => s.toggleSidebar);
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-[#dce2ea] bg-white px-6 md:px-8">
+    <header className="sticky top-0 z-30 flex h-14 w-full items-center justify-between border-b border-[#dce2ea] bg-white px-4 md:px-5">
       {/* Left: Mobile hamburger & Global Search */}
       <div className="flex flex-1 items-center gap-3">
         <button

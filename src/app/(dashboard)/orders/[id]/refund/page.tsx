@@ -651,6 +651,10 @@ export default function OrderRefundPage({ params }: PageProps) {
         order={order}
         mode={refundTotal >= order.totalAmount ? "cancel_and_refund" : "refund_only"}
         refundAmount={refundTotal}
+        items={Object.entries(itemSelections)
+          .filter(([_, sel]) => sel.selected && sel.quantity > 0)
+          .map(([itemId, sel]) => ({ orderItemId: itemId, qty: sel.quantity }))}
+        destination={refundMethod === "WALLET" ? "WALLET" : "ORIGINAL"}
         onSuccess={(refundId, amount) => {
           setIsConfirmModalOpen(false);
           setSuccessResult({ refundId, amount });

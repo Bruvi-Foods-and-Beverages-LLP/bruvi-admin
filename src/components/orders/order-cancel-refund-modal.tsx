@@ -6,12 +6,16 @@ import { Switch } from "@/components/ui/switch";
 import { AlertTriangle, AlertOctagon, CheckCircle2, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 
+import { OrdersApi } from "@/lib/api/orders";
+
 export interface OrderCancelRefundModalProps {
   isOpen: boolean;
   onClose: () => void;
   order: Order;
   mode?: "cancel_and_refund" | "refund_only";
   refundAmount?: number;
+  items?: Array<{ orderItemId: string; qty: number }>;
+  destination?: "ORIGINAL" | "WALLET";
   onSuccess?: (refundId: string, amount: number) => void;
 }
 
@@ -21,6 +25,8 @@ export function OrderCancelRefundModal({
   order,
   mode = "cancel_and_refund",
   refundAmount,
+  items,
+  destination = "ORIGINAL",
   onSuccess,
 }: OrderCancelRefundModalProps) {
   const [selectedReason, setSelectedReason] = React.useState("Customer left");
@@ -86,32 +92,38 @@ export function OrderCancelRefundModal({
   const handleConfirm = async () => {
     setIsSubmitting(true);
     try {
-      const res = await fetch(`/api/admin/orders/${encodeURIComponent(order.orderNumber)}/refund`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          refundAmount: totalRefund,
-          reason: selectedReason,
-          note: `Cancelled and refunded via confirmation modal: ${selectedReason}. Notified: ${notifyCustomer ? "Yes" : "No"}`,
-          method: order.paymentMethod,
-        }),
-      });
+      let refundId = "RF-30431";
 
-      if (!res.ok) {
-        throw new Error("Failed to process refund. Please try again.");
+      if (mode === "cancel_and_refund") {
+        await OrdersApi.cancelOrder(
+          order.id,
+          selectedReason,
+          `Cancelled via confirmation modal: ${selectedReason}. Notified: ${notifyCustomer ? "Yes" : "No"}`
+        );
+      } else {
+        const refundPayload = {
+          items: items || (order.items || []).map((it) => ({ orderItemId: it.id, qty: it.quantity })),
+          includeDeliveryFee: isFullRefund,
+          destination,
+          reasonCode: selectedReason,
+          note: `Refund via confirmation modal: ${selectedReason}. Notified: ${notifyCustomer ? "Yes" : "No"}`,
+        };
+        const res = await OrdersApi.createRefund(order.id, refundPayload);
+        if (res?.refund_number) {
+          refundId = res.refund_number;
+        }
       }
 
-      const data = await res.json();
       setSuccessInfo({
-        refundId: data.refundId || "RF-30431",
+        refundId,
         amount: totalRefund,
       });
 
       if (onSuccess) {
-        onSuccess(data.refundId || "RF-30431", totalRefund);
+        onSuccess(refundId, totalRefund);
       }
     } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : "Error processing cancellation.");
+      alert(err instanceof Error ? err.message : "Error processing cancellation or refund.");
       setIsSubmitting(false);
     }
   };

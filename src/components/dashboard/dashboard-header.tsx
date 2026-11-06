@@ -10,8 +10,8 @@ interface DashboardHeaderProps {
 }
 
 export function DashboardHeader({
-  greeting = "Good morning, Kavya",
-  updatedAtFormatted = "LIVE · UPDATED 9:41 AM",
+  greeting = "Good morning",
+  updatedAtFormatted = "LIVE",
   onExport,
   onOpenReport,
 }: DashboardHeaderProps) {

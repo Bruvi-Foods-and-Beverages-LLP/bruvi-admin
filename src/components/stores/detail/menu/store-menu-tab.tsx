@@ -7,6 +7,8 @@ import {
   fetchStoreMenu,
   updateStoreMenuItem,
   bulkUpdateStoreMenu,
+  updateStoreMenuCategory,
+  clearCategoryError,
   setSearchQuery,
   setSelectedCategory,
   setFilterUnavailableOnly,
@@ -15,7 +17,7 @@ import {
   clearSelection,
   dismissPushStatus,
 } from "@/store/slices/store-menu-slice";
-import { StoreMenuItem } from "@/types/store-menu";
+import { StoreMenuCategory } from "@/types/store-menu";
 import { StoreMenuFilterBar } from "./store-menu-filter-bar";
 import { StoreMenuBulkBar } from "./store-menu-bulk-bar";
 import { StoreMenuTableHeader } from "./store-menu-table-header";
@@ -23,6 +25,7 @@ import { StoreMenuCategorySection } from "./store-menu-category-section";
 import { StoreMenuItemRow } from "./store-menu-item-row";
 import { StoreMenuOverrideModal } from "./store-menu-override-modal";
 import { StoreMenuHideModal } from "./store-menu-hide-modal";
+import { StoreMenuCategoryHoursModal } from "./store-menu-category-hours-modal";
 import { StoreIcon } from "@/components/icons";
 import { AlertCircle, CheckCircle2, RotateCcw, X } from "lucide-react";
 
@@ -41,11 +44,13 @@ export function StoreMenuTab({ store }: StoreMenuTabProps) {
     filterUnavailableOnly,
     selectedItemIds,
     isSubmitting,
+    categoryError,
     pushStatus,
   } = useAppSelector((state) => state.storeMenu);
 
   const [isOverrideModalOpen, setIsOverrideModalOpen] = React.useState(false);
   const [isHideModalOpen, setIsHideModalOpen] = React.useState(false);
+  const [hoursCategory, setHoursCategory] = React.useState<StoreMenuCategory | null>(null);
 
   // Initial load
   React.useEffect(() => {
@@ -84,58 +89,26 @@ export function StoreMenuTab({ store }: StoreMenuTabProps) {
 
       // Category filter
       if (selectedCategory !== "all" && !filterUnavailableOnly) {
-        const normalizedItemCat = item.category.toLowerCase().replace(/[^a-z]/g, "");
-        const normalizedSelected = selectedCategory.toLowerCase().replace(/[^a-z]/g, "");
-        if (normalizedItemCat !== normalizedSelected) return false;
+        const selected = currentStoreMenu?.categories.find((c) => c.id === selectedCategory);
+        if (!selected || item.categoryId !== selected.categoryId) return false;
       }
 
       return true;
     });
-  }, [currentStoreMenu?.items, searchQuery, selectedCategory, filterUnavailableOnly]);
+  }, [currentStoreMenu?.items, currentStoreMenu?.categories, searchQuery, selectedCategory, filterUnavailableOnly]);
 
-  // Group filtered items by category preserving standard order
+  // Group by the catalogue's category order. Categories with no items still show (when nothing is
+  // being searched or filtered) so their visibility and hours can be managed.
   const groupedItems = React.useMemo(() => {
-    const categoryOrder = ["Vietnamese", "Specialty", "Matcha", "Bites", "Add-ons", "LAB"];
-    const groups: { category: string; items: StoreMenuItem[]; totalCount: number }[] = [];
-
-    const categoryTotals: Record<string, number> = {
-      Vietnamese: 12,
-      Specialty: 8,
-      Matcha: 4,
-      Bites: 6,
-      "Add-ons": 9,
-      LAB: 3,
-    };
-
-    categoryOrder.forEach((cat) => {
-      const catItems = filteredItems.filter(
-        (i) => i.category.toLowerCase().replace(/[^a-z]/g, "") === cat.toLowerCase().replace(/[^a-z]/g, "")
-      );
-      if (catItems.length > 0) {
-        groups.push({
-          category: cat,
-          items: catItems,
-          totalCount: categoryTotals[cat] || catItems.length,
-        });
-      }
-    });
-
-    // Capture any items in custom categories
-    filteredItems.forEach((i) => {
-      const alreadyGrouped = groups.some(
-        (g) => g.category.toLowerCase().replace(/[^a-z]/g, "") === i.category.toLowerCase().replace(/[^a-z]/g, "")
-      );
-      if (!alreadyGrouped) {
-        groups.push({
-          category: i.category,
-          items: [i],
-          totalCount: 1,
-        });
-      }
-    });
-
-    return groups;
-  }, [filteredItems]);
+    const filtering = searchQuery.trim() !== "" || filterUnavailableOnly;
+    return (currentStoreMenu?.categories ?? [])
+      .filter((c) => c.categoryId !== null && (selectedCategory === "all" || selectedCategory === c.id))
+      .map((c) => ({
+        category: c,
+        items: filteredItems.filter((i) => i.categoryId === c.categoryId),
+      }))
+      .filter((g) => g.items.length > 0 || !filtering);
+  }, [currentStoreMenu?.categories, filteredItems, searchQuery, filterUnavailableOnly, selectedCategory]);
 
   // Selection states
   const visibleItemIds = filteredItems.map((i) => i.itemId);
@@ -224,7 +197,11 @@ export function StoreMenuTab({ store }: StoreMenuTabProps) {
       {pushStatus && (
         <div
           role="status"
-          className="flex items-center justify-between gap-3 p-4 rounded-[12px] bg-[#DCFCE7] text-[#15803D] border border-[#BBF7D0] shadow-sm animate-in fade-in duration-200"
+          className={`flex items-center justify-between gap-3 p-4 rounded-[12px] border shadow-sm animate-in fade-in duration-200 ${
+            pushStatus.success
+              ? "bg-[#DCFCE7] text-[#15803D] border-[#BBF7D0]"
+              : "bg-[#fdf0d8] text-[#9a5b00] border-[#f3d9a4]"
+          }`}
         >
           <div className="flex items-center gap-2.5">
             <CheckCircle2 className="h-5 w-5 shrink-0" />
@@ -303,7 +280,7 @@ export function StoreMenuTab({ store }: StoreMenuTabProps) {
               <span>Retry</span>
             </button>
           </div>
-        ) : filteredItems.length === 0 ? (
+        ) : groupedItems.length === 0 ? (
           /* Zero-Data / Filter Empty State (Rule from GEMINI.md 6.2) */
           <div className="py-16 px-6 flex flex-col items-center justify-center text-center">
             <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#f5f7fa] border border-[#dce2ea] text-[#55647A] mb-4">
@@ -334,11 +311,27 @@ export function StoreMenuTab({ store }: StoreMenuTabProps) {
           /* Grouped Category Sections and Rows (Figma Nodes 225:88214 - 225:88515) */
           <div className="flex flex-col">
             {groupedItems.map((group) => (
-              <div key={group.category} className="flex flex-col">
+              <div key={group.category.id} className="flex flex-col">
                 <StoreMenuCategorySection
-                  categoryName={group.category}
+                  categoryName={group.category.name}
                   shownCount={group.items.length}
-                  totalCount={group.totalCount}
+                  totalCount={group.category.totalCount}
+                  category={group.category}
+                  disabled={isSubmitting}
+                  onToggleVisible={(visible) =>
+                    group.category.categoryId &&
+                    dispatch(
+                      updateStoreMenuCategory({
+                        storeId: store.id || store.code,
+                        categoryId: group.category.categoryId,
+                        payload: { isVisible: visible },
+                      })
+                    )
+                  }
+                  onEditHours={() => {
+                    dispatch(clearCategoryError());
+                    setHoursCategory(group.category);
+                  }}
                 />
                 {group.items.map((item) => (
                   <StoreMenuItemRow
@@ -356,6 +349,24 @@ export function StoreMenuTab({ store }: StoreMenuTabProps) {
       </div>
 
       {/* Modal Dialogs */}
+      <StoreMenuCategoryHoursModal
+        category={hoursCategory}
+        isSubmitting={isSubmitting}
+        error={categoryError}
+        onClose={() => setHoursCategory(null)}
+        onSave={async (windows) => {
+          if (!hoursCategory?.categoryId) return;
+          const res = await dispatch(
+            updateStoreMenuCategory({
+              storeId: store.id || store.code,
+              categoryId: hoursCategory.categoryId,
+              payload: { windows },
+            })
+          );
+          if (updateStoreMenuCategory.fulfilled.match(res)) setHoursCategory(null);
+        }}
+      />
+
       <StoreMenuOverrideModal
         isOpen={isOverrideModalOpen}
         itemCount={selectedItemIds.length}

@@ -27,6 +27,12 @@ export default function StoresPage() {
   React.useEffect(() => {
     dispatch(fetchStores());
     dispatch(fetchCities());
+
+    // Sales today moves with every paid order: refresh quietly while the tab is visible
+    const timer = setInterval(() => {
+      if (document.visibilityState === "visible") dispatch(fetchStores());
+    }, 15_000);
+    return () => clearInterval(timer);
   }, [dispatch]);
 
   const isLoading = isStoresLoading || isCitiesLoading;
@@ -547,7 +553,7 @@ export default function StoresPage() {
 
                   {/* Manager */}
                   <div className="w-[120px] shrink-0 text-body-s text-[#0F2340] truncate">
-                    {store.manager}
+                    {store.manager || "Not assigned"}
                   </div>
 
                   {/* Hours */}
@@ -570,7 +576,7 @@ export default function StoresPage() {
                   {/* Rating */}
                   <div className="w-[64px] shrink-0 text-right text-label text-[#0F2340] flex items-center justify-end gap-1">
                     <Star className="h-3.5 w-3.5 fill-[#0F2340] text-[#0F2340]" />
-                    <span>{store.rating.toFixed(1)}</span>
+                    <span>{store.rating > 0 ? store.rating.toFixed(1) : "–"}</span>
                   </div>
 
                   {/* Right Chevron */}

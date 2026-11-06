@@ -11,12 +11,12 @@ export function OrdersTabBar() {
   const { counts, filters } = useAppSelector((state) => state.orders);
 
   const tabs: Array<{ id: OrderTab; label: string; count: number; isError?: boolean }> = [
-    { id: "ALL", label: "All", count: counts.all },
-    { id: "LIVE", label: "Live", count: counts.live },
-    { id: "DELAYED", label: "Delayed", count: counts.delayed, isError: true },
-    { id: "COMPLETED", label: "Completed", count: counts.completed },
-    { id: "REFUNDED", label: "Refunded", count: counts.refunded },
-    { id: "CANCELLED", label: "Cancelled", count: counts.cancelled },
+    { id: "ALL", label: "All", count: counts?.all ?? (counts as any)?.total ?? 0 },
+    { id: "LIVE", label: "Live", count: counts?.live ?? 0 },
+    { id: "DELAYED", label: "Delayed", count: counts?.delayed ?? 0, isError: true },
+    { id: "COMPLETED", label: "Completed", count: counts?.completed ?? 0 },
+    { id: "REFUNDED", label: "Refunded", count: counts?.refunded ?? 0 },
+    { id: "CANCELLED", label: "Cancelled", count: counts?.cancelled ?? 0 },
   ];
 
   const handleSelectTab = (tabId: OrderTab) => {
@@ -35,7 +35,7 @@ export function OrdersTabBar() {
             type="button"
             onClick={() => handleSelectTab(tab.id)}
             className={cn(
-              "h-9 flex items-center justify-center pb-2 text-label whitespace-nowrap cursor-pointer transition-all border-b-2 -mb-px",
+              "h-9 flex items-center justify-center pb-2 text-label whitespace-nowrap cursor-pointer transition-all border-b-2 -mb-px font-sans [font-variation-settings:'wght'_700]",
               isActive
                 ? "border-[#1c3a66] text-[#0f2340] font-bold"
                 : "border-transparent font-bold hover:border-gray-300",
@@ -44,7 +44,7 @@ export function OrdersTabBar() {
             )}
           >
             <span>
-              {tab.label} · {tab.count.toLocaleString("en-IN")}
+              {tab.label} · {(tab.count ?? 0).toLocaleString("en-IN")}
             </span>
           </button>
         );

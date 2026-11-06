@@ -1,4 +1,6 @@
 export type OrderStatus =
+  | "New"
+  | "Accepted"
   | "Preparing"
   | "Ready"
   | "Delayed"
@@ -30,7 +32,10 @@ export interface OrderItem {
   quantity: number;
   unitPrice: number;
   totalPrice: number;
+  /** "Oat milk +₹50", "Hazelnut syrup ×2" */
   modifiers?: string[];
+  /** Customer note for this drink */
+  instructions?: string | null;
   image?: string;
 }
 
@@ -188,6 +193,8 @@ export interface Order {
   isDelayed?: boolean;
   isCancelled?: boolean;
   isRefunded?: boolean;
+  invoiceNumber?: string;
+  officialOrderNumber?: string;
   kdsStation?: string; // e.g. "Bar 1 KDS", "Kitchen KDS"
   baristaName?: string;
   priorityTier?: string;

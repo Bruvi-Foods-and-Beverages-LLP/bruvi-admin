@@ -169,7 +169,7 @@ export function OrdersFilterToolbar() {
 
         {activeDropdown === "status" && (
           <div className="absolute left-0 mt-1 w-44 rounded-[12px] bg-white border border-[#dce2ea] shadow-floating py-1.5 z-30">
-            {["All", "Preparing", "Ready", "Delayed", "Completed", "Cancelled", "Part refund"].map(
+            {["All", "New", "Accepted", "Preparing", "Ready", "Delayed", "Completed", "Cancelled", "Part refund"].map(
               (st) => (
                 <button
                   key={st}

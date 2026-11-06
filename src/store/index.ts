@@ -6,6 +6,7 @@ import storeMenuReducer from "./slices/store-menu-slice";
 import storeHoursReducer from "./slices/store-hours-slice";
 import dashboardReducer from "./slices/dashboard-slice";
 import catalogReducer from "./slices/catalog-slice";
+import modifierGroupsReducer from "./slices/modifier-groups-slice";
 import ordersReducer from "./slices/orders-slice";
 
 export const store = configureStore({
@@ -17,6 +18,7 @@ export const store = configureStore({
     dashboard: dashboardReducer,
     catalog: catalogReducer,
     orders: ordersReducer,
+    modifierGroups: modifierGroupsReducer,
   },
   devTools:
     process.env.NODE_ENV !== "production" ||

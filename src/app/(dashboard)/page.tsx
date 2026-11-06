@@ -30,7 +30,7 @@ export default function DashboardPage() {
   };
 
   const handleOpenReport = () => {
-    alert("Daily Operations Report for " + (feed?.user.name || "Kavya") + " is generated.");
+    alert("Daily Operations Report is generated.");
   };
 
   if (isLoading && !feed) {

@@ -57,9 +57,14 @@ export default function StoreDetailPage({ params }: PageProps) {
       : overview?.liveChannels?.appPickup?.status === "PAUSED";
 
   React.useEffect(() => {
-    if (storeId) {
-      dispatch(fetchStoreOverview(storeId));
-    }
+    if (!storeId) return;
+    dispatch(fetchStoreOverview(storeId));
+
+    // Keep today's sales, queue and hourly bars live while the page is open
+    const timer = setInterval(() => {
+      if (document.visibilityState === "visible") dispatch(fetchStoreOverview(storeId));
+    }, 15_000);
+    return () => clearInterval(timer);
   }, [dispatch, storeId]);
 
   const handleToggleAppOrders = () => {
@@ -93,8 +98,10 @@ export default function StoreDetailPage({ params }: PageProps) {
           storeIdOrCode: overview.store.code || overview.store.id,
           payload: {
             weeklyHours: currentStoreHours.weeklyHours,
-            channelHours: currentStoreHours.channelHours,
-            specialDates: currentStoreHours.specialDates,
+            channelHours: currentStoreHours.channelHours.map((c) => ({
+              channelId: c.channelId,
+              cutoffMinutesBeforeClose: c.cutoffMinutesBeforeClose,
+            })),
             timezone: currentStoreHours.timezone,
             timezoneLabel: currentStoreHours.timezoneLabel,
           },

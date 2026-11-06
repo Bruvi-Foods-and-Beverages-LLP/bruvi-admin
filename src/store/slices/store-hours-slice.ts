@@ -45,6 +45,7 @@ interface StoreHoursState {
   isSaving: boolean;
   error: string | null;
   isDirty: boolean;
+  saveError: string | null;
   copyModalOpen: boolean;
   addSpecialDateModalOpen: boolean;
 }
@@ -55,6 +56,7 @@ const initialState: StoreHoursState = {
   isSaving: false,
   error: null,
   isDirty: false,
+  saveError: null,
   copyModalOpen: false,
   addSpecialDateModalOpen: false,
 };
@@ -171,6 +173,29 @@ export const addSpecialDate = createAsyncThunk(
   }
 );
 
+export const removeSpecialDate = createAsyncThunk(
+  "storeHours/removeSpecialDate",
+  async (
+    { storeIdOrCode, specialDateId }: { storeIdOrCode: string; specialDateId: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      const res = await fetch(
+        `/api/proxy/stores/${encodeURIComponent(storeIdOrCode)}/hours/special-dates/${encodeURIComponent(specialDateId)}`,
+        { method: "DELETE" }
+      );
+      if (!res.ok) {
+        const errJson = await res.json().catch(() => ({}));
+        return rejectWithValue(errJson.message || "Failed to remove special date");
+      }
+      const json = await res.json();
+      return (json.data || json) as StoreHoursEntity;
+    } catch (err) {
+      return rejectWithValue(err instanceof Error ? err.message : "Unable to remove special date");
+    }
+  }
+);
+
 export const storeHoursSlice = createSlice({
   name: "storeHours",
   initialState,
@@ -214,6 +239,20 @@ export const storeHoursSlice = createSlice({
       });
       state.isDirty = true;
     },
+    updateChannelCutoff: (
+      state,
+      action: PayloadAction<{ channelId: string; minutes: number }>
+    ) => {
+      if (!state.currentStoreHours) return;
+      const ch = state.currentStoreHours.channelHours.find((c) => c.channelId === action.payload.channelId);
+      if (ch) {
+        ch.cutoffMinutesBeforeClose = action.payload.minutes;
+        state.isDirty = true;
+      }
+    },
+    clearSaveError: (state) => {
+      state.saveError = null;
+    },
     updateTimezone: (state, action: PayloadAction<{ timezone: string; label: string }>) => {
       if (!state.currentStoreHours) return;
       state.currentStoreHours.timezone = action.payload.timezone;
@@ -243,7 +282,7 @@ export const storeHoursSlice = createSlice({
     // Save
     builder.addCase(saveStoreHours.pending, (state) => {
       state.isSaving = true;
-      state.error = null;
+      state.saveError = null;
     });
     builder.addCase(saveStoreHours.fulfilled, (state, action) => {
       state.isSaving = false;
@@ -252,13 +291,27 @@ export const storeHoursSlice = createSlice({
     });
     builder.addCase(saveStoreHours.rejected, (state, action) => {
       state.isSaving = false;
-      state.error = (action.payload as string) || "Failed to save store hours";
+      state.saveError = (action.payload as string) || "Failed to save store hours";
     });
 
     // Add Special Date
+    builder.addCase(addSpecialDate.pending, (state) => {
+      state.saveError = null;
+    });
     builder.addCase(addSpecialDate.fulfilled, (state, action) => {
-      state.currentStoreHours = action.payload;
+      // Take only the special dates from the server so unsaved weekly edits survive.
+      if (state.currentStoreHours) state.currentStoreHours.specialDates = action.payload.specialDates;
+      else state.currentStoreHours = action.payload;
       state.addSpecialDateModalOpen = false;
+    });
+    builder.addCase(addSpecialDate.rejected, (state, action) => {
+      state.saveError = (action.payload as string) || "Failed to add special date";
+    });
+    builder.addCase(removeSpecialDate.fulfilled, (state, action) => {
+      if (state.currentStoreHours) state.currentStoreHours.specialDates = action.payload.specialDates;
+    });
+    builder.addCase(removeSpecialDate.rejected, (state, action) => {
+      state.saveError = (action.payload as string) || "Failed to remove special date";
     });
   },
 });
@@ -269,6 +322,8 @@ export const {
   toggleDayOpen,
   updateDayHours,
   applyMondayToAllDays,
+  updateChannelCutoff,
+  clearSaveError,
   updateTimezone,
   resetDirty,
 } = storeHoursSlice.actions;

@@ -9,6 +9,14 @@ import { GeofenceMapPreview } from "@/components/stores/geofence-map-preview";
 import { StoreSetupChecklist } from "@/components/stores/store-setup-checklist";
 import { AddCityModal } from "@/components/stores/add-city-modal";
 import { CityModel } from "@/stores/use-cities-store";
+import { CatalogApi } from "@/lib/api/catalog";
+import type { CategoryItem } from "@/types/catalog";
+import {
+  HoursSetupModal,
+  summariseWeek,
+  type SetupDayHours,
+} from "@/components/stores/new/hours-setup-modal";
+import { MenuSetupModal } from "@/components/stores/new/menu-setup-modal";
 import { PlaceAutocompleteInput } from "@/components/maps/place-autocomplete-input";
 import {
   InteractiveLocationPickerModal,
@@ -50,7 +58,7 @@ export default function CreateStorePage() {
   const [latitude, setLatitude] = React.useState<number | null>(null);
   const [longitude, setLongitude] = React.useState<number | null>(null);
   const [postalCode, setPostalCode] = React.useState("");
-  const [stateName, setStateName] = React.useState("Maharashtra");
+  const [stateName, setStateName] = React.useState("");
   const [geofenceRadius, setGeofenceRadius] = React.useState(50);
   const [phone, setPhone] = React.useState("");
   const [email, setEmail] = React.useState("");
@@ -59,6 +67,40 @@ export default function CreateStorePage() {
   const [fssai, setFssai] = React.useState("");
   const [openDate, setOpenDate] = React.useState("");
   const [isSubmitting, setIsSubmitting] = React.useState(false);
+
+  // Menu and hours chosen before the store exists; they are saved right after it is created
+  const [hoursDraft, setHoursDraft] = React.useState<SetupDayHours[] | null>(null);
+  const [isHoursModalOpen, setIsHoursModalOpen] = React.useState(false);
+  const [hiddenCategoryIds, setHiddenCategoryIds] = React.useState<string[] | null>(null);
+  const [isMenuModalOpen, setIsMenuModalOpen] = React.useState(false);
+  const [catalogCategories, setCatalogCategories] = React.useState<CategoryItem[]>([]);
+  const [categoriesLoading, setCategoriesLoading] = React.useState(false);
+  const [categoriesError, setCategoriesError] = React.useState<string | null>(null);
+
+  const loadCategories = React.useCallback(async () => {
+    setCategoriesLoading(true);
+    setCategoriesError(null);
+    try {
+      const all = await CatalogApi.getCategories();
+      setCatalogCategories(all.filter((c) => c.isActive !== false));
+    } catch (err) {
+      setCategoriesError(err instanceof Error ? err.message : "Could not load categories");
+    } finally {
+      setCategoriesLoading(false);
+    }
+  }, []);
+
+  const openMenuSetup = () => {
+    setIsMenuModalOpen(true);
+    if (catalogCategories.length === 0) void loadCategories();
+  };
+
+  const menuSummary =
+    hiddenCategoryIds === null
+      ? null
+      : hiddenCategoryIds.length === 0
+      ? "Every catalogue category on the menu"
+      : `${hiddenCategoryIds.length} categor${hiddenCategoryIds.length === 1 ? "y" : "ies"} hidden at this store`;
 
   // Fallback coordinates for common operational cities
   const KNOWN_CITY_COORDINATES: Record<string, { lat: number; lng: number; state: string }> = React.useMemo(
@@ -204,8 +246,8 @@ export default function CreateStorePage() {
   const isCityValid = city.trim().length > 0;
   const isFormatValid = format.length > 0;
   const isAddressValid = address.trim().length > 0;
-  const isPhoneValid = !phone.trim() || /^\+?[0-9\s-]{8,20}$/.test(phone.trim());
-  const isEmailValid = !email.trim() || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+  const isPhoneValid = /^\+?[0-9\s-]{8,20}$/.test(phone.trim());
+  const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
   const isGstinValid =
     !gstin.trim() ||
     /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/i.test(gstin.trim());
@@ -218,6 +260,9 @@ export default function CreateStorePage() {
   if (!isCityValid) attentionFields.push("City");
   if (!isFormatValid) attentionFields.push("Store format");
   if (!isAddressValid) attentionFields.push("Store address");
+  if (isAddressValid && (latitude === null || longitude === null)) {
+    attentionFields.push("Store location (pick the address from suggestions or the map)");
+  }
   if (!isPhoneValid) attentionFields.push("Phone");
   if (!isEmailValid) attentionFields.push("Email");
   if (gstin.trim() && !isGstinValid) attentionFields.push("GSTIN");
@@ -417,10 +462,6 @@ export default function CreateStorePage() {
       `Publishing ${storeName.trim()} in ${city.trim()} to the live network...`
     );
 
-    // Fallback coordinates if user typed arbitrary text without selecting Google Maps pin
-    const finalLat = latitude ?? 18.5481;
-    const finalLng = longitude ?? 73.9030;
-
     const matchedCity = cities.find(
       (c) => c.name.trim().toLowerCase() === city.trim().toLowerCase()
     );
@@ -434,20 +475,18 @@ export default function CreateStorePage() {
       addressLine1: address.trim(),
       state: matchedCity?.state || stateName,
       postalCode: postalCode.trim() || undefined,
-      latitude: finalLat,
-      longitude: finalLng,
+      latitude: latitude as number,
+      longitude: longitude as number,
       geofenceRadiusMeters: geofenceRadius,
-      phone: phone.trim() || "+91 20 4860 2213",
-      email: email.trim() || "store@bruvi.in",
-      managerName: manager.trim() || "Lead Barista (TBD)",
+      phone: phone.trim(),
+      email: email.trim(),
+      managerName: manager.trim() || undefined,
       gstin: gstin.trim() || undefined,
       fssaiLicenceNo: fssai.trim(),
       openDate: openDate || new Date().toISOString().split("T")[0],
       status: "OPEN" as const,
       statusDetail: "Open",
       isActive: true,
-      salesToday: 0,
-      rating: 5.0,
     };
 
     try {
@@ -476,6 +515,30 @@ export default function CreateStorePage() {
 
       const createdStore = responseJson?.data || responseJson;
 
+      // Save the menu and hours chosen in the setup steps; a failure here must not hide that the store exists
+      const followUps: string[] = [];
+      const newId = createdStore?.id as string | undefined;
+      if (newId && hoursDraft) {
+        const r = await fetch(`/api/proxy/stores/${encodeURIComponent(newId)}/hours`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ weeklyHours: hoursDraft }),
+        }).catch(() => null);
+        if (!r?.ok) followUps.push("opening hours");
+      }
+      if (newId && hiddenCategoryIds && hiddenCategoryIds.length > 0) {
+        const results = await Promise.all(
+          hiddenCategoryIds.map((categoryId) =>
+            fetch(`/api/proxy/stores/${encodeURIComponent(newId)}/menu-categories/${encodeURIComponent(categoryId)}`, {
+              method: "PATCH",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ isVisible: false }),
+            }).then((r) => r.ok).catch(() => false)
+          )
+        );
+        if (results.some((ok) => !ok)) followUps.push("menu categories");
+      }
+
       // Update both Redux enterprise store and local stores store
       const newStoreEntity = {
         id: createdStore?.id || `store-${Date.now()}`,
@@ -484,12 +547,12 @@ export default function CreateStorePage() {
         type: storePayload.format,
         cityId: storePayload.cityId,
         city: storePayload.cityName,
-        manager: storePayload.managerName,
-        hours: "7:00 am – 11:00 pm",
+        manager: storePayload.managerName ?? "",
+        hours: hoursDraft ? summariseWeek(hoursDraft) : "Hours not set",
         status: "Open" as const,
         statusDetail: "Open",
         salesToday: 0,
-        rating: 5.0,
+        rating: 0,
       };
 
       dispatch(addStoreLocally(newStoreEntity));
@@ -501,7 +564,10 @@ export default function CreateStorePage() {
       // User must explicitly click "View Stores Network" to navigate (no surprise redirects)
       actionStatus.showSuccess({
         title: "Store Created Successfully",
-        description: `${storePayload.name} has been published to the Bruvi network and is ready for operations.`,
+        description:
+          followUps.length > 0
+            ? `${storePayload.name} was created, but its ${followUps.join(" and ")} could not be saved. Set them from the store's Hours and Menu tabs.`
+            : `${storePayload.name} has been published to the Bruvi network and is ready for operations.`,
         primaryActionLabel: "View Stores Network",
         onPrimaryAction: () => {
           actionStatus.closeModal();
@@ -1048,7 +1114,14 @@ export default function CreateStorePage() {
 
           {/* Right Column: Setup Checklist Sidebar (400px) */}
           <div className="w-full lg:w-[400px] shrink-0">
-            <StoreSetupChecklist city={city} />
+            <StoreSetupChecklist
+              city={city}
+              menuSummary={menuSummary}
+              onSetupMenu={openMenuSetup}
+              hoursSummary={hoursDraft ? summariseWeek(hoursDraft) : null}
+              onSetupHours={() => setIsHoursModalOpen(true)}
+              managerName={manager.trim() || undefined}
+            />
           </div>
         </div>
 
@@ -1104,6 +1177,23 @@ export default function CreateStorePage() {
         </div>
       </div>
 
+      <HoursSetupModal
+        isOpen={isHoursModalOpen}
+        value={hoursDraft}
+        onClose={() => setIsHoursModalOpen(false)}
+        onSave={setHoursDraft}
+      />
+      <MenuSetupModal
+        isOpen={isMenuModalOpen}
+        categories={catalogCategories}
+        isLoading={categoriesLoading}
+        error={categoriesError}
+        hiddenIds={hiddenCategoryIds ?? []}
+        onRetry={loadCategories}
+        onClose={() => setIsMenuModalOpen(false)}
+        onSave={setHiddenCategoryIds}
+      />
+
       {/* Add City Modal */}
       <AddCityModal
         isOpen={isAddCityModalOpen}
@@ -1117,8 +1207,8 @@ export default function CreateStorePage() {
         isOpen={isLocationPickerOpen}
         onClose={() => setIsLocationPickerOpen(false)}
         onConfirm={handleLocationPicked}
-        initialLatitude={latitude ?? 18.5481}
-        initialLongitude={longitude ?? 73.9030}
+        initialLatitude={latitude ?? 20.5937}
+        initialLongitude={longitude ?? 78.9629}
         initialAddress={address}
         initialRadius={geofenceRadius}
         cityName={city}

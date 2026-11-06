@@ -16,6 +16,14 @@ export const NAV_TABS = [
 interface CatalogPageHeaderProps {
   activeNavTab?: string;
   totalProductsCount?: number;
+  /** Overrides the default "Catalog / Products" breadcrumb */
+  breadcrumb?: string;
+  /** Overrides the default "Products" page title */
+  title?: string;
+  /** Replaces the default Import CSV / New product actions */
+  actions?: React.ReactNode;
+  /** Optional meta row rendered under the title (e.g. type chip + summary) */
+  meta?: React.ReactNode;
 }
 
 /**
@@ -24,6 +32,10 @@ interface CatalogPageHeaderProps {
  */
 export function CatalogPageHeader({
   activeNavTab = "Products",
+  breadcrumb = "Catalog / Products",
+  title = "Products",
+  actions,
+  meta,
 }: CatalogPageHeaderProps) {
   const tabs = NAV_TABS.map((tab) => ({
     ...tab,
@@ -48,15 +60,19 @@ export function CatalogPageHeader({
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 w-full">
         {/* Left: Overline & Display Title */}
         <div className="flex flex-col gap-1">
-          <span className="text-[14px] leading-5 font-normal text-[#55647A] font-sans">
-            Catalog / Products
+          <span className="text-[14px] leading-5 font-normal text-text-secondary font-sans">
+            {breadcrumb}
           </span>
-          <h1 className="text-[32px] leading-[38px] font-black text-[#0F2340] font-archivo tracking-tight">
-            Products
+          <h1 className="text-display-s text-text">
+            {title}
           </h1>
+          {meta}
         </div>
 
         {/* Right: Actions Row (Figma 225:90285) */}
+        {actions ? (
+          <div className="flex items-center gap-2">{actions}</div>
+        ) : (
         <div className="flex items-center gap-2">
           {/* Import CSV Button (Figma 225:90286) */}
           <button
@@ -79,6 +95,7 @@ export function CatalogPageHeader({
             </Link>
           </RbacGuard>
         </div>
+        )}
       </div>
 
       {/* 2. Subnavigation Tabs Row (Figma 225:90294) */}

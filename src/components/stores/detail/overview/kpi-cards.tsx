@@ -51,10 +51,10 @@ export function KpiCards({ kpi }: KpiCardsProps) {
       <div className="flex flex-col justify-between h-[126px] p-5 rounded-[16px] bg-surface border border-border text-text shadow-sm transition-all hover:shadow-md">
         <span className="text-body-s text-text-muted">Rating · 30 days</span>
         <span className="text-price-m text-text">
-          {kpi.rating.toFixed(1)}
+          {kpi.reviewCount > 0 ? kpi.rating.toFixed(1) : "–"}
         </span>
         <span className="text-caption font-medium text-text-muted">
-          {kpi.reviewCount.toLocaleString("en-IN")} reviews
+          {kpi.reviewCount > 0 ? `${kpi.reviewCount.toLocaleString("en-IN")} reviews` : "No reviews yet"}
         </span>
       </div>
     </div>

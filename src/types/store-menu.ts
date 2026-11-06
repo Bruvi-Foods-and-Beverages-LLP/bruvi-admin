@@ -15,6 +15,7 @@ export interface StoreMenuItem {
   name: string;
   subtitle?: string | null;
   category: string;
+  categoryId?: string | null;
   sku: string;
   basePricePaise: number;
   basePriceFormatted: string;
@@ -36,11 +37,30 @@ export interface StoreMenuItem {
   updatedAt: string;
 }
 
+export interface CategoryWindow {
+  /** Empty = every day. */
+  days: string[];
+  from: string;
+  to: string;
+}
+
 export interface StoreMenuCategory {
   id: string;
+  /** Category UUID; null for the "All" pseudo-category. */
+  categoryId: string | null;
   name: string;
   count: number;
   totalCount: number;
+  isVisible: boolean;
+  windows: CategoryWindow[];
+  windowLabel: string;
+  liveNow: boolean;
+  statusLabel: string;
+}
+
+export interface UpdateStoreMenuCategoryPayload {
+  isVisible?: boolean;
+  windows?: CategoryWindow[];
 }
 
 export interface StoreMenuFeed {
@@ -53,6 +73,7 @@ export interface StoreMenuFeed {
   unavailableCount: number;
   categories: StoreMenuCategory[];
   items: StoreMenuItem[];
+  menuClock: { timezone: string; weekday: string; time: string };
 }
 
 export interface UpdateStoreMenuItemPayload {

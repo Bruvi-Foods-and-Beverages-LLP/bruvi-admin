@@ -39,6 +39,16 @@ export interface ProductVariant {
   updatedAt?: string;
 }
 
+/** How the customer app draws a group (Figma 225:61688). */
+export type ModifierDisplayStyle =
+  | "CARDS"
+  | "TOGGLE"
+  | "SEGMENTED"
+  | "RADIO"
+  | "CHECKBOX"
+  | "STEPPER"
+  | "TEXT";
+
 export interface ModifierOption {
   id: string;
   name: string;
@@ -47,8 +57,21 @@ export interface ModifierOption {
   isDefault: boolean;
   isAvailable: boolean;
   displayOrder: number;
+  code?: string | null;
+  /** Second line, e.g. "250 ml" */
+  detail?: string | null;
+  /** Units a customer can add (pumps 0–4); 1 for everything but steppers */
+  maxQuantity?: number;
+  calorieDelta?: number;
+  /** Level groups: recipe quantity multiplier (×0 / 0.6 / 1 / 1.4) */
+  recipeMultiplier?: number | null;
+  /** Group revealed while this option is chosen (milk → milk amount) */
+  nestedGroupId?: string | null;
+  /** Share (0-100) of this group's picks that chose this option (detail endpoint only) */
+  pickedPercent?: number;
 }
 
+/** A group as embedded in a product (product endpoints send the base fields only). */
 export interface ModifierGroup {
   id: string;
   name: string;
@@ -58,10 +81,99 @@ export interface ModifierGroup {
   isRequired: boolean;
   displayOrder: number;
   customHint?: string | null;
+  code?: string | null;
+  displayStyle?: ModifierDisplayStyle;
+  unitLabel?: string | null;
+  /** Units that cost nothing (the first shot) */
+  includedQuantity?: number;
+  maxLength?: number | null;
+  placeholder?: string | null;
+  hint?: string | null;
+  isActive?: boolean;
+  /** Products using this group */
+  productCount?: number;
+  /** Options that reveal this group; non-empty = nested group */
+  parentOptionIds?: string[];
   modifiers: ModifierOption[];
 }
 
-export type ModifierGroupDetail = ModifierGroup;
+export interface LinkedProduct {
+  id: string;
+  name: string;
+  imageUrl: string | null;
+  defaultModifierId: string | null;
+  hiddenModifierIds: string[];
+}
+
+/** Admin modifier endpoints (/admin/catalog/modifiers/groups[/:id]) send every field. */
+export interface ModifierGroupDetail extends ModifierGroup {
+  code: string | null;
+  displayStyle: ModifierDisplayStyle;
+  unitLabel: string | null;
+  includedQuantity: number;
+  maxLength: number | null;
+  placeholder: string | null;
+  hint: string | null;
+  isActive: boolean;
+  productCount: number;
+  parentOptionIds: string[];
+  metadata: Record<string, unknown>;
+  /** Detail endpoint only */
+  linkedProducts?: LinkedProduct[];
+  updatedAt: string | null;
+}
+
+export interface ModifierGroupPayload {
+  name?: string;
+  code?: string | null;
+  groupType?: ModifierGroupType;
+  displayStyle?: ModifierDisplayStyle;
+  minSelect?: number;
+  maxSelect?: number;
+  isRequired?: boolean;
+  unitLabel?: string | null;
+  includedQuantity?: number;
+  maxLength?: number | null;
+  placeholder?: string | null;
+  hint?: string | null;
+  isActive?: boolean;
+  metadata?: Record<string, unknown>;
+}
+
+export interface ModifierOptionPayload {
+  name?: string;
+  code?: string | null;
+  detail?: string | null;
+  pricePaise?: number;
+  isDefault?: boolean;
+  isAvailable?: boolean;
+  displayOrder?: number;
+  maxQuantity?: number;
+  recipeMultiplier?: number | null;
+  nestedGroupId?: string | null;
+}
+
+/** One group attached to a product, with that product's own settings */
+export interface ProductModifierBinding {
+  modifierGroupId: string;
+  name: string;
+  groupType: ModifierGroupType;
+  displayStyle: ModifierDisplayStyle;
+  displayOrder: number;
+  defaultModifierId: string | null;
+  hiddenModifierIds: string[];
+  isRequiredOverride: boolean | null;
+  maxSelectOverride: number | null;
+  includedQuantityOverride: number | null;
+  options: { id: string; name: string; isDefault: boolean }[];
+}
+
+export interface ModifierStockEntry {
+  modifierId: string;
+  isAvailable: boolean;
+  reason: string | null;
+  updatedAt?: string;
+}
 
 export interface StoreOverride {
   outletId: string;
@@ -265,4 +377,34 @@ export interface CatalogQueryFilters {
   limit?: number;
   sortBy?: "name" | "sku" | "price" | "category" | "created_at" | "display_order";
   sortOrder?: "asc" | "desc";
+}
+
+/** Real sales performance for one product (GET /admin/catalog/products/:id/performance). */
+export interface ProductPerformance {
+  productId: string;
+  scope: { outletIds: string[] | null; channel: string | null; label: "Network" | "Selected stores" };
+  businessDate: string;
+  soldToday: number;
+  ordersToday: number;
+  revenueTodayRupees: number;
+  changePercent: number | null;
+  comparisonLabel: string;
+  categorySharePercent: number | null;
+  series: Array<{ date: string; label: string; units: number; revenueRupees: number; isToday: boolean }>;
+  margin: {
+    percent: number | null;
+    unitCostRupees: number | null;
+    basis: "REALISED_30D" | "RECIPE_ESTIMATE" | "UNKNOWN";
+    unitsSampled: number;
+  };
+  topStore: { outletId: string; name: string; unitsToday: number } | null;
+  topModifier: { group: string; option: string; sharePercent: number } | null;
+  refunds: { unitsSold: number; unitsRefunded: number; refundRatePercent: number | null };
+  updatedAt: string;
+}
+
+export interface ProductPerformanceFilters {
+  outletIds?: string[];
+  channel?: "APP" | "QR" | "KIOSK" | "POS" | "COUNTER";
+  days?: number;
 }
