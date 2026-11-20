@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import { AdminAuthClient } from "@/features/auth/api/auth-client";
 
 export interface StoreEntity {
   id: string;
@@ -181,7 +182,7 @@ export const fetchStores = createAsyncThunk(
   "stores/fetchStores",
   async (_, { rejectWithValue }) => {
     try {
-      const res = await fetch("/api/proxy/stores?limit=100");
+      const res = await AdminAuthClient.authenticatedFetch("/api/proxy/stores?limit=100");
       if (!res.ok) {
         const errorJson = await res.json().catch(() => ({}));
         return rejectWithValue(errorJson.message || "Failed to load stores");
@@ -295,7 +296,7 @@ export const createStoreThunk = createAsyncThunk(
   "stores/createStore",
   async (storePayload: Record<string, unknown>, { rejectWithValue }) => {
     try {
-      const res = await fetch("/api/proxy/stores", {
+      const res = await AdminAuthClient.authenticatedFetch("/api/proxy/stores", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(storePayload),

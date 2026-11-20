@@ -16,6 +16,10 @@ import {
   ProductVariant,
   ProductPerformance,
   ProductPerformanceFilters,
+  StoreOverride,
+  CityPriceRule,
+  BulkStoreProductOverridePayload,
+  PublishPricingBatchPayload,
 } from "@/types/catalog";
 
 export const CatalogApi = {
@@ -234,5 +238,49 @@ export const CatalogApi = {
 
   async deleteVariant(variantId: string): Promise<{ success: boolean; message: string }> {
     return apiClient.delete<{ success: boolean; message: string }>(`/admin/catalog/variants/${variantId}`);
+  },
+
+  // ---------------------------------------------------------------------------
+  // Store Overrides & Regional Pricing
+  // ---------------------------------------------------------------------------
+
+  async getStoreOverrides(filters?: { productId?: string; outletId?: string }): Promise<StoreOverride[]> {
+    return apiClient.get<StoreOverride[]>("/admin/catalog/store-overrides", {
+      params: filters as Record<string, string | number | boolean | undefined>,
+    });
+  },
+
+  async updateStoreOverride(
+    payload: Partial<StoreOverride> & { outletId: string; productId: string }
+  ): Promise<StoreOverride> {
+    return apiClient.put<StoreOverride>("/admin/catalog/store-overrides", payload);
+  },
+
+  async bulkStoreOverrides(payload: BulkStoreProductOverridePayload): Promise<StoreOverride[]> {
+    return apiClient.post<StoreOverride[]>("/admin/catalog/store-overrides/bulk", payload);
+  },
+
+  async deleteStoreOverride(id: string): Promise<{ success: boolean; message: string }> {
+    return apiClient.delete<{ success: boolean; message: string }>(`/admin/catalog/store-overrides/${id}`);
+  },
+
+  async getCityPriceRules(): Promise<CityPriceRule[]> {
+    return apiClient.get<CityPriceRule[]>("/admin/catalog/city-price-rules");
+  },
+
+  async updateCityPriceRule(
+    id: string,
+    payload: { name?: string; deltaPricePaise?: number; percentageModifier?: number; isActive?: boolean }
+  ): Promise<CityPriceRule> {
+    return apiClient.patch<CityPriceRule>(`/admin/catalog/city-price-rules/${id}`, payload);
+  },
+
+  async publishPricingBatch(
+    payload: PublishPricingBatchPayload
+  ): Promise<{ success: boolean; baseUpdatedCount: number; overridesUpdatedCount: number }> {
+    return apiClient.post<{ success: boolean; baseUpdatedCount: number; overridesUpdatedCount: number }>(
+      "/admin/catalog/pricing/publish",
+      payload
+    );
   },
 };

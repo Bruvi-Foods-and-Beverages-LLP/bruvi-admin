@@ -1,0 +1,166 @@
+- generic [active] [ref=f7e1]:
+  - generic [ref=f7e2]:
+    - complementary [ref=f7e3]:
+      - link "HQ" [ref=f7e5] [cursor=pointer]:
+        - /url: /
+      - generic [ref=f7e16]:
+        - link "Dashboard" [ref=f7e18] [cursor=pointer]:
+          - /url: /
+        - generic [ref=f7e23]:
+          - generic [ref=f7e24]: Operations
+          - generic [ref=f7e26]:
+            - link "Orders" [ref=f7e27] [cursor=pointer]:
+              - /url: /orders
+            - link "Stores" [ref=f7e32] [cursor=pointer]:
+              - /url: /stores
+        - generic [ref=f7e40]:
+          - generic [ref=f7e41]: Menu
+          - generic [ref=f7e43]:
+            - link "Catalog" [ref=f7e44] [cursor=pointer]:
+              - /url: /catalog
+            - link "Recipes" [ref=f7e49] [cursor=pointer]:
+              - /url: /recipes
+        - generic [ref=f7e54]:
+          - generic [ref=f7e55]: Supply
+          - generic [ref=f7e57]:
+            - link "Inventory" [ref=f7e58] [cursor=pointer]:
+              - /url: /inventory
+            - link "Warehouse" [ref=f7e63] [cursor=pointer]:
+              - /url: /warehouse
+        - generic [ref=f7e68]:
+          - generic [ref=f7e69]: Growth
+          - generic [ref=f7e71]:
+            - link "Customers" [ref=f7e72] [cursor=pointer]:
+              - /url: /customers
+            - link "Marketing" [ref=f7e78] [cursor=pointer]:
+              - /url: /marketing
+            - link "BRUVI LAB" [ref=f7e83] [cursor=pointer]:
+              - /url: /lab
+            - link "Loyalty" [ref=f7e88] [cursor=pointer]:
+              - /url: /loyalty
+            - link "Subscriptions" [ref=f7e93] [cursor=pointer]:
+              - /url: /subscriptions
+        - generic [ref=f7e98]:
+          - generic [ref=f7e99]: Business
+          - generic [ref=f7e101]:
+            - link "Finance" [ref=f7e102] [cursor=pointer]:
+              - /url: /finance
+            - link "Analytics" [ref=f7e109] [cursor=pointer]:
+              - /url: /analytics
+            - link "Staff" [ref=f7e114] [cursor=pointer]:
+              - /url: /staff
+            - link "Settings" [ref=f7e121] [cursor=pointer]:
+              - /url: /settings
+      - button "Staff profile menu" [ref=f7e130] [cursor=pointer]:
+        - generic [ref=f7e131]: KR
+        - generic [ref=f7e132]:
+          - generic [ref=f7e133]: Kavya R
+          - generic [ref=f7e134]: Chief Operations Officer
+    - generic [ref=f7e137]:
+      - banner [ref=f7e138]:
+        - button "Search orders, stores, products, customers ⌘K" [ref=f7e140] [cursor=pointer]:
+          - generic [ref=f7e141]: Search orders, stores, products, customers
+          - generic [ref=f7e146]: ⌘K
+        - generic [ref=f7e147]:
+          - button "All stores · 0" [ref=f7e149] [cursor=pointer]
+          - button "Today · Fri 2 Oct" [ref=f7e158] [cursor=pointer]
+          - button "Notifications" [ref=f7e164] [cursor=pointer]
+      - main [ref=f7e169]:
+        - generic [ref=f7e170]:
+          - generic [ref=f7e171]:
+            - generic [ref=f7e172]:
+              - generic [ref=f7e173]:
+                - generic [ref=f7e174]: Growth · BRUVI Rewards
+                - heading "Loyalty" [level=1] [ref=f7e175]
+              - generic [ref=f7e176]:
+                - button "Export report" [ref=f7e177] [cursor=pointer]
+                - button "Adjust points" [ref=f7e178] [cursor=pointer]
+            - generic [ref=f7e179]:
+              - button "Overview" [ref=f7e180] [cursor=pointer]
+              - button "Rules" [ref=f7e181] [cursor=pointer]
+              - button "Rewards" [ref=f7e182] [cursor=pointer]
+              - button "Tiers" [ref=f7e183] [cursor=pointer]
+              - button "Transactions" [ref=f7e184] [cursor=pointer]
+          - main [ref=f7e185]:
+            - generic [ref=f7e186]:
+              - generic [ref=f7e187]:
+                - generic [ref=f7e188]:
+                  - generic [ref=f7e189]: Loyalty members
+                  - generic [ref=f7e190]: "0"
+                  - generic [ref=f7e191]: ▲ 0 joined this month
+                - generic [ref=f7e192]:
+                  - generic [ref=f7e193]: Issued · 30 days
+                  - generic [ref=f7e194]: "0"
+                  - generic [ref=f7e195]: ▲ 0% vs prior 30 days
+                - generic [ref=f7e196]:
+                  - generic [ref=f7e197]: Redeemed · 30 days
+                  - generic [ref=f7e198]: "0"
+                  - generic [ref=f7e199]: ≈ ₹0 in rewards
+                - generic [ref=f7e200]:
+                  - generic [ref=f7e201]: Points liability
+                  - generic [ref=f7e202]: ₹0
+                  - generic [ref=f7e203]: 0 pts open · 1 pt ≈ ₹0.10
+                - generic [ref=f7e204]:
+                  - generic [ref=f7e205]: Redemption rate
+                  - generic [ref=f7e206]: 0%
+                  - generic [ref=f7e207]: Target 45%
+              - generic [ref=f7e208]:
+                - generic [ref=f7e209]:
+                  - generic [ref=f7e210]:
+                    - generic [ref=f7e211]:
+                      - generic [ref=f7e212]:
+                        - heading "Points issued vs redeemed" [level=3] [ref=f7e213]
+                        - paragraph [ref=f7e214]: Weekly, last 8 weeks · points activity
+                      - generic [ref=f7e215]:
+                        - generic [ref=f7e216]: Issued
+                        - generic [ref=f7e219]: Redeemed
+                    - generic [ref=f7e223]:
+                      - generic [ref=f7e224]: "100"
+                      - generic [ref=f7e225]: "50"
+                      - generic [ref=f7e226]: "0"
+                  - generic [ref=f7e228]:
+                    - generic [ref=f7e229]:
+                      - generic [ref=f7e230]:
+                        - heading "Top rewards redeemed" [level=3] [ref=f7e231]
+                        - paragraph [ref=f7e232]: Last 30 days · 0 redeemed
+                      - button "All rewards →" [ref=f7e233] [cursor=pointer]
+                    - generic [ref=f7e234]:
+                      - generic [ref=f7e235]: Reward
+                      - generic [ref=f7e236]: Cost
+                      - generic [ref=f7e237]: Redeemed
+                      - generic [ref=f7e238]: Share of points
+                    - generic [ref=f7e239]: No rewards redeemed yet.
+                - generic [ref=f7e241]:
+                  - generic [ref=f7e242]:
+                    - generic [ref=f7e243]:
+                      - heading "Tier distribution" [level=3] [ref=f7e244]
+                      - button "Tiers →" [ref=f7e245] [cursor=pointer]
+                    - generic [ref=f7e246]:
+                      - generic "Silver 0%"
+                      - generic "Gold 0%"
+                      - generic "Platinum 0%"
+                    - generic [ref=f7e247]:
+                      - generic [ref=f7e248]:
+                        - generic [ref=f7e250]: Silver
+                        - generic [ref=f7e251]: 0–999
+                        - generic [ref=f7e252]: "0"
+                        - generic [ref=f7e253]: 0%
+                      - generic [ref=f7e254]:
+                        - generic [ref=f7e256]: Gold
+                        - generic [ref=f7e257]: 1,000–1,999
+                        - generic [ref=f7e258]: "0"
+                        - generic [ref=f7e259]: 0%
+                      - generic [ref=f7e260]:
+                        - generic [ref=f7e262]: Platinum
+                        - generic [ref=f7e263]: 2,000+
+                        - generic [ref=f7e264]: "0"
+                        - generic [ref=f7e265]: 0%
+                  - generic [ref=f7e266]:
+                    - generic [ref=f7e267]:
+                      - heading "Expiring in next 30 days" [level=3] [ref=f7e268]
+                      - generic [ref=f7e269]:
+                        - generic [ref=f7e270]: 0 pts
+                        - generic [ref=f7e271]: ≈ ₹0 · 0 members
+                    - button "Send \"points expiring\" push" [ref=f7e272] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=f7e278] [cursor=pointer]
+  - alert [ref=f7e282]

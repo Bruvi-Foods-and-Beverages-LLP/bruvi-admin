@@ -41,7 +41,7 @@ const initialState: CatalogState = {
   selectedProduct: null,
   total: 0,
   page: 1,
-  limit: 20,
+  limit: 10,
   totalPages: 1,
   counts: {
     all: 0,
@@ -57,7 +57,7 @@ const initialState: CatalogState = {
     channel: "ALL",
     prepStation: "ALL",
     page: 1,
-    limit: 20,
+    limit: 10,
     sortBy: "display_order",
     sortOrder: "asc",
   },
@@ -206,6 +206,10 @@ const catalogSlice = createSlice({
     setPage(state, action: PayloadAction<number>) {
       state.filters.page = action.payload;
     },
+    setLimit(state, action: PayloadAction<number>) {
+      state.filters.limit = action.payload;
+      state.filters.page = 1;
+    },
     toggleSelectProduct(state, action: PayloadAction<string>) {
       const id = action.payload;
       const idx = state.selectedProductIds.indexOf(id);
@@ -238,7 +242,7 @@ const catalogSlice = createSlice({
         state.products = payload.items || payload.products || [];
         state.total = payload.total ?? state.products.length;
         state.page = payload.page || 1;
-        state.limit = payload.limit || 20;
+        state.limit = payload.limit || 10;
         state.totalPages = payload.totalPages || 1;
         state.categories = payload.categories || [];
         if (payload.counts) {
@@ -352,6 +356,7 @@ export const {
   setFilterChannel,
   setFilterPrepStation,
   setPage,
+  setLimit,
   toggleSelectProduct,
   selectAllVisibleProducts,
   clearSelection,

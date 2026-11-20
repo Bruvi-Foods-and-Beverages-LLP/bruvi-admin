@@ -47,6 +47,8 @@ async function handler(
       body: ["GET", "HEAD"].includes(request.method) ? undefined : await request.blob(),
       redirect: "manual",
       cache: "no-store",
+      // A closed tab or navigation aborts the upstream request too (ends live streams)
+      signal: request.signal,
     });
 
     const responseHeaders = new Headers(backendResponse.headers);
@@ -56,6 +58,18 @@ async function handler(
     responseHeaders.delete("content-length");
     responseHeaders.delete("transfer-encoding");
     responseHeaders.delete("connection");
+
+    // Live event streams (SSE) pass through untouched: no-transform stops any compression
+    // layer from buffering them, and X-Accel-Buffering keeps nginx from holding events back.
+    const isEventStream = (backendResponse.headers.get("content-type") || "").includes("text/event-stream");
+    if (isEventStream) {
+      responseHeaders.set("Cache-Control", "no-cache, no-transform");
+      responseHeaders.set("X-Accel-Buffering", "no");
+      return new NextResponse(backendResponse.body, {
+        status: backendResponse.status,
+        headers: responseHeaders,
+      });
+    }
 
     // Prevent aggressive downstream and client-side caching
     responseHeaders.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0");
@@ -68,6 +82,10 @@ async function handler(
       headers: responseHeaders,
     });
   } catch (error) {
+    // The browser went away (closed tab, navigation): nothing to answer
+    if (request.signal.aborted) {
+      return new NextResponse(null, { status: 499 });
+    }
     console.error("BFF Proxy Gateway Error:", error);
     return NextResponse.json(
       {

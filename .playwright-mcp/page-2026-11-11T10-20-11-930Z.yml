@@ -1,0 +1,221 @@
+- generic [ref=f1e1]:
+  - generic [ref=f1e2]:
+    - complementary [ref=f1e3]:
+      - link "HQ" [ref=f1e5] [cursor=pointer]:
+        - /url: /
+      - generic [ref=f1e16]:
+        - link "Dashboard" [ref=f1e18] [cursor=pointer]:
+          - /url: /
+        - generic [ref=f1e23]:
+          - generic [ref=f1e24]: Operations
+          - generic [ref=f1e26]:
+            - link "Orders" [ref=f1e27] [cursor=pointer]:
+              - /url: /orders
+            - link "Stores" [ref=f1e32] [cursor=pointer]:
+              - /url: /stores
+        - generic [ref=f1e40]:
+          - generic [ref=f1e41]: Menu
+          - generic [ref=f1e43]:
+            - link "Catalog" [ref=f1e44] [cursor=pointer]:
+              - /url: /catalog
+            - link "Recipes" [ref=f1e49] [cursor=pointer]:
+              - /url: /recipes
+        - generic [ref=f1e54]:
+          - generic [ref=f1e55]: Supply
+          - generic [ref=f1e57]:
+            - link "Inventory" [ref=f1e58] [cursor=pointer]:
+              - /url: /inventory
+            - link "Warehouse" [ref=f1e63] [cursor=pointer]:
+              - /url: /warehouse
+        - generic [ref=f1e68]:
+          - generic [ref=f1e69]: Growth
+          - generic [ref=f1e71]:
+            - link "Customers" [ref=f1e72] [cursor=pointer]:
+              - /url: /customers
+            - link "Marketing" [ref=f1e78] [cursor=pointer]:
+              - /url: /marketing
+            - link "BRUVI LAB" [ref=f1e83] [cursor=pointer]:
+              - /url: /lab
+            - link "Loyalty" [ref=f1e88] [cursor=pointer]:
+              - /url: /loyalty
+            - link "Subscriptions" [ref=f1e93] [cursor=pointer]:
+              - /url: /subscriptions
+        - generic [ref=f1e98]:
+          - generic [ref=f1e99]: Business
+          - generic [ref=f1e101]:
+            - link "Finance" [ref=f1e102] [cursor=pointer]:
+              - /url: /finance
+            - link "Analytics" [ref=f1e109] [cursor=pointer]:
+              - /url: /analytics
+            - link "Staff" [ref=f1e114] [cursor=pointer]:
+              - /url: /staff
+            - link "Settings" [ref=f1e121] [cursor=pointer]:
+              - /url: /settings
+      - button "Staff profile menu" [ref=f1e130] [cursor=pointer]:
+        - generic [ref=f1e131]: KR
+        - generic [ref=f1e132]:
+          - generic [ref=f1e133]: Kavya R
+          - generic [ref=f1e134]: Chief Operations Officer
+    - generic [ref=f1e137]:
+      - banner [ref=f1e138]:
+        - button "Search orders, stores, products, customers ⌘K" [ref=f1e140] [cursor=pointer]:
+          - generic [ref=f1e141]: Search orders, stores, products, customers
+          - generic [ref=f1e146]: ⌘K
+        - generic [ref=f1e147]:
+          - button "All stores · 0" [ref=f1e149] [cursor=pointer]
+          - button "Today · Fri 2 Oct" [ref=f1e158] [cursor=pointer]
+          - button "Notifications" [ref=f1e164] [cursor=pointer]
+      - main [ref=f1e169]:
+        - generic [ref=f1e170]:
+          - generic [ref=f1e171]:
+            - generic [ref=f1e172]:
+              - generic [ref=f1e173]:
+                - generic [ref=f1e174]: Growth / Marketing · October 2026
+                - heading "Campaign list" [level=1] [ref=f1e175]
+              - generic [ref=f1e176]:
+                - button "Export" [ref=f1e177] [cursor=pointer]
+                - button "New campaign" [active] [ref=f1e182] [cursor=pointer]
+            - generic [ref=f1e185]:
+              - button "Overview" [ref=f1e186] [cursor=pointer]
+              - button "Campaigns" [ref=f1e187] [cursor=pointer]
+              - button "Audiences" [ref=f1e188] [cursor=pointer]
+              - button "Coupons" [ref=f1e189] [cursor=pointer]
+              - button "Push" [ref=f1e190] [cursor=pointer]
+          - main [ref=f1e191]:
+            - generic [ref=f1e192]:
+              - generic [ref=f1e193]:
+                - generic [ref=f1e194]:
+                  - textbox "Search campaigns..." [ref=f1e199]
+                  - combobox [ref=f1e201] [cursor=pointer]:
+                    - option "All channels" [selected]
+                    - option "Push"
+                    - option "WhatsApp"
+                    - option "In-app"
+                    - option "SMS"
+                - generic [ref=f1e202]:
+                  - button "All 14" [ref=f1e203] [cursor=pointer]
+                  - button "Live 2" [ref=f1e204] [cursor=pointer]
+                  - button "Scheduled 2" [ref=f1e205] [cursor=pointer]
+                  - button "Draft 3" [ref=f1e206] [cursor=pointer]
+                  - button "Completed 7" [ref=f1e207] [cursor=pointer]
+              - generic [ref=f1e208]:
+                - generic [ref=f1e209]:
+                  - generic [ref=f1e210]: Campaign
+                  - generic [ref=f1e211]: Channels
+                  - generic [ref=f1e212]: Audience
+                  - generic [ref=f1e213]: Schedule
+                  - generic [ref=f1e214]: Budget / Cap
+                  - generic [ref=f1e215]: Conversion
+                  - generic [ref=f1e216]: Revenue
+                  - generic [ref=f1e217]: Status
+                  - generic [ref=f1e218]: Actions
+                - generic [ref=f1e219]:
+                  - generic [ref=f1e220]:
+                    - generic [ref=f1e221]: Monsoon Matcha
+                    - generic [ref=f1e222]: push, in-app
+                    - generic [ref=f1e223]:
+                      - generic [ref=f1e224]: Iced Beverage Drinkers
+                      - generic [ref=f1e225]: 18,400 targets
+                    - generic [ref=f1e226]: 1 Oct 2026 – 15 Oct 2026
+                    - generic [ref=f1e227]:
+                      - generic [ref=f1e228]: ₹18,400
+                      - generic [ref=f1e229]: of ₹30,000
+                    - generic [ref=f1e230]: 6.0%
+                    - generic [ref=f1e231]: ₹2,86,900
+                    - generic [ref=f1e232]: Live
+                    - button [ref=f1e235] [cursor=pointer]
+                  - generic [ref=f1e240]:
+                    - generic [ref=f1e241]: Come back to Phin
+                    - generic [ref=f1e242]: whatsapp
+                    - generic [ref=f1e243]:
+                      - generic [ref=f1e244]: Lapsed 45d Customers
+                      - generic [ref=f1e245]: 49,700 targets
+                    - generic [ref=f1e246]: 28 Sep 2026 – 12 Oct 2026
+                    - generic [ref=f1e247]:
+                      - generic [ref=f1e248]: ₹34,800
+                      - generic [ref=f1e249]: of ₹50,000
+                    - generic [ref=f1e250]: 4.8%
+                    - generic [ref=f1e251]: ₹2,64,300
+                    - generic [ref=f1e252]: Live
+                    - button [ref=f1e255] [cursor=pointer]
+                  - generic [ref=f1e260]:
+                    - generic [ref=f1e261]: Diwali Corporate Gift Cards
+                    - generic [ref=f1e262]: whatsapp, push
+                    - generic [ref=f1e263]:
+                      - generic [ref=f1e264]: High AOV > ₹800
+                      - generic [ref=f1e265]: 12,500 targets
+                    - generic [ref=f1e266]: 10 Oct 2026 – 24 Oct 2026
+                    - generic [ref=f1e267]:
+                      - generic [ref=f1e268]: ₹0
+                      - generic [ref=f1e269]: of ₹45,000
+                    - generic [ref=f1e270]: —
+                    - generic [ref=f1e271]: —
+                    - generic [ref=f1e272]: Scheduled
+                    - button [ref=f1e275] [cursor=pointer]
+                  - generic [ref=f1e280]:
+                    - generic [ref=f1e281]: LAB Batch 08 Pilot Preview
+                    - generic [ref=f1e282]: push
+                    - generic [ref=f1e283]:
+                      - generic [ref=f1e284]: Gold & Platinum Tiers
+                      - generic [ref=f1e285]: 4,200 targets
+                    - generic [ref=f1e286]: 12 Oct 2026 – 14 Oct 2026
+                    - generic [ref=f1e287]:
+                      - generic [ref=f1e288]: ₹0
+                      - generic [ref=f1e289]: of ₹15,000
+                    - generic [ref=f1e290]: —
+                    - generic [ref=f1e291]: —
+                    - generic [ref=f1e292]: Scheduled
+                    - button [ref=f1e295] [cursor=pointer]
+                  - generic [ref=f1e300]:
+                    - generic [ref=f1e301]: Weekend Nitro Cold Brew Boost
+                    - generic [ref=f1e302]: push
+                    - generic [ref=f1e303]:
+                      - generic [ref=f1e304]: Weekend Repeaters
+                      - generic [ref=f1e305]: 22,100 targets
+                    - generic [ref=f1e306]: 20 Sep 2026 – 27 Sep 2026
+                    - generic [ref=f1e307]:
+                      - generic [ref=f1e308]: ₹22,000
+                      - generic [ref=f1e309]: of ₹25,000
+                    - generic [ref=f1e310]: 5.4%
+                    - generic [ref=f1e311]: ₹1,94,000
+                    - generic [ref=f1e312]: Completed
+                    - button [ref=f1e315] [cursor=pointer]
+          - generic [ref=f1e331]:
+            - generic [ref=f1e332]:
+              - generic [ref=f1e333]:
+                - text: Growth / Marketing
+                - heading "Create new campaign" [level=2] [ref=f1e334]
+              - button [ref=f1e335] [cursor=pointer]
+            - generic [ref=f1e339]:
+              - generic [ref=f1e340]:
+                - generic [ref=f1e341]: Campaign Name
+                - textbox "e.g. Diwali Weekend Sparkle" [ref=f1e342]
+              - generic [ref=f1e343]:
+                - generic [ref=f1e344]: Channels
+                - generic [ref=f1e345]:
+                  - button "Push Notification" [ref=f1e346] [cursor=pointer]
+                  - button "WhatsApp" [ref=f1e350] [cursor=pointer]
+                  - button "In-app Banner" [ref=f1e352] [cursor=pointer]
+                  - button "SMS" [ref=f1e354] [cursor=pointer]
+              - generic [ref=f1e356]:
+                - generic [ref=f1e357]: Audience Segment
+                - combobox [ref=f1e358]:
+                  - option "All Active Customers (48,200 targets)" [selected]
+                  - option "Iced Beverage Drinkers (18,400 targets)"
+                  - option "Lapsed 45d Customers (49,700 targets)"
+                  - option "Gold & Platinum Tiers (4,200 targets)"
+              - generic [ref=f1e359]:
+                - generic [ref=f1e360]:
+                  - generic [ref=f1e361]: Start Date
+                  - textbox [ref=f1e362]: 15 Oct 2026
+                - generic [ref=f1e363]:
+                  - generic [ref=f1e364]: End Date
+                  - textbox [ref=f1e365]: 30 Oct 2026
+              - generic [ref=f1e366]:
+                - generic [ref=f1e367]: Budget Cap
+                - textbox "e.g. ₹25,000" [ref=f1e368]: ₹25,000
+              - generic [ref=f1e369]:
+                - button "Cancel" [ref=f1e370] [cursor=pointer]
+                - button "Launch campaign" [ref=f1e371] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=f1e325] [cursor=pointer]
+  - alert [ref=f1e329]

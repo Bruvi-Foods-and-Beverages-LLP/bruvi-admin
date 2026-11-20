@@ -113,11 +113,15 @@ export const ordersSlice = createSlice({
     setPage: (state, action: PayloadAction<number>) => {
       state.filters.page = action.payload;
     },
+    setLimit: (state, action: PayloadAction<number>) => {
+      state.filters.limit = action.payload;
+      state.filters.page = 1;
+    },
     setFilters: (state, action: PayloadAction<Partial<OrdersQueryFilters>>) => {
       state.filters = { ...state.filters, ...action.payload, page: 1 };
     },
     clearFilters: (state) => {
-      state.filters = initialFilters;
+      state.filters = { ...initialFilters, limit: state.filters.limit };
     },
     resetFilters: (state) => {
       state.filters = initialFilters;
@@ -173,6 +177,7 @@ export const {
   setStatusFilter,
   setDateFilter,
   setPage,
+  setLimit,
   setFilters,
   clearFilters,
   resetFilters,

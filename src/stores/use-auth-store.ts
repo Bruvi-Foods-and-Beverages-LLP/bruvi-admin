@@ -18,6 +18,8 @@ interface AuthState {
   hasPermission: (permission: string | string[]) => boolean;
 }
 
+let initAuthInFlight: Promise<void> | null = null;
+
 export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   token: null,
@@ -51,59 +53,79 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   initAuth: async () => {
-    const token = AdminAuthClient.getToken();
+    if (initAuthInFlight) return initAuthInFlight;
 
-    if (!token) {
-      set({
-        user: null,
-        token: null,
-        isAuthenticated: false,
-        isLoading: false,
-      });
-      return;
-    }
+    initAuthInFlight = (async () => {
+      try {
+        const token = AdminAuthClient.getToken();
+        const currentAuth = get().isAuthenticated;
+        const currentUser = get().user;
 
-    // Optimistically load cached user profile to prevent layout shift
-    const cachedUser = AdminAuthClient.getCachedUser();
-    if (cachedUser) {
-      set({
-        user: cachedUser,
-        token,
-        isAuthenticated: true,
-        isLoading: false,
-      });
-    }
+        if (!token) {
+          if (!currentAuth) {
+            set({
+              user: null,
+              token: null,
+              isAuthenticated: false,
+              isLoading: false,
+            });
+          }
+          return;
+        }
 
-    // Verify cryptographic token validity directly against backend
-    try {
-      const freshUser = await AdminAuthClient.fetchCurrentProfile();
-      if (freshUser) {
-        set({
-          user: freshUser,
-          token: AdminAuthClient.getToken() || token,
-          isAuthenticated: true,
-          isLoading: false,
-        });
-      } else {
-        // Token is invalid or expired and cannot be refreshed
-        await AdminAuthClient.logout();
-        set({
-          user: null,
-          token: null,
-          isAuthenticated: false,
-          isLoading: false,
-        });
+        // Optimistically load cached user profile to prevent layout shift
+        const cachedUser = AdminAuthClient.getCachedUser() || currentUser;
+        if (cachedUser) {
+          set({
+            user: cachedUser,
+            token,
+            isAuthenticated: true,
+            isLoading: false,
+          });
+        }
+
+        // Verify cryptographic token validity directly against backend
+        try {
+          const freshUser = await AdminAuthClient.fetchCurrentProfile();
+          if (freshUser) {
+            set({
+              user: freshUser,
+              token: AdminAuthClient.getToken() || token,
+              isAuthenticated: true,
+              isLoading: false,
+            });
+          } else {
+            // Note: If freshUser returned null (temporary network blip or response format variance),
+            // DO NOT log out or destroy an active session if we have cached credentials.
+            if (!cachedUser && !currentAuth) {
+              set({
+                user: null,
+                token: null,
+                isAuthenticated: false,
+                isLoading: false,
+              });
+            } else {
+              set({ isLoading: false });
+            }
+          }
+        } catch {
+          if (!cachedUser && !currentAuth) {
+            set({
+              user: null,
+              token: null,
+              isAuthenticated: false,
+              isLoading: false,
+            });
+          } else {
+            set({ isLoading: false });
+          }
+        }
+      } finally {
+        initAuthInFlight = null;
       }
-    } catch {
-      if (!cachedUser) {
-        set({
-          user: null,
-          token: null,
-          isAuthenticated: false,
-          isLoading: false,
-        });
-      }
-    }
+    })();
+
+    return initAuthInFlight;
   },
 
   hasRole: (requiredRoles: string | string[]) => {

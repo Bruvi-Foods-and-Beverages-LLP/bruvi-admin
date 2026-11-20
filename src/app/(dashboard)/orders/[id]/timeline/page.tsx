@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useEffect, useState, use } from "react";
+import { useEffect, useState, use } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { OrdersApi } from "@/lib/api/orders";
-import { OrderTimelineDetail, OrderTimelineItem } from "@/types/orders";
+import { OrderTimelineDetail } from "@/types/orders";
 import {
   CreditCard,
   Check,
@@ -16,7 +15,6 @@ import {
   MessageSquare,
   AlertCircle,
   Loader2,
-  ChevronRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 
@@ -28,7 +26,6 @@ export default function OrderTimelinePage({
   params: Promise<{ id: string }>;
 }) {
   const resolvedParams = use(params);
-  const router = useRouter();
   const orderId = resolvedParams.id;
 
   const [timeline, setTimeline] = useState<OrderTimelineDetail | null>(null);

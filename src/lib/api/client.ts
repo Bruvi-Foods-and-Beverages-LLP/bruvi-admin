@@ -80,7 +80,7 @@ class ApiClient {
 
       // Handle session expiration and automatic token rotation
       if (response.status === 401 && !endpoint.includes("/admin/auth/")) {
-        const refreshedToken = await AdminAuthClient.refreshSession();
+        const refreshedToken = await AdminAuthClient.refreshSession(token);
         if (refreshedToken) {
           requestHeaders.set("Authorization", `Bearer ${refreshedToken}`);
           response = await fetch(url, {

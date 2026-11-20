@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { DashboardFeed } from "@/types/dashboard";
+import { AdminAuthClient } from "@/features/auth/api/auth-client";
 
 interface DashboardState {
   feed: DashboardFeed | null;
@@ -19,7 +20,7 @@ export const fetchDashboardFeed = createAsyncThunk<DashboardFeed, void, { reject
   "dashboard/fetchFeed",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await fetch("/api/proxy/stores/dashboard", {
+      const response = await AdminAuthClient.authenticatedFetch("/api/proxy/stores/dashboard", {
         headers: {
           Accept: "application/json",
         },

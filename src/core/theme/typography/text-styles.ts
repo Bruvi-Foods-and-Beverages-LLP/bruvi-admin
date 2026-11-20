@@ -69,6 +69,16 @@ export const AppTextStyle = {
   // --------------------------------------------------------------------------
   // 2. PRICE STYLES (Archivo with wdth: 112 / 100, tabular figures)
   // --------------------------------------------------------------------------
+  priceXl: {
+    fontFamily: AppFonts.archivo,
+    fontSize: "40px",
+    lineHeight: "44px",
+    fontWeight: 800,
+    letterSpacing: "-1.2px",
+    fontVariationSettings: "'wdth' 112, 'wght' 800",
+    fontFeatureSettings: "'tnum' 1",
+    className: "text-price-xl",
+  },
   priceL: {
     fontFamily: AppFonts.archivo,
     fontSize: "32px",

@@ -1,0 +1,222 @@
+- generic [ref=f5e1]:
+  - generic [ref=f5e2]:
+    - complementary [ref=f5e22]:
+      - link "HQ" [ref=f5e24] [cursor=pointer]:
+        - /url: /
+      - generic [ref=f5e35]:
+        - link "Dashboard" [ref=f5e37] [cursor=pointer]:
+          - /url: /
+        - generic [ref=f5e42]:
+          - generic [ref=f5e43]: Operations
+          - generic [ref=f5e45]:
+            - link "Orders" [ref=f5e46] [cursor=pointer]:
+              - /url: /orders
+            - link "Stores" [ref=f5e51] [cursor=pointer]:
+              - /url: /stores
+        - generic [ref=f5e59]:
+          - generic [ref=f5e60]: Menu
+          - generic [ref=f5e62]:
+            - link "Catalog" [ref=f5e63] [cursor=pointer]:
+              - /url: /catalog
+            - link "Recipes" [ref=f5e68] [cursor=pointer]:
+              - /url: /recipes
+        - generic [ref=f5e73]:
+          - generic [ref=f5e74]: Supply
+          - generic [ref=f5e76]:
+            - link "Inventory" [ref=f5e77] [cursor=pointer]:
+              - /url: /inventory
+            - link "Warehouse" [ref=f5e82] [cursor=pointer]:
+              - /url: /warehouse
+        - generic [ref=f5e87]:
+          - generic [ref=f5e88]: Growth
+          - generic [ref=f5e90]:
+            - link "Customers" [ref=f5e91] [cursor=pointer]:
+              - /url: /customers
+            - link "Marketing" [ref=f5e97] [cursor=pointer]:
+              - /url: /marketing
+            - link "BRUVI LAB" [ref=f5e102] [cursor=pointer]:
+              - /url: /lab
+            - link "Loyalty" [ref=f5e107] [cursor=pointer]:
+              - /url: /loyalty
+            - link "Subscriptions" [ref=f5e112] [cursor=pointer]:
+              - /url: /subscriptions
+        - generic [ref=f5e117]:
+          - generic [ref=f5e118]: Business
+          - generic [ref=f5e120]:
+            - link "Finance" [ref=f5e121] [cursor=pointer]:
+              - /url: /finance
+            - link "Analytics" [ref=f5e128] [cursor=pointer]:
+              - /url: /analytics
+            - link "Staff" [ref=f5e133] [cursor=pointer]:
+              - /url: /staff
+            - link "Settings" [ref=f5e140] [cursor=pointer]:
+              - /url: /settings
+      - button "Staff profile menu" [ref=f5e149] [cursor=pointer]:
+        - generic [ref=f5e150]: KR
+        - generic [ref=f5e151]:
+          - generic [ref=f5e152]: Kavya R
+          - generic [ref=f5e153]: Chief Operations Officer
+    - generic [ref=f5e156]:
+      - banner [ref=f5e157]:
+        - button "Search orders, stores, products, customers ⌘K" [ref=f5e159] [cursor=pointer]:
+          - generic [ref=f5e160]: Search orders, stores, products, customers
+          - generic [ref=f5e165]: ⌘K
+        - generic [ref=f5e166]:
+          - button "All stores · 0" [ref=f5e168] [cursor=pointer]
+          - button "Today · Fri 2 Oct" [ref=f5e177] [cursor=pointer]
+          - button "Notifications" [ref=f5e183] [cursor=pointer]
+      - main [ref=f5e188]:
+        - generic [ref=f5e189]:
+          - generic [ref=f5e190]:
+            - generic [ref=f5e191]:
+              - generic [ref=f5e192]:
+                - generic [ref=f5e193]: Loyalty / Tiers
+                - heading "Customer tiers" [level=1] [ref=f5e538]
+              - generic [ref=f5e195]:
+                - button "Preview member view" [ref=f5e539] [cursor=pointer]
+                - button "Adjust points" [ref=f5e540] [cursor=pointer]
+            - generic [ref=f5e198]:
+              - button "Overview" [ref=f5e199] [cursor=pointer]
+              - button "Rules" [ref=f5e200] [cursor=pointer]
+              - button "Rewards" [ref=f5e201] [cursor=pointer]
+              - button "Tiers" [active] [ref=f5e202] [cursor=pointer]
+              - button "Transactions" [ref=f5e203] [cursor=pointer]
+          - main [ref=f5e204]:
+            - generic [ref=f5e541]:
+              - generic [ref=f5e542]:
+                - generic [ref=f5e543]:
+                  - generic [ref=f5e544]:
+                    - heading "Silver" [level=3] [ref=f5e546]
+                    - generic [ref=f5e547]: Entry tier
+                  - generic [ref=f5e548]:
+                    - generic [ref=f5e549]: "18"
+                    - generic [ref=f5e550]: members · 80%
+                  - generic [ref=f5e551]:
+                    - generic [ref=f5e552]:
+                      - generic [ref=f5e553]: Threshold · pts
+                      - generic [ref=f5e554]: 0–999
+                    - generic [ref=f5e555]:
+                      - generic [ref=f5e556]: Earn
+                      - generic [ref=f5e557]: 1×
+                    - generic [ref=f5e558]:
+                      - generic [ref=f5e559]: 30-day change
+                      - generic [ref=f5e560]: +3,120
+                - generic [ref=f5e561]:
+                  - generic [ref=f5e562]:
+                    - heading "Gold" [level=3] [ref=f5e564]
+                    - generic [ref=f5e565]: Mid tier
+                  - generic [ref=f5e566]:
+                    - generic [ref=f5e567]: 20,300
+                    - generic [ref=f5e568]: members · 16%
+                  - generic [ref=f5e569]:
+                    - generic [ref=f5e570]:
+                      - generic [ref=f5e571]: Threshold · pts
+                      - generic [ref=f5e572]: 1,000–1,999
+                    - generic [ref=f5e573]:
+                      - generic [ref=f5e574]: Earn
+                      - generic [ref=f5e575]: 1.25× app
+                    - generic [ref=f5e576]:
+                      - generic [ref=f5e577]: 30-day change
+                      - generic [ref=f5e578]: "+640"
+                - generic [ref=f5e579]:
+                  - generic [ref=f5e580]:
+                    - heading "Platinum" [level=3] [ref=f5e582]
+                    - generic [ref=f5e583]: Top tier
+                  - generic [ref=f5e584]:
+                    - generic [ref=f5e585]: "1"
+                    - generic [ref=f5e586]: members · 4%
+                  - generic [ref=f5e587]:
+                    - generic [ref=f5e588]:
+                      - generic [ref=f5e589]: Threshold · pts
+                      - generic [ref=f5e590]: 2,000+
+                    - generic [ref=f5e591]:
+                      - generic [ref=f5e592]: Earn
+                      - generic [ref=f5e593]: 1.5× app
+                    - generic [ref=f5e594]:
+                      - generic [ref=f5e595]: 30-day change
+                      - generic [ref=f5e596]: "+210"
+              - generic [ref=f5e597]:
+                - generic [ref=f5e598]:
+                  - generic [ref=f5e599]:
+                    - generic [ref=f5e600]:
+                      - heading "Benefits by tier" [level=3] [ref=f5e601]
+                      - paragraph [ref=f5e602]: “Order in the app to earn faster” · counter & kiosk earn 1 pt/₹20 for all tiers
+                    - button "+ Add benefit" [ref=f5e603] [cursor=pointer]
+                  - generic [ref=f5e604]:
+                    - generic [ref=f5e605]: Benefit
+                    - generic [ref=f5e606]: Silver
+                    - generic [ref=f5e607]: Gold
+                    - generic [ref=f5e608]: Platinum
+                  - generic [ref=f5e609]:
+                    - generic [ref=f5e610]:
+                      - generic [ref=f5e612]:
+                        - button "Edit perk" [ref=f5e613]
+                        - button "Delete perk" [ref=f5e616]
+                      - generic [ref=f5e620]: 1 pt
+                      - generic [ref=f5e621]: 1.25 pts
+                      - generic [ref=f5e622]: 1.5 pts
+                    - generic [ref=f5e623]:
+                      - generic [ref=f5e625]:
+                        - button "Edit perk" [ref=f5e626]
+                        - button "Delete perk" [ref=f5e629]
+                      - generic [ref=f5e633]: 200 pts
+                      - generic [ref=f5e634]: 200 pts + drink
+                      - generic [ref=f5e635]: 200 pts + drink
+                    - generic [ref=f5e636]:
+                      - generic [ref=f5e638]:
+                        - button "Edit perk" [ref=f5e639]
+                        - button "Delete perk" [ref=f5e642]
+                      - generic [ref=f5e646]: —
+                      - generic [ref=f5e647]: 1 / month
+                      - generic [ref=f5e648]: 4 / month
+                    - generic [ref=f5e649]:
+                      - generic [ref=f5e651]:
+                        - button "Edit perk" [ref=f5e652]
+                        - button "Delete perk" [ref=f5e655]
+                      - generic [ref=f5e659]: —
+                    - generic [ref=f5e668]:
+                      - generic [ref=f5e670]:
+                        - button "Edit perk" [ref=f5e671]
+                        - button "Delete perk" [ref=f5e674]
+                      - generic [ref=f5e678]: —
+                      - generic [ref=f5e679]: 24 h early
+                      - generic [ref=f5e680]: 48 h early
+                    - generic [ref=f5e681]:
+                      - generic [ref=f5e683]:
+                        - button "Edit perk" [ref=f5e684]
+                        - button "Delete perk" [ref=f5e687]
+                      - generic [ref=f5e691]: —
+                      - generic [ref=f5e692]: —
+                    - generic [ref=f5e697]:
+                      - generic [ref=f5e699]:
+                        - button "Edit perk" [ref=f5e700]
+                        - button "Delete perk" [ref=f5e703]
+                      - generic [ref=f5e707]: —
+                      - generic [ref=f5e708]: —
+                - generic [ref=f5e713]:
+                  - generic [ref=f5e714]:
+                    - heading "Qualification" [level=3] [ref=f5e715]
+                    - paragraph [ref=f5e716]: How members move between tiers
+                  - generic [ref=f5e717]:
+                    - generic [ref=f5e718]: Qualification window
+                    - combobox [ref=f5e719] [cursor=pointer]:
+                      - option "12 months, rolling" [selected]
+                      - option "Calendar year (Jan–Dec)"
+                      - option "6 months, rolling"
+                    - generic [ref=f5e720]: Based on points earned, not current balance
+                  - generic [ref=f5e721]:
+                    - generic [ref=f5e722]: Downgrade grace period
+                    - generic [ref=f5e723]:
+                      - spinbutton [ref=f5e724]: "30"
+                      - generic [ref=f5e725]: days
+                  - generic [ref=f5e726]:
+                    - generic [ref=f5e727]:
+                      - generic [ref=f5e728]: Upgrade instantly
+                      - generic [ref=f5e729]: Push "You're Gold now" on crossing threshold
+                    - switch [checked] [ref=f5e730] [cursor=pointer]
+                  - generic [ref=f5e735]:
+                    - generic [ref=f5e736]: 412 Gold members in grace
+                    - generic [ref=f5e737]: Drop to Silver by 1 Nov unless they re-qualify
+                  - button "Preview member view" [ref=f5e739] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=f5e17] [cursor=pointer]
+  - alert [ref=f5e21]

@@ -1,0 +1,308 @@
+- generic [ref=f4e1]:
+  - generic [ref=f4e2]:
+    - complementary [ref=f4e22]:
+      - link "HQ" [ref=f4e24] [cursor=pointer]:
+        - /url: /
+      - generic [ref=f4e35]:
+        - link "Dashboard" [ref=f4e37] [cursor=pointer]:
+          - /url: /
+        - generic [ref=f4e42]:
+          - generic [ref=f4e43]: Operations
+          - generic [ref=f4e45]:
+            - link "Orders" [ref=f4e46] [cursor=pointer]:
+              - /url: /orders
+            - link "Stores" [ref=f4e51] [cursor=pointer]:
+              - /url: /stores
+        - generic [ref=f4e59]:
+          - generic [ref=f4e60]: Menu
+          - generic [ref=f4e62]:
+            - link "Catalog" [ref=f4e63] [cursor=pointer]:
+              - /url: /catalog
+            - link "Recipes" [ref=f4e68] [cursor=pointer]:
+              - /url: /recipes
+        - generic [ref=f4e73]:
+          - generic [ref=f4e74]: Supply
+          - generic [ref=f4e76]:
+            - link "Inventory" [ref=f4e77] [cursor=pointer]:
+              - /url: /inventory
+            - link "Warehouse" [ref=f4e82] [cursor=pointer]:
+              - /url: /warehouse
+        - generic [ref=f4e87]:
+          - generic [ref=f4e88]: Growth
+          - generic [ref=f4e90]:
+            - link "Customers" [ref=f4e91] [cursor=pointer]:
+              - /url: /customers
+            - link "Marketing" [ref=f4e97] [cursor=pointer]:
+              - /url: /marketing
+            - link "BRUVI LAB" [ref=f4e102] [cursor=pointer]:
+              - /url: /lab
+            - link "Loyalty" [ref=f4e107] [cursor=pointer]:
+              - /url: /loyalty
+            - link "Subscriptions" [ref=f4e112] [cursor=pointer]:
+              - /url: /subscriptions
+        - generic [ref=f4e117]:
+          - generic [ref=f4e118]: Business
+          - generic [ref=f4e120]:
+            - link "Finance" [ref=f4e121] [cursor=pointer]:
+              - /url: /finance
+            - link "Analytics" [ref=f4e128] [cursor=pointer]:
+              - /url: /analytics
+            - link "Staff" [ref=f4e133] [cursor=pointer]:
+              - /url: /staff
+            - link "Settings" [ref=f4e140] [cursor=pointer]:
+              - /url: /settings
+      - button "Staff profile menu" [ref=f4e149] [cursor=pointer]:
+        - generic [ref=f4e150]: KR
+        - generic [ref=f4e151]:
+          - generic [ref=f4e152]: Kavya R
+          - generic [ref=f4e153]: Chief Operations Officer
+    - generic [ref=f4e156]:
+      - banner [ref=f4e157]:
+        - button "Search orders, stores, products, customers ⌘K" [ref=f4e159] [cursor=pointer]:
+          - generic [ref=f4e160]: Search orders, stores, products, customers
+          - generic [ref=f4e165]: ⌘K
+        - generic [ref=f4e166]:
+          - button "All stores · 0" [ref=f4e168] [cursor=pointer]
+          - button "Today · Fri 2 Oct" [ref=f4e177] [cursor=pointer]
+          - button "Notifications" [ref=f4e183] [cursor=pointer]
+      - main [ref=f4e188]:
+        - generic [ref=f4e189]:
+          - generic [ref=f4e190]:
+            - generic [ref=f4e191]:
+              - generic [ref=f4e192]:
+                - generic [ref=f4e193]: Growth · BRUVI Rewards
+                - heading "Loyalty" [level=1] [ref=f4e194]
+              - generic [ref=f4e195]:
+                - button "Export report" [ref=f4e196] [cursor=pointer]
+                - button "Adjust points" [ref=f4e197] [cursor=pointer]
+            - generic [ref=f4e198]:
+              - button "Overview" [ref=f4e199] [cursor=pointer]
+              - button "Rules" [ref=f4e200] [cursor=pointer]
+              - button "Rewards" [ref=f4e201] [cursor=pointer]
+              - button "Tiers" [ref=f4e202] [cursor=pointer]
+              - button "Transactions" [active] [ref=f4e203] [cursor=pointer]
+          - main [ref=f4e204]:
+            - generic [ref=f4e889]:
+              - generic [ref=f4e890]:
+                - generic [ref=f4e895]:
+                  - generic [ref=f4e896]: "Ledger Anomaly Detection: Active & Nominal"
+                  - generic [ref=f4e897]: Double-entry audit rules operating normally. 0 high-risk velocity spikes flagged in last 24h.
+                - button "+ Manual Adjustment" [ref=f4e898] [cursor=pointer]
+              - generic [ref=f4e899]:
+                - textbox "Search by customer name, email, or order reference..." [ref=f4e904]
+                - combobox [ref=f4e906] [cursor=pointer]:
+                  - option "All Event Types" [selected]
+                  - option "Earned on Order"
+                  - option "Redeemed Reward"
+                  - option "Admin Adjustment"
+                  - option "Tier Bonus"
+              - table [ref=f4e909]:
+                - rowgroup [ref=f4e910]:
+                  - row [ref=f4e911]:
+                    - columnheader "Time & Date" [ref=f4e912]
+                    - columnheader "Customer" [ref=f4e913]
+                    - columnheader "Type" [ref=f4e914]
+                    - columnheader "Points Delta" [ref=f4e915]
+                    - columnheader "Reference & Note" [ref=f4e916]
+                    - columnheader "Balance After" [ref=f4e917]
+                - rowgroup [ref=f4e918]:
+                  - row [ref=f4e919]:
+                    - cell "10 Nov, 12:18 pm" [ref=f4e920]
+                    - cell "Saisubbireddy saisubbireddy@gmail.com" [ref=f4e921]:
+                      - generic [ref=f4e922]: Saisubbireddy
+                      - generic [ref=f4e923]: saisubbireddy@gmail.com
+                    - cell "ADMIN ADJUSTMENT" [ref=f4e924]
+                    - cell "+50 pts" [ref=f4e926]
+                    - 'cell "VIP apology gesture ADMIN: adm_1794293336960" [ref=f4e931]':
+                      - generic [ref=f4e932]: VIP apology gesture
+                      - generic [ref=f4e933]: "ADMIN: adm_1794293336960"
+                    - cell "1,290 pts" [ref=f4e934]
+                  - row [ref=f4e935]:
+                    - cell "8 Nov, 12:09 pm" [ref=f4e936]
+                    - cell "Saisubbireddy saisubbireddy@gmail.com" [ref=f4e937]:
+                      - generic [ref=f4e938]: Saisubbireddy
+                      - generic [ref=f4e939]: saisubbireddy@gmail.com
+                    - cell "EARNED ORDER" [ref=f4e940]
+                    - cell "+32 pts" [ref=f4e942]
+                    - 'cell "Earned on Order #C-218 ORDER: BRV-BLR-IND-261109-0218" [ref=f4e947]':
+                      - generic [ref=f4e948]: "Earned on Order #C-218"
+                      - generic [ref=f4e949]: "ORDER: BRV-BLR-IND-261109-0218"
+                    - cell "1,240 pts" [ref=f4e950]
+                  - row [ref=f4e951]:
+                    - cell "8 Nov, 12:09 pm" [ref=f4e952]
+                    - cell "Saisubbireddy saisubbireddy@gmail.com" [ref=f4e953]:
+                      - generic [ref=f4e954]: Saisubbireddy
+                      - generic [ref=f4e955]: saisubbireddy@gmail.com
+                    - cell "EARNED ORDER" [ref=f4e956]
+                    - cell "+16 pts" [ref=f4e958]
+                    - 'cell "Earned on Order #C-218 ORDER: C-218" [ref=f4e963]':
+                      - generic [ref=f4e964]: "Earned on Order #C-218"
+                      - generic [ref=f4e965]: "ORDER: C-218"
+                    - cell "1,358 pts" [ref=f4e966]
+                  - row [ref=f4e967]:
+                    - cell "6 Nov, 9:01 pm" [ref=f4e968]
+                    - cell "Test User" [ref=f4e969]
+                    - cell "EARNED ORDER" [ref=f4e971]
+                    - cell "+14 pts" [ref=f4e973]
+                    - 'cell "Earned on Order #A-006 ORDER: A-006" [ref=f4e978]':
+                      - generic [ref=f4e979]: "Earned on Order #A-006"
+                      - generic [ref=f4e980]: "ORDER: A-006"
+                    - cell "14 pts" [ref=f4e981]
+                  - row [ref=f4e982]:
+                    - cell "6 Nov, 7:04 pm" [ref=f4e983]
+                    - cell "Babu Raj" [ref=f4e984]
+                    - cell "EARNED ORDER" [ref=f4e986]
+                    - cell "+15 pts" [ref=f4e988]
+                    - 'cell "Earned on Order #A-005 ORDER: A-005" [ref=f4e993]':
+                      - generic [ref=f4e994]: "Earned on Order #A-005"
+                      - generic [ref=f4e995]: "ORDER: A-005"
+                    - cell "45 pts" [ref=f4e996]
+                  - row [ref=f4e997]:
+                    - cell "6 Nov, 6:46 pm" [ref=f4e998]
+                    - cell "Babu Raj" [ref=f4e999]
+                    - cell "EARNED ORDER" [ref=f4e1001]
+                    - cell "+13 pts" [ref=f4e1003]
+                    - 'cell "Earned on Order #A-004 ORDER: A-004" [ref=f4e1008]':
+                      - generic [ref=f4e1009]: "Earned on Order #A-004"
+                      - generic [ref=f4e1010]: "ORDER: A-004"
+                    - cell "30 pts" [ref=f4e1011]
+                  - row [ref=f4e1012]:
+                    - cell "6 Nov, 6:35 pm" [ref=f4e1013]
+                    - cell "hello" [ref=f4e1014]
+                    - cell "EARNED ORDER" [ref=f4e1016]
+                    - cell "+19 pts" [ref=f4e1018]
+                    - 'cell "Earned on Order #A-003 ORDER: A-003" [ref=f4e1023]':
+                      - generic [ref=f4e1024]: "Earned on Order #A-003"
+                      - generic [ref=f4e1025]: "ORDER: A-003"
+                    - cell "31 pts" [ref=f4e1026]
+                  - row [ref=f4e1027]:
+                    - cell "6 Nov, 6:20 pm" [ref=f4e1028]
+                    - cell "hello" [ref=f4e1029]
+                    - cell "EARNED ORDER" [ref=f4e1031]
+                    - cell "+12 pts" [ref=f4e1033]
+                    - 'cell "Earned on Order #A-002 ORDER: A-002" [ref=f4e1038]':
+                      - generic [ref=f4e1039]: "Earned on Order #A-002"
+                      - generic [ref=f4e1040]: "ORDER: A-002"
+                    - cell "12 pts" [ref=f4e1041]
+                  - row [ref=f4e1042]:
+                    - cell "6 Nov, 5:23 pm" [ref=f4e1043]
+                    - cell "shibil devloper" [ref=f4e1044]
+                    - cell "EARNED ORDER" [ref=f4e1046]
+                    - cell "+12 pts" [ref=f4e1048]
+                    - 'cell "Earned on Order #A-001 ORDER: A-001" [ref=f4e1053]':
+                      - generic [ref=f4e1054]: "Earned on Order #A-001"
+                      - generic [ref=f4e1055]: "ORDER: A-001"
+                    - cell "12 pts" [ref=f4e1056]
+                  - row [ref=f4e1057]:
+                    - cell "6 Nov, 3:10 pm" [ref=f4e1058]
+                    - cell "Ajmal Khan ajmal@gmail.com" [ref=f4e1059]:
+                      - generic [ref=f4e1060]: Ajmal Khan
+                      - generic [ref=f4e1061]: ajmal@gmail.com
+                    - cell "EARNED ORDER" [ref=f4e1062]
+                    - cell "+14 pts" [ref=f4e1064]
+                    - 'cell "Earned on Order #A-006 ORDER: A-006" [ref=f4e1069]':
+                      - generic [ref=f4e1070]: "Earned on Order #A-006"
+                      - generic [ref=f4e1071]: "ORDER: A-006"
+                    - cell "84 pts" [ref=f4e1072]
+                  - row [ref=f4e1073]:
+                    - cell "6 Nov, 3:03 pm" [ref=f4e1074]
+                    - cell "Ajmal Khan ajmal@gmail.com" [ref=f4e1075]:
+                      - generic [ref=f4e1076]: Ajmal Khan
+                      - generic [ref=f4e1077]: ajmal@gmail.com
+                    - cell "EARNED ORDER" [ref=f4e1078]
+                    - cell "+18 pts" [ref=f4e1080]
+                    - 'cell "Earned on Order #A-005 ORDER: A-005" [ref=f4e1085]':
+                      - generic [ref=f4e1086]: "Earned on Order #A-005"
+                      - generic [ref=f4e1087]: "ORDER: A-005"
+                    - cell "70 pts" [ref=f4e1088]
+                  - row [ref=f4e1089]:
+                    - cell "6 Nov, 2:55 pm" [ref=f4e1090]
+                    - cell "Ajmal Khan ajmal@gmail.com" [ref=f4e1091]:
+                      - generic [ref=f4e1092]: Ajmal Khan
+                      - generic [ref=f4e1093]: ajmal@gmail.com
+                    - cell "EARNED ORDER" [ref=f4e1094]
+                    - cell "+18 pts" [ref=f4e1096]
+                    - 'cell "Earned on Order #A-004 ORDER: A-004" [ref=f4e1101]':
+                      - generic [ref=f4e1102]: "Earned on Order #A-004"
+                      - generic [ref=f4e1103]: "ORDER: A-004"
+                    - cell "52 pts" [ref=f4e1104]
+                  - row [ref=f4e1105]:
+                    - cell "6 Nov, 2:31 pm" [ref=f4e1106]
+                    - cell "Ajmal Khan ajmal@gmail.com" [ref=f4e1107]:
+                      - generic [ref=f4e1108]: Ajmal Khan
+                      - generic [ref=f4e1109]: ajmal@gmail.com
+                    - cell "EARNED ORDER" [ref=f4e1110]
+                    - cell "+19 pts" [ref=f4e1112]
+                    - 'cell "Earned on Order #A-003 ORDER: A-003" [ref=f4e1117]':
+                      - generic [ref=f4e1118]: "Earned on Order #A-003"
+                      - generic [ref=f4e1119]: "ORDER: A-003"
+                    - cell "34 pts" [ref=f4e1120]
+                  - row [ref=f4e1121]:
+                    - cell "6 Nov, 2:04 pm" [ref=f4e1122]
+                    - cell "Ajmal Khan ajmal@gmail.com" [ref=f4e1123]:
+                      - generic [ref=f4e1124]: Ajmal Khan
+                      - generic [ref=f4e1125]: ajmal@gmail.com
+                    - cell "EARNED ORDER" [ref=f4e1126]
+                    - cell "+15 pts" [ref=f4e1128]
+                    - 'cell "Earned on Order #A-002 ORDER: A-002" [ref=f4e1133]':
+                      - generic [ref=f4e1134]: "Earned on Order #A-002"
+                      - generic [ref=f4e1135]: "ORDER: A-002"
+                    - cell "15 pts" [ref=f4e1136]
+                  - row [ref=f4e1137]:
+                    - cell "6 Nov, 1:53 pm" [ref=f4e1138]
+                    - cell "Raj Kumar" [ref=f4e1139]
+                    - cell "EARNED ORDER" [ref=f4e1141]
+                    - cell "+19 pts" [ref=f4e1143]
+                    - 'cell "Earned on Order #A-002 ORDER: A-002" [ref=f4e1148]':
+                      - generic [ref=f4e1149]: "Earned on Order #A-002"
+                      - generic [ref=f4e1150]: "ORDER: A-002"
+                    - cell "19 pts" [ref=f4e1151]
+                  - row [ref=f4e1152]:
+                    - cell "6 Nov, 1:45 pm" [ref=f4e1153]
+                    - cell "Babu Raj" [ref=f4e1154]
+                    - cell "EARNED ORDER" [ref=f4e1156]
+                    - cell "+17 pts" [ref=f4e1158]
+                    - 'cell "Earned on Order #A-001 ORDER: A-001" [ref=f4e1163]':
+                      - generic [ref=f4e1164]: "Earned on Order #A-001"
+                      - generic [ref=f4e1165]: "ORDER: A-001"
+                    - cell "17 pts" [ref=f4e1166]
+                  - row [ref=f4e1167]:
+                    - cell "5 Nov, 5:31 pm" [ref=f4e1168]
+                    - cell "Mhd Shahul" [ref=f4e1169]
+                    - cell "EARNED ORDER" [ref=f4e1171]
+                    - cell "+21 pts" [ref=f4e1173]
+                    - 'cell "Earned on Order #A-005 ORDER: A-005" [ref=f4e1178]':
+                      - generic [ref=f4e1179]: "Earned on Order #A-005"
+                      - generic [ref=f4e1180]: "ORDER: A-005"
+                    - cell "42 pts" [ref=f4e1181]
+                  - row [ref=f4e1182]:
+                    - cell "5 Nov, 3:15 pm" [ref=f4e1183]
+                    - cell "Mhd Shahul" [ref=f4e1184]
+                    - cell "EARNED ORDER" [ref=f4e1186]
+                    - cell "+12 pts" [ref=f4e1188]
+                    - 'cell "Earned on Order #A-002 ORDER: A-002" [ref=f4e1193]':
+                      - generic [ref=f4e1194]: "Earned on Order #A-002"
+                      - generic [ref=f4e1195]: "ORDER: A-002"
+                    - cell "21 pts" [ref=f4e1196]
+                  - row [ref=f4e1197]:
+                    - cell "5 Nov, 2:20 pm" [ref=f4e1198]
+                    - cell "Mhd Shahul" [ref=f4e1199]
+                    - cell "EARNED ORDER" [ref=f4e1201]
+                    - cell "+9 pts" [ref=f4e1203]
+                    - 'cell "Earned on Order #A-001 ORDER: A-001" [ref=f4e1208]':
+                      - generic [ref=f4e1209]: "Earned on Order #A-001"
+                      - generic [ref=f4e1210]: "ORDER: A-001"
+                    - cell "9 pts" [ref=f4e1211]
+                  - row [ref=f4e1212]:
+                    - cell "3 Nov, 12:09 pm" [ref=f4e1213]
+                    - cell "Saisubbireddy saisubbireddy@gmail.com" [ref=f4e1214]:
+                      - generic [ref=f4e1215]: Saisubbireddy
+                      - generic [ref=f4e1216]: saisubbireddy@gmail.com
+                    - cell "EARNED ORDER" [ref=f4e1217]
+                    - cell "+28 pts" [ref=f4e1219]
+                    - 'cell "Earned on Order #A-047 ORDER: BRV-BLR-IND-261104-0047" [ref=f4e1224]':
+                      - generic [ref=f4e1225]: "Earned on Order #A-047"
+                      - generic [ref=f4e1226]: "ORDER: BRV-BLR-IND-261104-0047"
+                    - cell "1,208 pts" [ref=f4e1227]
+  - button "Open Next.js Dev Tools" [ref=f4e17] [cursor=pointer]
+  - alert [ref=f4e21]

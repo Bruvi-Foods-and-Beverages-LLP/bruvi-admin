@@ -1,0 +1,6 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e9]:
+    - generic [ref=e10]: BRUVI HQ ENTERPRISE
+    - generic [ref=e11]: Verifying corporate credentials...
+  - button "Open Next.js Dev Tools" [ref=e17] [cursor=pointer]
+  - alert [ref=e21]

@@ -1,0 +1,213 @@
+- generic [ref=f7e1]:
+  - generic [ref=f7e2]:
+    - complementary [ref=f7e3]:
+      - link "HQ" [ref=f7e5] [cursor=pointer]:
+        - /url: /
+      - generic [ref=f7e16]:
+        - link "Dashboard" [ref=f7e18] [cursor=pointer]:
+          - /url: /
+        - generic [ref=f7e23]:
+          - generic [ref=f7e24]: Operations
+          - generic [ref=f7e26]:
+            - link "Orders" [ref=f7e27] [cursor=pointer]:
+              - /url: /orders
+            - link "Stores" [ref=f7e32] [cursor=pointer]:
+              - /url: /stores
+        - generic [ref=f7e40]:
+          - generic [ref=f7e41]: Menu
+          - generic [ref=f7e43]:
+            - link "Catalog" [ref=f7e44] [cursor=pointer]:
+              - /url: /catalog
+            - link "Recipes" [ref=f7e49] [cursor=pointer]:
+              - /url: /recipes
+        - generic [ref=f7e54]:
+          - generic [ref=f7e55]: Supply
+          - generic [ref=f7e57]:
+            - link "Inventory" [ref=f7e58] [cursor=pointer]:
+              - /url: /inventory
+            - link "Warehouse" [ref=f7e63] [cursor=pointer]:
+              - /url: /warehouse
+        - generic [ref=f7e68]:
+          - generic [ref=f7e69]: Growth
+          - generic [ref=f7e71]:
+            - link "Customers" [ref=f7e72] [cursor=pointer]:
+              - /url: /customers
+            - link "Marketing" [ref=f7e78] [cursor=pointer]:
+              - /url: /marketing
+            - link "BRUVI LAB" [ref=f7e83] [cursor=pointer]:
+              - /url: /lab
+            - link "Loyalty" [ref=f7e88] [cursor=pointer]:
+              - /url: /loyalty
+            - link "Subscriptions" [ref=f7e93] [cursor=pointer]:
+              - /url: /subscriptions
+        - generic [ref=f7e98]:
+          - generic [ref=f7e99]: Business
+          - generic [ref=f7e101]:
+            - link "Finance" [ref=f7e102] [cursor=pointer]:
+              - /url: /finance
+            - link "Analytics" [ref=f7e109] [cursor=pointer]:
+              - /url: /analytics
+            - link "Staff" [ref=f7e114] [cursor=pointer]:
+              - /url: /staff
+            - link "Settings" [ref=f7e121] [cursor=pointer]:
+              - /url: /settings
+      - button "Staff profile menu" [ref=f7e130] [cursor=pointer]:
+        - generic [ref=f7e131]: KR
+        - generic [ref=f7e132]:
+          - generic [ref=f7e133]: Kavya R
+          - generic [ref=f7e134]: Chief Operations Officer
+    - generic [ref=f7e137]:
+      - banner [ref=f7e138]:
+        - button "Search orders, stores, products, customers ⌘K" [ref=f7e140] [cursor=pointer]:
+          - generic [ref=f7e141]: Search orders, stores, products, customers
+          - generic [ref=f7e146]: ⌘K
+        - generic [ref=f7e147]:
+          - button "All stores · 0" [ref=f7e149] [cursor=pointer]
+          - button "Today · Fri 2 Oct" [ref=f7e158] [cursor=pointer]
+          - button "Notifications" [ref=f7e164] [cursor=pointer]
+      - main [ref=f7e169]:
+        - generic [ref=f7e170]:
+          - generic [ref=f7e171]:
+            - generic [ref=f7e172]:
+              - generic [ref=f7e173]:
+                - generic [ref=f7e174]: Loyalty / Rewards
+                - heading "Rewards catalogue" [level=1] [ref=f7e467]
+              - generic [ref=f7e176]:
+                - button "Export" [ref=f7e468] [cursor=pointer]
+                - button "Create reward" [ref=f7e469] [cursor=pointer]
+            - generic [ref=f7e179]:
+              - button "Overview" [ref=f7e180] [cursor=pointer]
+              - button "Rules" [ref=f7e181] [cursor=pointer]
+              - button "Rewards" [active] [ref=f7e182] [cursor=pointer]
+              - button "Tiers" [ref=f7e183] [cursor=pointer]
+              - button "Transactions" [ref=f7e184] [cursor=pointer]
+          - main [ref=f7e185]:
+            - generic [ref=f7e470]:
+              - generic [ref=f7e471]:
+                - generic [ref=f7e472]:
+                  - textbox "Search rewards" [ref=f7e477]
+                  - combobox [ref=f7e479] [cursor=pointer]:
+                    - 'option "Status: All" [selected]'
+                    - 'option "Status: Live"'
+                    - 'option "Status: Draft"'
+                    - 'option "Status: Archived"'
+                  - combobox [ref=f7e481] [cursor=pointer]:
+                    - 'option "Type: All" [selected]'
+                    - 'option "Type: Drink"'
+                    - 'option "Type: Food"'
+                    - 'option "Type: Add-on"'
+                    - 'option "Type: Merch"'
+                  - combobox [ref=f7e483] [cursor=pointer]:
+                    - 'option "Store: All 12" [selected]'
+                    - 'option "Store: LAB only (6)"'
+                    - 'option "Store: Bengaluru"'
+                    - 'option "Store: Mumbai"'
+                    - 'option "Store: Delhi NCR"'
+                - generic [ref=f7e484]: 5 rewards · 5 live
+              - generic [ref=f7e485]:
+                - generic [ref=f7e486] [cursor=pointer]:
+                  - generic [ref=f7e487]:
+                    - generic [ref=f7e488]: Live
+                    - generic [ref=f7e490]: Edit
+                    - img "Free extra shot" [ref=f7e495]
+                  - generic [ref=f7e496]:
+                    - generic [ref=f7e497]:
+                      - generic [ref=f7e498]:
+                        - heading "Free extra shot" [level=3] [ref=f7e499]
+                        - paragraph [ref=f7e500]: Any espresso or phin drip shot add-on to your beverage
+                      - generic [ref=f7e501]: 120 pts
+                    - generic [ref=f7e502]:
+                      - generic [ref=f7e503]:
+                        - generic [ref=f7e504]: Redeemed · 30d
+                        - generic [ref=f7e505]: 6,420
+                      - generic [ref=f7e506]:
+                        - generic [ref=f7e507]: Stock
+                        - generic [ref=f7e508]: n/a
+                      - generic [ref=f7e509]:
+                        - generic [ref=f7e510]: Available
+                        - generic [ref=f7e511]: 12 of 12 stores
+                - generic [ref=f7e512] [cursor=pointer]:
+                  - generic [ref=f7e513]:
+                    - generic [ref=f7e514]: Live
+                    - generic [ref=f7e516]: Edit
+                    - img "Any Vietnamese, Regular" [ref=f7e521]
+                  - generic [ref=f7e522]:
+                    - generic [ref=f7e523]:
+                      - generic [ref=f7e524]:
+                        - heading "Any Vietnamese, Regular" [level=3] [ref=f7e525]
+                        - paragraph [ref=f7e526]: Regular size Vietnamese traditional phin coffee, hot or iced
+                      - generic [ref=f7e527]: 600 pts
+                    - generic [ref=f7e528]:
+                      - generic [ref=f7e529]:
+                        - generic [ref=f7e530]: Redeemed · 30d
+                        - generic [ref=f7e531]: 2,180
+                      - generic [ref=f7e532]:
+                        - generic [ref=f7e533]: Stock
+                        - generic [ref=f7e534]: n/a
+                      - generic [ref=f7e535]:
+                        - generic [ref=f7e536]: Available
+                        - generic [ref=f7e537]: 12 of 12 stores
+                - generic [ref=f7e538] [cursor=pointer]:
+                  - generic [ref=f7e539]:
+                    - generic [ref=f7e540]: Live
+                    - generic [ref=f7e542]: Edit
+                    - img "Bánh Mì Paneer" [ref=f7e547]
+                  - generic [ref=f7e548]:
+                    - generic [ref=f7e549]:
+                      - generic [ref=f7e550]:
+                        - heading "Bánh Mì Paneer" [level=3] [ref=f7e551]
+                        - paragraph [ref=f7e552]: Crisp baguette with grilled paneer, pickled daikon & herbs
+                      - generic [ref=f7e553]: 900 pts
+                    - generic [ref=f7e554]:
+                      - generic [ref=f7e555]:
+                        - generic [ref=f7e556]: Redeemed · 30d
+                        - generic [ref=f7e557]: "610"
+                      - generic [ref=f7e558]:
+                        - generic [ref=f7e559]: Stock
+                        - generic [ref=f7e560]: n/a
+                      - generic [ref=f7e561]:
+                        - generic [ref=f7e562]: Available
+                        - generic [ref=f7e563]: 12 of 12 stores
+                - generic [ref=f7e564] [cursor=pointer]:
+                  - generic [ref=f7e565]:
+                    - generic [ref=f7e566]: Live
+                    - generic [ref=f7e568]: Edit
+                  - generic [ref=f7e577]:
+                    - generic [ref=f7e578]:
+                      - generic [ref=f7e579]:
+                        - heading "BRUVI Canvas Tote" [level=3] [ref=f7e580]
+                        - paragraph [ref=f7e581]: Heavyweight organic cotton canvas tote with embroidered logo
+                      - generic [ref=f7e582]: 1,200 pts
+                    - generic [ref=f7e583]:
+                      - generic [ref=f7e584]:
+                        - generic [ref=f7e585]: Redeemed · 30d
+                        - generic [ref=f7e586]: "42"
+                      - generic [ref=f7e587]:
+                        - generic [ref=f7e588]: Stock
+                        - generic [ref=f7e589]: n/a
+                      - generic [ref=f7e590]:
+                        - generic [ref=f7e591]: Available
+                        - generic [ref=f7e592]: 12 of 12 stores
+                - generic [ref=f7e593] [cursor=pointer]:
+                  - generic [ref=f7e594]:
+                    - generic [ref=f7e595]: Live
+                    - generic [ref=f7e597]: Edit
+                    - img "Any Specialty drink, Large" [ref=f7e602]
+                  - generic [ref=f7e603]:
+                    - generic [ref=f7e604]:
+                      - generic [ref=f7e605]:
+                        - heading "Any Specialty drink, Large" [level=3] [ref=f7e606]
+                        - paragraph [ref=f7e607]: Any large specialty latte, tonic, or seasonal drink
+                      - generic [ref=f7e608]: 1,500 pts
+                    - generic [ref=f7e609]:
+                      - generic [ref=f7e610]:
+                        - generic [ref=f7e611]: Redeemed · 30d
+                        - generic [ref=f7e612]: "0"
+                      - generic [ref=f7e613]:
+                        - generic [ref=f7e614]: Stock
+                        - generic [ref=f7e615]: n/a
+                      - generic [ref=f7e616]:
+                        - generic [ref=f7e617]: Available
+                        - generic [ref=f7e618]: 12 of 12 stores
+  - button "Open Next.js Dev Tools" [ref=f7e278] [cursor=pointer]
+  - alert [ref=f7e282]

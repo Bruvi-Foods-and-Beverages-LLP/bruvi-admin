@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import { AdminAuthClient } from "@/features/auth/api/auth-client";
 
 export interface CityEntity {
   id: string;
@@ -34,7 +35,7 @@ export const fetchCities = createAsyncThunk(
   "cities/fetchCities",
   async (_, { rejectWithValue }) => {
     try {
-      const res = await fetch("/api/proxy/cities?limit=100&isActive=true");
+      const res = await AdminAuthClient.authenticatedFetch("/api/proxy/cities?limit=100&isActive=true");
       if (!res.ok) {
         const errorJson = await res.json().catch(() => ({}));
         return rejectWithValue(errorJson.message || "Failed to load cities");
@@ -69,7 +70,7 @@ export const createCityThunk = createAsyncThunk(
   "cities/createCity",
   async (cityPayload: Record<string, unknown>, { rejectWithValue }) => {
     try {
-      const res = await fetch("/api/proxy/cities", {
+      const res = await AdminAuthClient.authenticatedFetch("/api/proxy/cities", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(cityPayload),

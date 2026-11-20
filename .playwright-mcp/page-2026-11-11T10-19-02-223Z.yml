@@ -1,0 +1,9 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]: HQ
+        - generic [ref=e15]: Brew | Vibe | Repeat
+      - paragraph [ref=e19]: Loading corporate authentication...
+  - button "Open Next.js Dev Tools" [ref=e25] [cursor=pointer]
+  - alert [ref=e29]

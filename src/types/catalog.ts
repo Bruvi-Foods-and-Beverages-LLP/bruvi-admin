@@ -176,19 +176,95 @@ export interface ModifierStockEntry {
 }
 
 export interface StoreOverride {
+  id?: string;
   outletId: string;
+  productId?: string;
   outletCode?: string;
   outletName?: string;
   city?: string;
   overridePricePaise?: number | null;
   isAvailable: boolean;
   autoHiddenReason?: string | null;
+  autoHiddenDetail?: string | null;
   channelCounter?: boolean;
   channelKiosk?: boolean;
   channelApp?: boolean;
   channelQr?: boolean;
   effectiveFrom?: string | null;
   effectiveTo?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+  outlets?: {
+    id: string;
+    code: string;
+    name: string;
+    city: string;
+    city_id?: string;
+  };
+  products?: {
+    id: string;
+    name: string;
+    sku: string;
+    base_price_paise: number;
+    image_url?: string | null;
+    category_id?: string;
+    is_available?: boolean;
+  };
+}
+
+export interface CityPriceRule {
+  id: string;
+  cityId: string;
+  name: string;
+  deltaPricePaise: number;
+  percentageModifier: number;
+  isActive: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+  cities?: {
+    id: string;
+    name: string;
+    code: string;
+    state: string;
+  };
+}
+
+export interface BulkStoreProductOverridePayload {
+  outletIds: string[];
+  productId: string;
+  overridePricePaise?: number | null;
+  isAvailable?: boolean;
+  autoHiddenReason?: AutoHiddenReason | null;
+  autoHiddenDetail?: string | null;
+  channelCounter?: boolean;
+  channelKiosk?: boolean;
+  channelApp?: boolean;
+  channelQr?: boolean;
+  effectiveFrom?: string | null;
+  effectiveTo?: string | null;
+}
+
+export interface PublishPricingBatchPayload {
+  basePriceUpdates?: Array<{
+    productId: string;
+    basePricePaise: number;
+    scheduledPricePaise?: number | null;
+    scheduledPriceDate?: string | null;
+  }>;
+  storeOverrides?: Array<{
+    outletId: string;
+    productId: string;
+    overridePricePaise?: number | null;
+    isAvailable?: boolean;
+    autoHiddenReason?: AutoHiddenReason | null;
+    autoHiddenDetail?: string | null;
+    channelCounter?: boolean;
+    channelKiosk?: boolean;
+    channelApp?: boolean;
+    channelQr?: boolean;
+    effectiveFrom?: string | null;
+    effectiveTo?: string | null;
+  }>;
 }
 
 export interface CatalogProduct {

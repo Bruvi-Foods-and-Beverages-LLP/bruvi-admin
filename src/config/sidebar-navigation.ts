@@ -6,9 +6,30 @@ export interface SidebarNavItem {
   href: string;
   iconName: BruviIconName;
   requiredCapability?: DomainCapability;
+  /** Visible when the user holds any one of these (used instead of requiredCapability). */
+  anyCapability?: DomainCapability[];
+  /** Live dot next to the title, fed by a global watcher. */
+  liveIndicator?: "support";
   description: string;
   category: string;
 }
+
+/** True when the user may open this item (sidebar, ⌘K and the route guard all use it). */
+export function canAccessNavItem(
+  item: SidebarNavItem,
+  hasPermission: (permission: string) => boolean,
+): boolean {
+  if (item.anyCapability) return item.anyCapability.some((capability) => hasPermission(capability));
+  return !item.requiredCapability || hasPermission(item.requiredCapability);
+}
+
+/** Customers tabs that need more than access to the module itself. */
+export const CUSTOMER_TAB_CAPABILITY = {
+  customers: "staff:view",
+  wallet: "staff:view",
+  segments: "staff:view",
+  support: "orders:view",
+} as const satisfies Record<string, DomainCapability>;
 
 export interface SidebarNavSection {
   title: string; // e.g. "Operations", "Menu", "Supply", "Growth", "Business"
@@ -100,8 +121,9 @@ export const SIDEBAR_NAV_SECTIONS: SidebarNavSection[] = [
         title: "Customers",
         href: "/customers",
         iconName: "users",
-        requiredCapability: "staff:view",
-        description: "Omnichannel customer profiles, beverage preferences, purchase histories, and LTV.",
+        anyCapability: ["staff:view", "orders:view"],
+        liveIndicator: "support",
+        description: "Customer profiles, wallet, segments, and the support inbox with live chat.",
         category: "Growth",
       },
       {

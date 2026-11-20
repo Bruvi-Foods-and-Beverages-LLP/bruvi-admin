@@ -1,0 +1,40 @@
+[     137ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[     149ms] [LOG] [HMR] connected @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[    4336ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_VariableFont_wdth%2Cwght-s.p.09nwgo1rywamy.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/lab:0
+[    4336ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_Italic_VariableFont_wdth%2Cwght-s.p.3cp-88p9nhsl1.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/lab:0
+[   22033ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[   22074ms] [LOG] [Fast Refresh] done in 116ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2275306ms] [LOG] [Fast Refresh] done in 116ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2452204ms] [LOG] [Fast Refresh] done in 116ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2452355ms] [LOG] [Fast Refresh] done in 116ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2452705ms] [LOG] [Fast Refresh] done in 116ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2452756ms] [LOG] [Fast Refresh] done in 116ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2453322ms] [LOG] [Fast Refresh] done in 116ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2453462ms] [LOG] [Fast Refresh] done in 116ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2453544ms] [LOG] [Fast Refresh] done in 116ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2453773ms] [LOG] [Fast Refresh] done in 116ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2591292ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2591537ms] [LOG] [Fast Refresh] done in 319ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2594587ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_VariableFont_wdth%2Cwght-s.p.09nwgo1rywamy.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/lab:0
+[ 2594587ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_Italic_VariableFont_wdth%2Cwght-s.p.3cp-88p9nhsl1.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/lab:0
+[ 2596768ms] [LOG] [Fast Refresh] done in 319ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2644703ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2644818ms] [LOG] [Fast Refresh] done in 217ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2647808ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_VariableFont_wdth%2Cwght-s.p.09nwgo1rywamy.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/lab:0
+[ 2647808ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_Italic_VariableFont_wdth%2Cwght-s.p.3cp-88p9nhsl1.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/lab:0
+[ 2648134ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2648685ms] [LOG] [Fast Refresh] done in 613ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2648746ms] [LOG] [Fast Refresh] done in 613ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2651956ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_VariableFont_wdth%2Cwght-s.p.09nwgo1rywamy.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/lab:0
+[ 2651957ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_Italic_VariableFont_wdth%2Cwght-s.p.3cp-88p9nhsl1.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/lab:0
+[ 2678891ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2678941ms] [LOG] [Fast Refresh] done in 79ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2681913ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_VariableFont_wdth%2Cwght-s.p.09nwgo1rywamy.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/lab:0
+[ 2681913ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_Italic_VariableFont_wdth%2Cwght-s.p.3cp-88p9nhsl1.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/lab:0
+[ 2686956ms] [LOG] [Fast Refresh] done in 79ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2730067ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2730148ms] [LOG] [Fast Refresh] done in 153ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2733151ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_VariableFont_wdth%2Cwght-s.p.09nwgo1rywamy.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/lab:0
+[ 2733151ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_Italic_VariableFont_wdth%2Cwght-s.p.3cp-88p9nhsl1.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/lab:0
+[ 2769132ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2769197ms] [LOG] [Fast Refresh] done in 147ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719

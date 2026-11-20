@@ -1,5 +1,6 @@
 "use client";
 
+import { Pagination, usePagination } from "@/components/ui/pagination";
 import * as React from "react";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/store";
@@ -122,6 +123,11 @@ export default function StoresPage() {
 
     return matchesSearch && matchesCity && matchesStatus;
   });
+  const storePager = usePagination(filteredStores, 10, "stores");
+  const resetStorePager = storePager.reset;
+  React.useEffect(() => {
+    resetStorePager();
+  }, [searchQuery, selectedCity, selectedStatus, resetStorePager]);
 
   return (
     <div className="flex flex-col gap-6 w-full max-w-[1136px] mx-auto pb-12">
@@ -522,7 +528,7 @@ export default function StoresPage() {
           </div>
         ) : (
           <div className="divide-y divide-[#dce2ea]">
-            {filteredStores.map((store) => {
+            {storePager.pageItems.map((store) => {
               const badgeBg =
                 store.status === "Open"
                   ? "bg-[#DCFCE7] text-[#15803D]"
@@ -588,6 +594,7 @@ export default function StoresPage() {
             })}
           </div>
         )}
+        {filteredStores.length > 0 && <Pagination {...storePager.paginationProps} />}
       </div>
     </div>
   );

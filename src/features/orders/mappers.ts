@@ -4,6 +4,8 @@ import {
   OrderChannel,
   OrderTimelineItem,
   PaymentDetail,
+  PaymentGatewayEvent,
+  PaymentMethod,
   OrderTimelineDetail,
 } from '@/types/orders';
 import {
@@ -29,6 +31,9 @@ export class AdminOrderMapper {
       storeName: item.storeName,
       storeId: item.storeId,
       channel: item.channel as OrderChannel,
+      serviceType: item.serviceType,
+      tableLabel: item.tableLabel || undefined,
+      customerNote: item.kitchenNote || undefined,
       customerName: item.customerName,
       customerPhone: item.customerPhone,
       customerEmail: item.customerEmail,
@@ -48,7 +53,14 @@ export class AdminOrderMapper {
       subtotal: item.subtotal,
       promoDiscount: item.discount,
       taxAmount: item.tax,
-      paymentMethod: (item.paymentStatus === 'PAID' ? 'UPI' : 'UPI') as any,
+      deliveryFee: item.deliveryFee,
+      tip: item.tip ?? 0,
+      money: item.money,
+      gst: (item as BackendOrderDetail).gst,
+      paymentMethod:
+        ({ UPI: 'UPI', CARD: 'Card', NETBANKING: 'Netbanking', WALLET: 'Wallet' } as Record<string, PaymentMethod>)[
+          (item.paymentMethod || '').toUpperCase()
+        ] ?? '—',
       paymentStatus: (item.paymentStatus === 'PARTIALLY_REFUNDED'
         ? 'PARTIALLY_REFUNDED'
         : item.paymentStatus === 'REFUNDED'
@@ -85,50 +97,7 @@ export class AdminOrderMapper {
       note: cust.note || `Usually orders ${order.items?.[0]?.productName || 'Cold Brew'} · no complaints on file`,
     };
 
-    const firstPayment = detail.payments?.[0];
-    const payment: PaymentDetail = {
-      orderId: detail.id,
-      orderNumber: detail.orderNumber,
-      amount: detail.totalAmount,
-      status: (firstPayment?.status === 'CAPTURED'
-        ? 'Captured'
-        : firstPayment?.status === 'FAILED'
-        ? 'Failed'
-        : 'Authorized') as any,
-      method: firstPayment?.method || 'UPI',
-      storeName: detail.storeName,
-      timestamp: detail.createdAt,
-      razorpayPaymentId: firstPayment?.providerPaymentId || firstPayment?.id || 'pay_mock',
-      gatewayFeeText: '₹ 0.00',
-      netToSettle: detail.totalAmount,
-      upiRrn: '849204918234',
-      payerVpa: 'customer@okaxis',
-      posTerminalId: 'POS-01',
-      settlementBatch: 'SB-8492',
-      expectedCreditDate: 'Next business day',
-      gatewayEvents: (detail.payments || []).map((p) => ({
-        time: p.capturedAt || p.createdAt,
-        event: p.status,
-        detail: `Amount ₹${p.amount} via ${p.method} (${p.provider})`,
-        result: p.status === 'CAPTURED' ? 'SUCCESS' : p.failureReason || p.status,
-        status: p.status === 'CAPTURED' ? 'success' : 'failed',
-      })),
-      rawPayload: JSON.stringify(firstPayment || {}, null, 2),
-      riskChecks: [
-        { id: '1', label: 'IP Geolocation Match', passed: true },
-        { id: '2', label: 'Velocity Check (< 3 orders / hr)', passed: true },
-        { id: '3', label: 'Device Fingerprint Known', passed: true },
-      ],
-      settlement: {
-        batchId: 'BATCH-83921',
-        cycle: 'T+1 Daily',
-        batchCloses: '23:59 IST',
-        expectedCredit: `₹ ${detail.totalAmount}`,
-        account: 'HDFC Bank •••• 4021',
-        reconciled: true,
-        reconciledText: 'Matched with bank feed',
-      },
-    };
+    const payment = this.toPaymentDetail(detail);
 
     const timelineEvents: OrderTimelineItem[] = (detail.timeline || []).map((ev) => {
       let category: 'customer' | 'staff' | 'system' = 'system';
@@ -179,5 +148,141 @@ export class AdminOrderMapper {
     };
 
     return { order, payment, timeline };
+  }
+
+  /** Real payment data from the paying attempt, the refunds and the server's money summary. */
+  static toPaymentDetail(detail: BackendOrderDetail): PaymentDetail {
+    const attempts = [...(detail.payments || [])].sort((a, b) => b.attemptNo - a.attemptNo);
+    const paid = attempts.find((p) => p.status === 'CAPTURED') ?? attempts[0];
+    const summary = detail.paymentSummary;
+    const rupees = (paise: number | null | undefined) => (paise == null ? null : paise / 100);
+
+    const statusLabel: PaymentDetail['status'] =
+      detail.paymentStatus === 'REFUNDED'
+        ? 'Refunded'
+        : detail.paymentStatus === 'PARTIALLY_REFUNDED'
+          ? 'Partially Refunded'
+          : paid?.status === 'CAPTURED'
+            ? 'Captured'
+            : paid?.status === 'AUTHORIZED'
+              ? 'Authorized'
+              : paid?.status === 'FAILED' || paid?.status === 'EXPIRED'
+                ? 'Failed'
+                : 'Pending';
+
+    const methodNames: Record<string, string> = { UPI: 'UPI', CARD: 'Card', NETBANKING: 'Netbanking', WALLET: 'BRUVI Wallet', FREE: 'No payment (₹0)' };
+    const method = methodNames[(paid?.method || '').toUpperCase()] || paid?.method || '—';
+
+    const fmtTime = (iso?: string | null) =>
+      iso ? new Date(iso).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : '—';
+
+    const gatewayEvents: PaymentGatewayEvent[] = [...(detail.payments || [])]
+      .sort((a, b) => a.attemptNo - b.attemptNo)
+      .flatMap((p) => {
+        const via = p.methodLabel || p.method;
+        const events: PaymentGatewayEvent[] = [
+          {
+            time: fmtTime(p.createdAt),
+            event: `attempt.${p.attemptNo}.created`,
+            detail: `₹${(p.amountPaise ?? p.amount * 100) / 100} via ${via} (${p.provider})${p.providerOrderId ? ` · ${p.providerOrderId}` : ''}`,
+            result: 'OPEN',
+            status: 'pending',
+          },
+        ];
+        if (p.status === 'CAPTURED') {
+          events.push({
+            time: fmtTime(p.capturedAt),
+            event: 'payment.captured',
+            detail: [p.providerPaymentId, p.upiRrn ? `RRN ${p.upiRrn}` : null].filter(Boolean).join(' · ') || via,
+            result: 'SUCCESS',
+            status: 'success',
+          });
+        } else if (p.status !== 'PENDING' && p.status !== 'CREATED') {
+          events.push({
+            time: fmtTime(p.capturedAt || p.expiresAt),
+            event: `payment.${p.status.toLowerCase()}`,
+            detail: p.failureReason || p.failureCode || p.status,
+            result: p.status,
+            status: 'failed',
+          });
+        }
+        return events;
+      });
+    for (const r of [...(detail.refunds || [])].reverse()) {
+      gatewayEvents.push({
+        time: fmtTime(r.createdAt),
+        event: `refund.${r.status.toLowerCase()}`,
+        detail: `₹${r.amountPaise / 100} to ${r.destination === 'WALLET' ? 'BRUVI Wallet' : 'original method'}${r.providerRefundId ? ` · ${r.providerRefundId}` : ''}`,
+        result: r.status,
+        status: r.status === 'SUCCEEDED' ? 'success' : r.status === 'FAILED' ? 'failed' : 'pending',
+      });
+    }
+
+    const payId = paid?.provider === 'RAZORPAY' ? paid.providerPaymentId ?? null : null;
+    const isZeroPayment = (paid?.method || '').toUpperCase() === 'FREE';
+    const b = summary?.benefits ?? paid?.benefits ?? null;
+    const benefits = b
+      ? {
+          itemTotal: b.itemTotalPaise / 100,
+          discount: b.discountPaise / 100,
+          coupon: b.coupon ? { code: b.coupon.code, discount: b.coupon.discountPaise / 100 } : null,
+          membership: b.membership
+            ? {
+                planName: b.membership.planName,
+                discount: b.membership.discountPaise / 100,
+                freeDrinks: b.membership.freeDrinks.map((d) => d.name),
+              }
+            : null,
+        }
+      : null;
+    return {
+      gst: detail.gst ?? null,
+      invoiceNumber: detail.invoiceNumber ?? null,
+      orderId: detail.id,
+      orderNumber: detail.orderNumber,
+      amount: summary?.capturedPaise ? summary.capturedPaise / 100 : detail.totalAmount,
+      status: statusLabel,
+      method,
+      methodLabel: summary?.methodLabel || paid?.methodLabel || method,
+      provider: paid?.provider ?? null,
+      storeName: detail.storeName,
+      timestamp: summary?.capturedAt || paid?.capturedAt
+        ? new Date((summary?.capturedAt || paid?.capturedAt) as string).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })
+        : new Date(detail.createdAt).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }),
+      razorpayPaymentId: payId,
+      razorpayOrderId: paid?.provider === 'RAZORPAY' ? paid.providerOrderId ?? null : null,
+      // Razorpay's fee already includes its GST; gatewayTax is that GST part.
+      gatewayFee: rupees(summary?.feePaise ?? null),
+      gatewayTax: rupees(summary?.gatewayTaxPaise ?? null),
+      refundedToSource: (summary?.refundedToSourcePaise ?? 0) / 100,
+      refundedToWallet: (summary?.refundedToWalletPaise ?? 0) / 100,
+      netToSettle: (summary?.netSettlementPaise ?? 0) / 100,
+      upiRrn: paid?.upiRrn ?? null,
+      payerVpa: paid?.vpa ?? null,
+      cardLast4: paid?.cardLast4 ?? null,
+      cardNetwork: paid?.cardNetwork ?? null,
+      bank: paid?.bank ?? null,
+      isZeroPayment,
+      paymentId: paid?.providerPaymentId ?? null,
+      benefits,
+      gatewayEvents,
+      // Only data the API returned for the paying attempt; nothing is invented.
+      rawPayload: JSON.stringify(paid ?? {}, null, 2),
+      refunds: (detail.refunds || []).map((r) => ({
+        id: r.id,
+        refundNumber: r.refundNumber,
+        amount: r.amountPaise / 100,
+        creditNoteNumber: r.creditNoteNumber ?? null,
+        gstReversal: r.gstReversal,
+        destination: r.destination,
+        status: r.status,
+        reasonCode: r.reasonCode,
+        note: r.note,
+        providerRefundId: r.providerRefundId,
+        lastError: r.lastError,
+        createdAt: r.createdAt,
+      })),
+      razorpayDashboardUrl: payId ? `https://dashboard.razorpay.com/app/payments/${payId}` : undefined,
+    };
   }
 }

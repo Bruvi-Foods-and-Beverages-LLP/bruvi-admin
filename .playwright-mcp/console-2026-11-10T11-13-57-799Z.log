@@ -1,0 +1,285 @@
+[     266ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[     295ms] [LOG] [HMR] connected @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[    4712ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_VariableFont_wdth%2Cwght-s.p.09nwgo1rywamy.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[    4712ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_Italic_VariableFont_wdth%2Cwght-s.p.3cp-88p9nhsl1.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[   33629ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_VariableFont_wdth%2Cwght-s.p.09nwgo1rywamy.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[   33629ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_Italic_VariableFont_wdth%2Cwght-s.p.3cp-88p9nhsl1.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[   52081ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_VariableFont_wdth%2Cwght-s.p.09nwgo1rywamy.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[   52081ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_Italic_VariableFont_wdth%2Cwght-s.p.3cp-88p9nhsl1.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[   60833ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_VariableFont_wdth%2Cwght-s.p.09nwgo1rywamy.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[   60833ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_Italic_VariableFont_wdth%2Cwght-s.p.3cp-88p9nhsl1.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[   78121ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_VariableFont_wdth%2Cwght-s.p.09nwgo1rywamy.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[   78121ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_Italic_VariableFont_wdth%2Cwght-s.p.3cp-88p9nhsl1.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[   94171ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_VariableFont_wdth%2Cwght-s.p.09nwgo1rywamy.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[   94171ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_Italic_VariableFont_wdth%2Cwght-s.p.3cp-88p9nhsl1.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 1083669ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 1083726ms] [LOG] [Fast Refresh] done in 25ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 1105934ms] [LOG] [Fast Refresh] done in 25ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 1112107ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 1112226ms] [LOG] [Fast Refresh] done in 4ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 1112299ms] [LOG] [Fast Refresh] done in 4ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 1112396ms] [LOG] [Fast Refresh] done in 4ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 1112692ms] [LOG] [Fast Refresh] done in 4ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 1115678ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_VariableFont_wdth%2Cwght-s.p.09nwgo1rywamy.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 1115679ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_Italic_VariableFont_wdth%2Cwght-s.p.3cp-88p9nhsl1.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 1117798ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 1117865ms] [LOG] [Fast Refresh] done in 3ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 1121234ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_VariableFont_wdth%2Cwght-s.p.09nwgo1rywamy.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 1121235ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_Italic_VariableFont_wdth%2Cwght-s.p.3cp-88p9nhsl1.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 1123129ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 1123160ms] [LOG] [Fast Refresh] done in 4ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 1123225ms] [LOG] [Fast Refresh] done in 4ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 1126620ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_VariableFont_wdth%2Cwght-s.p.09nwgo1rywamy.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 1126621ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_Italic_VariableFont_wdth%2Cwght-s.p.3cp-88p9nhsl1.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 1136373ms] [LOG] [Fast Refresh] done in 4ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 1184614ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 1184657ms] [LOG] [Fast Refresh] done in 119ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 1187659ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_VariableFont_wdth%2Cwght-s.p.09nwgo1rywamy.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 1187659ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_Italic_VariableFont_wdth%2Cwght-s.p.3cp-88p9nhsl1.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 1225847ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 1225874ms] [LOG] [Fast Refresh] done in 4ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 1420475ms] [LOG] [Fast Refresh] done in 4ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 1420510ms] [LOG] [Fast Refresh] done in 4ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 1420584ms] [LOG] [Fast Refresh] done in 4ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 1468822ms] [LOG] [Fast Refresh] done in 4ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 1468875ms] [LOG] [Fast Refresh] done in 4ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 1469268ms] [LOG] [Fast Refresh] done in 4ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2038810ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2038879ms] [LOG] [Fast Refresh] done in 104ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2041919ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_VariableFont_wdth%2Cwght-s.p.09nwgo1rywamy.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 2041920ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_Italic_VariableFont_wdth%2Cwght-s.p.3cp-88p9nhsl1.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 2053135ms] [LOG] [Fast Refresh] done in 104ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2053180ms] [LOG] [Fast Refresh] done in 104ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2053328ms] [LOG] [Fast Refresh] done in 104ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2056377ms] [LOG] [Fast Refresh] done in 104ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2056489ms] [LOG] [Fast Refresh] done in 104ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2056787ms] [LOG] [Fast Refresh] done in 104ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2056981ms] [LOG] [Fast Refresh] done in 104ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2057165ms] [LOG] [Fast Refresh] done in 104ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2057286ms] [LOG] [Fast Refresh] done in 104ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2057374ms] [LOG] [Fast Refresh] done in 104ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2057633ms] [LOG] [Fast Refresh] done in 104ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2057762ms] [LOG] [Fast Refresh] done in 104ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2059148ms] [LOG] [Fast Refresh] done in 104ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2059505ms] [LOG] [Fast Refresh] done in 104ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2059703ms] [LOG] [Fast Refresh] done in 104ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2059855ms] [LOG] [Fast Refresh] done in 104ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2060362ms] [LOG] [Fast Refresh] done in 104ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2060463ms] [LOG] [Fast Refresh] done in 104ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2061091ms] [LOG] [Fast Refresh] done in 104ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2061195ms] [LOG] [Fast Refresh] done in 104ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2062071ms] [LOG] [Fast Refresh] done in 104ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2062194ms] [LOG] [Fast Refresh] done in 104ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2062471ms] [LOG] [Fast Refresh] done in 104ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2062559ms] [LOG] [Fast Refresh] done in 104ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2068629ms] [LOG] [Fast Refresh] done in 104ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2068756ms] [LOG] [Fast Refresh] done in 104ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2069265ms] [LOG] [Fast Refresh] done in 104ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2069367ms] [LOG] [Fast Refresh] done in 104ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2070072ms] [LOG] [Fast Refresh] done in 104ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2070261ms] [LOG] [Fast Refresh] done in 104ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2071236ms] [LOG] [Fast Refresh] done in 104ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2071388ms] [LOG] [Fast Refresh] done in 104ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2072320ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2072346ms] [LOG] [Fast Refresh] done in 41ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2075093ms] [LOG] [Fast Refresh] done in 41ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2075236ms] [LOG] [Fast Refresh] done in 41ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2085880ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2086012ms] [LOG] [Fast Refresh] done in 189ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2086053ms] [LOG] [Fast Refresh] done in 189ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2086381ms] [LOG] [Fast Refresh] done in 189ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2089482ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_VariableFont_wdth%2Cwght-s.p.09nwgo1rywamy.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 2089482ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_Italic_VariableFont_wdth%2Cwght-s.p.3cp-88p9nhsl1.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 2098915ms] [LOG] [Fast Refresh] done in 189ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2164983ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2165202ms] [LOG] [Fast Refresh] done in 300ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2168088ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_VariableFont_wdth%2Cwght-s.p.09nwgo1rywamy.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 2168088ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_Italic_VariableFont_wdth%2Cwght-s.p.3cp-88p9nhsl1.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 2171586ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2171647ms] [LOG] [Fast Refresh] done in 140ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2181973ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2182108ms] [LOG] [Fast Refresh] done in 219ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2185077ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_VariableFont_wdth%2Cwght-s.p.09nwgo1rywamy.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 2185078ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_Italic_VariableFont_wdth%2Cwght-s.p.3cp-88p9nhsl1.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 2538740ms] [LOG] [Fast Refresh] done in 219ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2538910ms] [LOG] [Fast Refresh] done in 219ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2539888ms] [LOG] [Fast Refresh] done in 219ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2540275ms] [LOG] [Fast Refresh] done in 219ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2546320ms] [LOG] [Fast Refresh] done in 219ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2546372ms] [LOG] [Fast Refresh] done in 219ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2546583ms] [LOG] [Fast Refresh] done in 219ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2546793ms] [LOG] [Fast Refresh] done in 219ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2547057ms] [LOG] [Fast Refresh] done in 219ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2547596ms] [LOG] [Fast Refresh] done in 219ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2547750ms] [LOG] [Fast Refresh] done in 219ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2547909ms] [LOG] [Fast Refresh] done in 219ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2549337ms] [LOG] [Fast Refresh] done in 219ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2549623ms] [LOG] [Fast Refresh] done in 219ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2565954ms] [LOG] [Fast Refresh] done in 219ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2566070ms] [LOG] [Fast Refresh] done in 219ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2566172ms] [LOG] [Fast Refresh] done in 219ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2571161ms] [LOG] [Fast Refresh] done in 219ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2571334ms] [LOG] [Fast Refresh] done in 219ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2571535ms] [LOG] [Fast Refresh] done in 219ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2571611ms] [LOG] [Fast Refresh] done in 219ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2571815ms] [LOG] [Fast Refresh] done in 219ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2572012ms] [LOG] [Fast Refresh] done in 219ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2572823ms] [LOG] [Fast Refresh] done in 219ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2573299ms] [LOG] [Fast Refresh] done in 219ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2574385ms] [LOG] [Fast Refresh] done in 219ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2574559ms] [LOG] [Fast Refresh] done in 219ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2575472ms] [LOG] [Fast Refresh] done in 219ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2575605ms] [LOG] [Fast Refresh] done in 219ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2653831ms] [LOG] [Fast Refresh] done in 219ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2653919ms] [LOG] [Fast Refresh] done in 219ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2945175ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2945409ms] [LOG] [Fast Refresh] done in 69ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2945410ms] [LOG] [Fast Refresh] done in 69ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2945423ms] [LOG] [Fast Refresh] done in 69ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2945452ms] [LOG] [Fast Refresh] done in 69ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2945770ms] [LOG] [Fast Refresh] done in 69ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2948748ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_VariableFont_wdth%2Cwght-s.p.09nwgo1rywamy.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 2948749ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_Italic_VariableFont_wdth%2Cwght-s.p.3cp-88p9nhsl1.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 2960918ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2960945ms] [LOG] [Fast Refresh] done in 4ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2961004ms] [LOG] [Fast Refresh] done in 4ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2964135ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_VariableFont_wdth%2Cwght-s.p.09nwgo1rywamy.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 2964136ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_Italic_VariableFont_wdth%2Cwght-s.p.3cp-88p9nhsl1.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 2982741ms] [LOG] [Fast Refresh] done in 4ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2989576ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2989606ms] [LOG] [Fast Refresh] done in 5ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2989674ms] [LOG] [Fast Refresh] done in 5ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 2992865ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_VariableFont_wdth%2Cwght-s.p.09nwgo1rywamy.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 2992865ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_Italic_VariableFont_wdth%2Cwght-s.p.3cp-88p9nhsl1.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 3001592ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 3001650ms] [LOG] [Fast Refresh] done in 4ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 3005233ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_VariableFont_wdth%2Cwght-s.p.09nwgo1rywamy.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 3005234ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_Italic_VariableFont_wdth%2Cwght-s.p.3cp-88p9nhsl1.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 3013871ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 3013898ms] [LOG] [Fast Refresh] done in 5ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 3013957ms] [LOG] [Fast Refresh] done in 5ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 3017308ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_VariableFont_wdth%2Cwght-s.p.09nwgo1rywamy.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 3017309ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_Italic_VariableFont_wdth%2Cwght-s.p.3cp-88p9nhsl1.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 3265162ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 3265335ms] [LOG] [Fast Refresh] done in 148ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 3268427ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_VariableFont_wdth%2Cwght-s.p.09nwgo1rywamy.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 3268427ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_Italic_VariableFont_wdth%2Cwght-s.p.3cp-88p9nhsl1.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 3314167ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 3314196ms] [LOG] [Fast Refresh] done in 13ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 3317216ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_VariableFont_wdth%2Cwght-s.p.09nwgo1rywamy.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 3317216ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_Italic_VariableFont_wdth%2Cwght-s.p.3cp-88p9nhsl1.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 3353482ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 3353504ms] [LOG] [Fast Refresh] done in 71ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 3410929ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 3410945ms] [LOG] [Fast Refresh] done in 102ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 3413955ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_VariableFont_wdth%2Cwght-s.p.09nwgo1rywamy.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 3413955ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_Italic_VariableFont_wdth%2Cwght-s.p.3cp-88p9nhsl1.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 3453306ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 3453443ms] [LOG] [Fast Refresh] done in 228ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 3456427ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_VariableFont_wdth%2Cwght-s.p.09nwgo1rywamy.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 3456428ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_Italic_VariableFont_wdth%2Cwght-s.p.3cp-88p9nhsl1.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 3460948ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 3460970ms] [LOG] [Fast Refresh] done in 61ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 3498813ms] [LOG] [Fast Refresh] done in 61ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 3504135ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 3504162ms] [LOG] [Fast Refresh] done in 109ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 3511450ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 3511470ms] [LOG] [Fast Refresh] done in 59ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 3528497ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 3528523ms] [LOG] [Fast Refresh] done in 29ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 3690252ms] [LOG] [Fast Refresh] done in 29ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 3690338ms] [LOG] [Fast Refresh] done in 29ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 3690371ms] [LOG] [Fast Refresh] done in 29ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 3690406ms] [LOG] [Fast Refresh] done in 29ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 3700419ms] [LOG] [Fast Refresh] done in 29ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 3700494ms] [LOG] [Fast Refresh] done in 29ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 3700781ms] [LOG] [Fast Refresh] done in 29ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 3717535ms] [LOG] [Fast Refresh] done in 29ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 3717853ms] [LOG] [Fast Refresh] done in 29ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 3731858ms] [LOG] [Fast Refresh] done in 29ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 3731999ms] [LOG] [Fast Refresh] done in 29ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 4249896ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 4250295ms] [LOG] [Fast Refresh] done in 81ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 4250316ms] [LOG] [Fast Refresh] done in 81ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 4255097ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_VariableFont_wdth%2Cwght-s.p.09nwgo1rywamy.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 4255098ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_Italic_VariableFont_wdth%2Cwght-s.p.3cp-88p9nhsl1.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 4287349ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 4287374ms] [LOG] [Fast Refresh] done in 7ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 4287431ms] [LOG] [Fast Refresh] done in 7ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 4290907ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_VariableFont_wdth%2Cwght-s.p.09nwgo1rywamy.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 4290907ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_Italic_VariableFont_wdth%2Cwght-s.p.3cp-88p9nhsl1.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 4318991ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 4319087ms] [LOG] [Fast Refresh] done in 172ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 4337023ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 4337044ms] [LOG] [Fast Refresh] done in 7ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 4404995ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 4405051ms] [LOG] [Fast Refresh] done in 143ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 4408064ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_VariableFont_wdth%2Cwght-s.p.09nwgo1rywamy.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 4408064ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_Italic_VariableFont_wdth%2Cwght-s.p.3cp-88p9nhsl1.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 4443655ms] [LOG] [Fast Refresh] done in 143ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 4443685ms] [LOG] [Fast Refresh] done in 143ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 4443921ms] [LOG] [Fast Refresh] done in 143ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 4452630ms] [LOG] [Fast Refresh] done in 143ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 4453243ms] [LOG] [Fast Refresh] done in 143ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 4454221ms] [LOG] [Fast Refresh] done in 143ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 4454463ms] [LOG] [Fast Refresh] done in 143ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 4458108ms] [LOG] [Fast Refresh] done in 143ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 4458516ms] [LOG] [Fast Refresh] done in 143ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 4458952ms] [LOG] [Fast Refresh] done in 143ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 4459064ms] [LOG] [Fast Refresh] done in 143ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 4459440ms] [LOG] [Fast Refresh] done in 143ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 4459560ms] [LOG] [Fast Refresh] done in 143ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 4460308ms] [LOG] [Fast Refresh] done in 143ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 4460777ms] [LOG] [Fast Refresh] done in 143ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 4460896ms] [LOG] [Fast Refresh] done in 143ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 4461056ms] [LOG] [Fast Refresh] done in 143ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 4461523ms] [LOG] [Fast Refresh] done in 143ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 4461609ms] [LOG] [Fast Refresh] done in 143ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 4462189ms] [LOG] [Fast Refresh] done in 143ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 4462317ms] [LOG] [Fast Refresh] done in 143ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 4492948ms] [LOG] [Fast Refresh] done in 143ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 4492979ms] [LOG] [Fast Refresh] done in 143ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 4843693ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 4844061ms] [LOG] [Fast Refresh] done in 457ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 4846939ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_VariableFont_wdth%2Cwght-s.p.09nwgo1rywamy.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 4846939ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_Italic_VariableFont_wdth%2Cwght-s.p.3cp-88p9nhsl1.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 4864716ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 4864735ms] [LOG] [Fast Refresh] done in 100ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 4903116ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 4903253ms] [LOG] [Fast Refresh] done in 206ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 4906392ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_VariableFont_wdth%2Cwght-s.p.09nwgo1rywamy.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 4906392ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_Italic_VariableFont_wdth%2Cwght-s.p.3cp-88p9nhsl1.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 6412779ms] [LOG] [Fast Refresh] done in 206ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 6438149ms] [LOG] [Fast Refresh] done in 206ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 6438328ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 6438588ms] [LOG] [Fast Refresh] done in 365ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 6441581ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_VariableFont_wdth%2Cwght-s.p.09nwgo1rywamy.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 6441581ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_Italic_VariableFont_wdth%2Cwght-s.p.3cp-88p9nhsl1.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 7300184ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 7300451ms] [LOG] [Fast Refresh] done in 17ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 7300452ms] [LOG] [Fast Refresh] done in 17ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 7300452ms] [LOG] [Fast Refresh] done in 17ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 7300469ms] [LOG] [Fast Refresh] done in 17ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 7300766ms] [LOG] [Fast Refresh] done in 17ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 7304845ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 7304911ms] [LOG] [Fast Refresh] done in 3ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 7308007ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_VariableFont_wdth%2Cwght-s.p.09nwgo1rywamy.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 7308007ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_Italic_VariableFont_wdth%2Cwght-s.p.3cp-88p9nhsl1.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 7323633ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 7323703ms] [LOG] [Fast Refresh] done in 4ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 7326818ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_VariableFont_wdth%2Cwght-s.p.09nwgo1rywamy.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 7326818ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_Italic_VariableFont_wdth%2Cwght-s.p.3cp-88p9nhsl1.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 7344860ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 7344887ms] [LOG] [Fast Refresh] done in 102ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 7373785ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 7373804ms] [LOG] [Fast Refresh] done in 17ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 7386147ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 7386166ms] [LOG] [Fast Refresh] done in 16ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 7389182ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_VariableFont_wdth%2Cwght-s.p.09nwgo1rywamy.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 7389182ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_Italic_VariableFont_wdth%2Cwght-s.p.3cp-88p9nhsl1.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/loyalty:0
+[ 7448273ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 7448324ms] [LOG] [Fast Refresh] done in 136ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 7468148ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 7468217ms] [LOG] [Fast Refresh] done in 151ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 7502909ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[ 7502991ms] [LOG] [Fast Refresh] done in 161ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719

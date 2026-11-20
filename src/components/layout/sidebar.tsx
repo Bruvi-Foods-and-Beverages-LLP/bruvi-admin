@@ -10,8 +10,10 @@ import {
 import {
   DASHBOARD_ITEM,
   SIDEBAR_NAV_SECTIONS,
+  canAccessNavItem,
   type SidebarNavItem,
 } from "@/config/sidebar-navigation";
+import { useSupportLiveStore } from "@/stores/use-support-live-store";
 import { useAuthStore } from "@/stores/use-auth-store";
 import { useAppStore } from "@/stores/use-app-store";
 import { cn } from "@/lib/utils/cn";
@@ -32,6 +34,7 @@ export function Sidebar() {
   const user = useAuthStore((s) => s.user);
   const logout = useAuthStore((s) => s.logout);
   const hasPermission = useAuthStore((s) => s.hasPermission);
+  const unresolvedChats = useSupportLiveStore((s) => s.unresolved);
 
   const isSidebarCollapsed = useAppStore((s) => s.isSidebarCollapsed);
   const setSidebarCollapsed = useAppStore((s) => s.setSidebarCollapsed);
@@ -76,9 +79,10 @@ export function Sidebar() {
     const active = isItemActive(item.href);
 
     // Dynamic RBAC gating
-    if (item.requiredCapability && !hasPermission(item.requiredCapability)) {
+    if (!canAccessNavItem(item, hasPermission)) {
       return null;
     }
+    const showLiveDot = item.liveIndicator === "support" && unresolvedChats > 0;
 
     return (
       <Link
@@ -113,6 +117,17 @@ export function Sidebar() {
         >
           {item.title}
         </span>
+        {showLiveDot && (
+          <span
+            className="ml-auto relative flex h-2 w-2 shrink-0"
+            role="status"
+            aria-label={`${unresolvedChats} live ${unresolvedChats === 1 ? "chat" : "chats"} not resolved`}
+            title={`${unresolvedChats} live ${unresolvedChats === 1 ? "chat" : "chats"} not resolved`}
+          >
+            <span className="absolute inline-flex h-full w-full rounded-full bg-[#5AB8F5] opacity-75 motion-safe:animate-ping" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-[#5AB8F5] ring-2 ring-[#1C3A66]" />
+          </span>
+        )}
       </Link>
     );
   };
@@ -171,8 +186,8 @@ export function Sidebar() {
           {/* 2. Standard 5 Navigation Sections */}
           {SIDEBAR_NAV_SECTIONS.map((section) => {
             // Check if section has at least one visible item based on RBAC permissions
-            const hasVisibleItems = section.items.some(
-              (item) => !item.requiredCapability || hasPermission(item.requiredCapability)
+            const hasVisibleItems = section.items.some((item) =>
+              canAccessNavItem(item, hasPermission)
             );
             if (!hasVisibleItems) return null;
 

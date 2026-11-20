@@ -1,0 +1,198 @@
+- generic [ref=f4e1]:
+  - generic [ref=f4e2]:
+    - complementary [ref=f4e22]:
+      - link "HQ" [ref=f4e24] [cursor=pointer]:
+        - /url: /
+      - generic [ref=f4e35]:
+        - link "Dashboard" [ref=f4e37] [cursor=pointer]:
+          - /url: /
+        - generic [ref=f4e42]:
+          - generic [ref=f4e43]: Operations
+          - generic [ref=f4e45]:
+            - link "Orders" [ref=f4e46] [cursor=pointer]:
+              - /url: /orders
+            - link "Stores" [ref=f4e51] [cursor=pointer]:
+              - /url: /stores
+        - generic [ref=f4e59]:
+          - generic [ref=f4e60]: Menu
+          - generic [ref=f4e62]:
+            - link "Catalog" [ref=f4e63] [cursor=pointer]:
+              - /url: /catalog
+            - link "Recipes" [ref=f4e68] [cursor=pointer]:
+              - /url: /recipes
+        - generic [ref=f4e73]:
+          - generic [ref=f4e74]: Supply
+          - generic [ref=f4e76]:
+            - link "Inventory" [ref=f4e77] [cursor=pointer]:
+              - /url: /inventory
+            - link "Warehouse" [ref=f4e82] [cursor=pointer]:
+              - /url: /warehouse
+        - generic [ref=f4e87]:
+          - generic [ref=f4e88]: Growth
+          - generic [ref=f4e90]:
+            - link "Customers" [ref=f4e91] [cursor=pointer]:
+              - /url: /customers
+            - link "Marketing" [ref=f4e97] [cursor=pointer]:
+              - /url: /marketing
+            - link "BRUVI LAB" [ref=f4e102] [cursor=pointer]:
+              - /url: /lab
+            - link "Loyalty" [ref=f4e107] [cursor=pointer]:
+              - /url: /loyalty
+            - link "Subscriptions" [ref=f4e112] [cursor=pointer]:
+              - /url: /subscriptions
+        - generic [ref=f4e117]:
+          - generic [ref=f4e118]: Business
+          - generic [ref=f4e120]:
+            - link "Finance" [ref=f4e121] [cursor=pointer]:
+              - /url: /finance
+            - link "Analytics" [ref=f4e128] [cursor=pointer]:
+              - /url: /analytics
+            - link "Staff" [ref=f4e133] [cursor=pointer]:
+              - /url: /staff
+            - link "Settings" [ref=f4e140] [cursor=pointer]:
+              - /url: /settings
+      - button "Staff profile menu" [ref=f4e149] [cursor=pointer]:
+        - generic [ref=f4e150]: KR
+        - generic [ref=f4e151]:
+          - generic [ref=f4e152]: Kavya R
+          - generic [ref=f4e153]: Chief Operations Officer
+    - generic [ref=f4e156]:
+      - banner [ref=f4e157]:
+        - button "Search orders, stores, products, customers ⌘K" [ref=f4e159] [cursor=pointer]:
+          - generic [ref=f4e160]: Search orders, stores, products, customers
+          - generic [ref=f4e165]: ⌘K
+        - generic [ref=f4e166]:
+          - button "All stores · 0" [ref=f4e168] [cursor=pointer]
+          - button "Today · Fri 2 Oct" [ref=f4e177] [cursor=pointer]
+          - button "Notifications" [ref=f4e183] [cursor=pointer]
+      - main [ref=f4e188]:
+        - generic [ref=f4e189]:
+          - generic [ref=f4e190]:
+            - generic [ref=f4e191]:
+              - generic [ref=f4e192]:
+                - generic [ref=f4e193]: Growth · BRUVI Rewards
+                - heading "Loyalty" [level=1] [ref=f4e194]
+              - generic [ref=f4e195]:
+                - button "Export report" [ref=f4e196] [cursor=pointer]
+                - button "Adjust points" [ref=f4e197] [cursor=pointer]
+            - generic [ref=f4e198]:
+              - button "Overview" [ref=f4e199] [cursor=pointer]
+              - button "Rules" [ref=f4e200] [cursor=pointer]
+              - button "Rewards" [ref=f4e201] [cursor=pointer]
+              - button "Tiers" [active] [ref=f4e202] [cursor=pointer]
+              - button "Transactions" [ref=f4e203] [cursor=pointer]
+          - main [ref=f4e204]:
+            - generic [ref=f4e724]:
+              - generic [ref=f4e725]:
+                - generic [ref=f4e726]:
+                  - heading "Customer Loyalty Tiers & Perks" [level=2] [ref=f4e727]
+                  - paragraph [ref=f4e728]: Tier qualification criteria, multiplier benefits matrix, and active member census.
+                - generic [ref=f4e729]: Rolling 12-month calendar window
+              - generic [ref=f4e734]:
+                - generic [ref=f4e736]:
+                  - generic [ref=f4e738]:
+                    - heading "Silver" [level=3] [ref=f4e739]
+                    - paragraph [ref=f4e740]: 0–999 pts
+                  - generic [ref=f4e745]:
+                    - generic [ref=f4e746]: App Earn Rate
+                    - generic [ref=f4e747]: 1.0× (5 pts / ₹100)
+                  - generic [ref=f4e748]:
+                    - generic [ref=f4e749]: "Enrolled customers:"
+                    - generic [ref=f4e750]: 18 members
+                  - generic [ref=f4e751]:
+                    - generic [ref=f4e752]: "Included Benefits:"
+                    - list [ref=f4e753]:
+                      - listitem [ref=f4e754]:
+                        - generic [ref=f4e757]: Base earn on every ₹20 spent
+                      - listitem [ref=f4e758]:
+                        - generic [ref=f4e761]: Mobile app ordering & tracking
+                      - listitem [ref=f4e762]:
+                        - generic [ref=f4e765]: Special birthday month reward
+                - generic [ref=f4e766]:
+                  - generic [ref=f4e767]: Popular
+                  - generic [ref=f4e768]:
+                    - generic [ref=f4e770]:
+                      - heading "Gold" [level=3] [ref=f4e771]
+                      - paragraph [ref=f4e772]: 1,000–1,999 pts
+                    - generic [ref=f4e777]:
+                      - generic [ref=f4e778]: App Earn Rate
+                      - generic [ref=f4e779]: 1.25× on app orders (6.25 pts / ₹100)
+                    - generic [ref=f4e780]:
+                      - generic [ref=f4e781]: "Enrolled customers:"
+                      - generic [ref=f4e782]: 0 members
+                    - generic [ref=f4e783]:
+                      - generic [ref=f4e784]: "Included Benefits:"
+                      - list [ref=f4e785]:
+                        - listitem [ref=f4e786]:
+                          - generic [ref=f4e789]: 1.25× points multiplier on all app orders
+                        - listitem [ref=f4e790]:
+                          - generic [ref=f4e793]: Monthly complimentary beverage size upgrade
+                        - listitem [ref=f4e794]:
+                          - generic [ref=f4e797]: BRUVI LAB 24-hour early access window
+                        - listitem [ref=f4e798]:
+                          - generic [ref=f4e801]: Priority counter pickup at all stores
+                - generic [ref=f4e802]:
+                  - generic [ref=f4e803]: VIP Elite
+                  - generic [ref=f4e804]:
+                    - generic [ref=f4e806]:
+                      - heading "Platinum" [level=3] [ref=f4e807]
+                      - paragraph [ref=f4e808]: 2,000+ pts
+                    - generic [ref=f4e813]:
+                      - generic [ref=f4e814]: App Earn Rate
+                      - generic [ref=f4e815]: 1.5× on app orders (7.5 pts / ₹100)
+                    - generic [ref=f4e816]:
+                      - generic [ref=f4e817]: "Enrolled customers:"
+                      - generic [ref=f4e818]: 1 members
+                    - generic [ref=f4e819]:
+                      - generic [ref=f4e820]: "Included Benefits:"
+                      - list [ref=f4e821]:
+                        - listitem [ref=f4e822]:
+                          - generic [ref=f4e825]: 1.5× points multiplier on all app orders
+                        - listitem [ref=f4e826]:
+                          - generic [ref=f4e829]: 4× monthly complimentary size upgrades
+                        - listitem [ref=f4e830]:
+                          - generic [ref=f4e833]: BRUVI LAB 48-hour VIP drop early access
+                        - listitem [ref=f4e834]:
+                          - generic [ref=f4e837]: Dedicated concierge support & invite to roastery events
+              - generic [ref=f4e838]:
+                - heading "Complete Tier Benefits Comparison" [level=3] [ref=f4e839]
+                - table [ref=f4e841]:
+                  - rowgroup [ref=f4e842]:
+                    - row [ref=f4e843]:
+                      - columnheader "Benefit Feature" [ref=f4e844]
+                      - columnheader "Silver (0–999)" [ref=f4e845]
+                      - columnheader "Gold (1,000–1,999)" [ref=f4e846]
+                      - columnheader "Platinum (2,000+)" [ref=f4e847]
+                  - rowgroup [ref=f4e848]:
+                    - row [ref=f4e849]:
+                      - cell "App Orders Points Multiplier" [ref=f4e850]
+                      - cell "1.0× base" [ref=f4e851]
+                      - cell "1.25× (6.25 pts/₹100)" [ref=f4e852]
+                      - cell "1.50× (7.5 pts/₹100)" [ref=f4e853]
+                    - row [ref=f4e854]:
+                      - cell "Monthly Complimentary Size Upgrades" [ref=f4e855]
+                      - cell "—" [ref=f4e856]
+                      - cell "1× per month" [ref=f4e857]
+                      - cell "4× per month" [ref=f4e858]
+                    - row [ref=f4e859]:
+                      - cell "BRUVI LAB Drop Early Access" [ref=f4e860]
+                      - cell "—" [ref=f4e861]
+                      - cell "24 hours prior" [ref=f4e862]
+                      - cell "48 hours prior VIP" [ref=f4e863]
+                    - row [ref=f4e864]:
+                      - cell "Special Birthday Month Drink" [ref=f4e865]
+                      - cell [ref=f4e866]
+                      - cell [ref=f4e869]
+                      - cell [ref=f4e872]
+                    - row [ref=f4e875]:
+                      - cell "Priority Counter Pickup Lane" [ref=f4e876]
+                      - cell "—" [ref=f4e877]
+                      - cell [ref=f4e878]
+                      - cell [ref=f4e881]
+                    - row [ref=f4e884]:
+                      - cell "Roastery Masterclass Invitation" [ref=f4e885]
+                      - cell "—" [ref=f4e886]
+                      - cell "—" [ref=f4e887]
+                      - cell "Annual Pass" [ref=f4e888]
+  - button "Open Next.js Dev Tools" [ref=f4e17] [cursor=pointer]
+  - alert [ref=f4e21]

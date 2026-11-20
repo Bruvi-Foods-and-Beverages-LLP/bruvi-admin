@@ -5,14 +5,18 @@ import Link from "next/link";
 import Image from "next/image";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { fetchOrderById } from "@/store/slices/orders-slice";
+import { useOrderEvents } from "@/hooks/use-order-events";
 import { OrderStatusBadge } from "@/components/orders/order-status-badge";
 import { OrderCancelRefundModal } from "@/components/orders/order-cancel-refund-modal";
 import { CoffeeIcon, PhinIcon, WalletIcon } from "@/components/icons";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowLeft } from "lucide-react";
+import { formatPaise, formatRate } from "@/lib/utils/money";
+import { GstInfoTooltip } from "@/components/orders/gst-info-tooltip";
 import { cn } from "@/lib/utils/cn";
 
 import { OrdersApi } from "@/lib/api/orders";
+import { AdminOrderMapper } from "@/features/orders/mappers";
 import type { BackendOrderDetail, NextAction } from "@/features/orders/types";
 
 interface PageProps {
@@ -67,6 +71,50 @@ export default function OrderDetailPage({ params }: PageProps) {
     dispatch(fetchOrderById(orderId));
     loadDetail();
   }, [dispatch, orderId, loadDetail]);
+
+  // Live updates: changes made elsewhere (the customer paying or tapping "I've picked it up"
+  // in the app, another staff member) show up within seconds. Polls the raw detail while the
+  // tab is visible and refreshes the full view only when the order's version moves.
+  const lastVersionRef = React.useRef<number | undefined>(undefined);
+  React.useEffect(() => {
+    const v = backendDetail?.version;
+    if (v === undefined) return;
+    if (lastVersionRef.current !== undefined && v !== lastVersionRef.current) {
+      dispatch(fetchOrderById(orderId));
+    }
+    lastVersionRef.current = v;
+  }, [backendDetail?.version, dispatch, orderId]);
+
+  // Live updates: a pushed change to this order refetches it at once (SSE). Polling stays as
+  // the fallback: every 3 s without the stream, every 30 s with it.
+  const { connected } = useOrderEvents(
+    React.useCallback(
+      (event) => {
+        const mine =
+          event.type === "orders.changed" ||
+          event.orderId === orderId ||
+          event.orderId === backendDetail?.id;
+        if (mine) loadDetail();
+      },
+      [orderId, backendDetail?.id, loadDetail],
+    ),
+  );
+
+  React.useEffect(() => {
+    lastVersionRef.current = undefined;
+  }, [orderId]);
+
+  React.useEffect(() => {
+    const refresh = () => {
+      if (document.visibilityState === "visible") loadDetail();
+    };
+    const interval = setInterval(refresh, connected ? 30_000 : 3_000);
+    document.addEventListener("visibilitychange", refresh);
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener("visibilitychange", refresh);
+    };
+  }, [loadDetail, connected]);
 
   const handleTransition = async (action: NextAction) => {
     if (action.action === "CANCEL") {
@@ -150,6 +198,8 @@ export default function OrderDetailPage({ params }: PageProps) {
   }
 
   const order = selectedOrder;
+  // Table orders: served at the table, with the customer's note for the kitchen
+  const isDineIn = order.serviceType === "DINE_IN" || order.channel === "QR dine-in";
 
   const rawPhone = backendDetail?.customer?.phone || order.customerPhone || "";
   const phoneDigits = rawPhone.replace(/[^0-9]/g, "");
@@ -181,6 +231,49 @@ export default function OrderDetailPage({ params }: PageProps) {
     { time: "Now", event: "Preparing · ready by 9:45", isCurrent: true, dotColor: "#22629e" },
   ];
 
+  // Real payment line from the API (paying attempt + refunds); nothing invented.
+  const pay = backendDetail ? AdminOrderMapper.toPaymentDetail(backendDetail) : null;
+  const gatewayName =
+    pay?.provider === "RAZORPAY"
+      ? "Razorpay"
+      : pay?.provider === "WALLET"
+        ? "BRUVI Wallet"
+        : pay?.provider === "FREE"
+          ? "No gateway"
+          : pay?.provider ?? null;
+  // Amounts and GST exactly as the server stored them on the order (no guessing in the browser).
+  const money = order.money;
+  const gst = order.gst ?? backendDetail?.gst ?? null;
+  const gstIncluded = gst?.pricesIncludeGst ?? true;
+  const gstRates = (gst?.rates ?? []).filter((r) => r.taxPaise > 0);
+  const gstLabel = `GST${gstRates.length ? ` ${gstRates.map((r) => formatRate(r.ratePercent)).join(" + ")}` : ""}${gstIncluded ? " (included in prices)" : ""}`;
+  const amount = (paise: number | undefined, rupees: number | undefined) =>
+    paise != null ? formatPaise(paise) : `₹${(rupees ?? 0).toFixed(2)}`;
+
+  const paymentHeadline = pay
+    ? [pay.methodLabel, gatewayName, pay.status].filter(Boolean).join(" · ")
+    : order.paymentMethod || "Payment";
+  const paymentSubline = pay
+    ? [
+        pay.razorpayPaymentId ?? (pay.isZeroPayment ? pay.paymentId : null),
+        pay.upiRrn ? `RRN ${pay.upiRrn}` : null,
+        pay.benefits?.membership
+          ? `${pay.benefits.membership.planName ?? "BRUVI Club"} −₹${pay.benefits.membership.discount.toFixed(2)}${
+              pay.benefits.membership.freeDrinks.length ? ` (free: ${pay.benefits.membership.freeDrinks.join(", ")})` : ""
+            }`
+          : null,
+        pay.benefits?.coupon ? `Coupon ${pay.benefits.coupon.code} −₹${pay.benefits.coupon.discount.toFixed(2)}` : null,
+        pay.refunds.length > 0
+          ? `${pay.refunds.length} refund${pay.refunds.length > 1 ? "s" : ""} · ₹${pay.refunds
+              .filter((r) => r.status !== "FAILED")
+              .reduce((sum, r) => sum + r.amount, 0)
+              .toFixed(2)}`
+          : null,
+      ]
+        .filter(Boolean)
+        .join(" · ") || "No gateway reference yet"
+    : "Loading payment…";
+
   const slaInfo = order.sla || {
     elapsedText: "10 min since placed · target 8 min",
     busyModeText: "Busy mode +10",
@@ -207,7 +300,7 @@ export default function OrderDetailPage({ params }: PageProps) {
             </h1>
             <OrderStatusBadge status={order.status} />
             <span className="text-body-s text-text-secondary whitespace-nowrap">
-              {order.channel} · {order.storeName} · {order.customerName} · placed {order.time.replace(/\s*(am|pm)\s*(am|pm)/i, ' $1')}
+              {order.channel} · {order.storeName}{order.tableLabel ? ` · ${order.tableLabel}` : ""} · {order.customerName} · placed {order.time.replace(/\s*(am|pm)\s*(am|pm)/i, ' $1')}
             </span>
           </div>
         </div>
@@ -245,6 +338,15 @@ export default function OrderDetailPage({ params }: PageProps) {
                 </button>
               )}
             </>
+          )}
+
+          {backendDetail?.id && (
+            <Link
+              href={{ pathname: "/customers", query: { tab: "support", order: backendDetail.id } }}
+              className="flex h-9 items-center whitespace-nowrap rounded-[12px] border-[1.5px] border-[#bcc6d3] bg-white px-3.5 text-label font-bold text-[#0f2340] hover:bg-[#f5f7fa]"
+            >
+              Support conversations
+            </Link>
           )}
 
           {/* Contact */}
@@ -287,7 +389,8 @@ export default function OrderDetailPage({ params }: PageProps) {
                 Items · {order.itemCount}
               </h2>
               <span className="text-caption text-text-secondary">
-                Ticket on {order.kdsStation || "Bar 1 KDS"} · pickup at counter
+                Ticket on {order.kdsStation || "Bar 1 KDS"} ·{" "}
+                {isDineIn ? `serve to ${order.tableLabel || "table"}` : "pickup at counter"}
               </span>
             </div>
 
@@ -359,34 +462,78 @@ export default function OrderDetailPage({ params }: PageProps) {
               <div className="flex items-center justify-between text-body-s">
                 <span className="text-text-secondary">Subtotal</span>
                 <span className="font-bold text-[#0f2340] tnum">
-                  ₹{(order.subtotal || order.totalAmount).toFixed(2)}
+                  {amount(money?.itemTotalPaise, order.subtotal || order.totalAmount)}
                 </span>
               </div>
 
-              {order.promoCode && (
+              {(order.promoDiscount ?? 0) > 0 && (
                 <div className="flex items-center justify-between text-body-s">
-                  <span className="text-text-secondary">{order.promoCode}</span>
+                  <span className="text-text-secondary">Discount</span>
                   <span className="font-bold text-[#1f7a4d] tnum">
-                    −₹{(order.promoDiscount || 50).toFixed(2)}
+                    {amount(money ? -money.discountPaise : undefined, -(order.promoDiscount ?? 0))}
                   </span>
                 </div>
               )}
 
-              <div className="flex items-center justify-between text-body-s">
-                <span className="text-text-secondary">
-                  {order.taxBreakdown || "GST 5% on ₹920 (CGST 2.5% + SGST 2.5%)"}
-                </span>
-                <span className="font-bold text-[#0f2340] tnum">
-                  ₹{(order.taxAmount || 46).toFixed(2)}
-                </span>
-              </div>
+              {(order.deliveryFee ?? 0) > 0 && (
+                <div className="flex items-center justify-between text-body-s">
+                  <span className="text-text-secondary">Delivery fee</span>
+                  <span className="font-bold text-[#0f2340] tnum">{amount(money?.deliveryFeePaise, order.deliveryFee)}</span>
+                </div>
+              )}
+
+              {(order.tip ?? 0) > 0 && (
+                <div className="flex items-center justify-between text-body-s">
+                  <span className="text-text-secondary">Tip</span>
+                  <span className="font-bold text-[#0f2340] tnum">{amount(money?.tipPaise, order.tip)}</span>
+                </div>
+              )}
+
+              {order.taxAmount > 0 && (
+                <div className="flex items-center justify-between text-body-s">
+                  <span className="text-text-secondary inline-flex items-center gap-1">
+                    {gstLabel}
+                    {gst && <GstInfoTooltip gst={gst} />}
+                  </span>
+                  <span className="font-bold text-[#0f2340] tnum">{amount(money?.taxPaise, order.taxAmount)}</span>
+                </div>
+              )}
+
+              {/* CGST / SGST (or IGST) per rate, as on the tax invoice */}
+              {gstRates.map((r) =>
+                (r.igstPaise > 0
+                  ? [{ k: "IGST", rate: r.igstRatePercent, paise: r.igstPaise }]
+                  : [
+                      { k: "CGST", rate: r.cgstRatePercent, paise: r.cgstPaise },
+                      { k: "SGST", rate: r.sgstRatePercent, paise: r.sgstPaise },
+                    ]
+                ).map((c) => (
+                  <div key={`${r.ratePercent}-${c.k}`} className="flex items-center justify-between text-caption pl-3">
+                    <span className="text-text-secondary">
+                      {c.k} {formatRate(c.rate)} on {formatPaise(r.taxablePaise)}
+                    </span>
+                    <span className="text-text-secondary tnum">{formatPaise(c.paise)}</span>
+                  </div>
+                )),
+              )}
+
+              {gst && (
+                <div className="flex flex-wrap items-center justify-between gap-2 text-caption text-text-secondary">
+                  <span>
+                    {gst.supplierGstin ? `GSTIN ${gst.supplierGstin}` : "No GSTIN on this store · not a GST tax invoice"}
+                    {` · SAC ${gst.sacCode}`}
+                    {gst.legacy ? " · placed before the GST engine" : ""}
+                  </span>
+                  {(gst.invoiceNumber || order.invoiceNumber) && <span>Invoice {gst.invoiceNumber || order.invoiceNumber}</span>}
+                </div>
+              )}
 
               <div className="pt-2 border-t border-[#dce2ea] flex items-baseline justify-between">
                 <span className="text-[16px] leading-6 font-extrabold text-[#0f2340]">
                   Total paid
                 </span>
                 <span className="text-price-m font-display font-extrabold text-[#0f2340] tnum">
-                  ₹{order.totalAmount.toFixed(2)}
+                  {amount(money?.totalPaise, order.totalAmount)}
                 </span>
               </div>
             </div>
@@ -400,10 +547,10 @@ export default function OrderDetailPage({ params }: PageProps) {
 
             <div className="flex-1 flex flex-col gap-0.5 min-w-0">
               <span className="text-body-s font-bold text-[#0f2340] truncate">
-                {order.paymentGatewayText || `${order.paymentMethod} · Razorpay · Captured 9:31:07`}
+                {paymentHeadline}
               </span>
               <span className="text-caption text-text-secondary truncate">
-                {order.paymentReference || "UPI ref 4290 7712 0034 · pay_P8sJ4vNc19 · settles Sat 3 Oct"}
+                {paymentSubline}
               </span>
             </div>
 
@@ -436,18 +583,35 @@ export default function OrderDetailPage({ params }: PageProps) {
                 </span>
               </div>
               <div>
-                <span className="text-caption text-text-secondary block">Priority tier</span>
-                <span className="text-body-s font-bold text-[#9a5b00] mt-0.5 block">
-                  {order.priorityTier || "Standard app prep"}
-                </span>
+                {isDineIn ? (
+                  <>
+                    <span className="text-caption text-text-secondary block">Dine-in · serve to</span>
+                    <span className="text-body-s font-bold text-[#0f2340] mt-0.5 block">
+                      {order.tableLabel || "Table not set"}
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <span className="text-caption text-text-secondary block">Priority tier</span>
+                    <span className="text-body-s font-bold text-[#9a5b00] mt-0.5 block">
+                      {order.priorityTier || "Standard app prep"}
+                    </span>
+                  </>
+                )}
               </div>
             </div>
 
             {/* Customer Note Box */}
             <div className="p-3 rounded-[16px] bg-[#f5f7fa] border border-[#dce2ea] flex items-center gap-2">
-              <span className="text-body-s text-text-secondary">Customer note:</span>
+              <span className="text-body-s text-text-secondary">
+                {isDineIn ? "Kitchen note:" : "Customer note:"}
+              </span>
               <span className="text-body-s font-bold text-[#0f2340]">
-                {order.customerNote || "“Please write Saisubbireddy on the cups”"}
+                {isDineIn
+                  ? order.customerNote
+                    ? `“${order.customerNote}”`
+                    : "None"
+                  : order.customerNote || "“Please write Saisubbireddy on the cups”"}
               </span>
             </div>
           </div>

@@ -1,0 +1,134 @@
+- generic [ref=f5e1]:
+  - generic [ref=f5e2]:
+    - complementary [ref=f5e22]:
+      - link "HQ" [ref=f5e24] [cursor=pointer]:
+        - /url: /
+      - generic [ref=f5e35]:
+        - link "Dashboard" [ref=f5e37] [cursor=pointer]:
+          - /url: /
+        - generic [ref=f5e42]:
+          - generic [ref=f5e43]: Operations
+          - generic [ref=f5e45]:
+            - link "Orders" [ref=f5e46] [cursor=pointer]:
+              - /url: /orders
+            - link "Stores" [ref=f5e51] [cursor=pointer]:
+              - /url: /stores
+        - generic [ref=f5e59]:
+          - generic [ref=f5e60]: Menu
+          - generic [ref=f5e62]:
+            - link "Catalog" [ref=f5e63] [cursor=pointer]:
+              - /url: /catalog
+            - link "Recipes" [ref=f5e68] [cursor=pointer]:
+              - /url: /recipes
+        - generic [ref=f5e73]:
+          - generic [ref=f5e74]: Supply
+          - generic [ref=f5e76]:
+            - link "Inventory" [ref=f5e77] [cursor=pointer]:
+              - /url: /inventory
+            - link "Warehouse" [ref=f5e82] [cursor=pointer]:
+              - /url: /warehouse
+        - generic [ref=f5e87]:
+          - generic [ref=f5e88]: Growth
+          - generic [ref=f5e90]:
+            - link "Customers" [ref=f5e91] [cursor=pointer]:
+              - /url: /customers
+            - link "Marketing" [ref=f5e97] [cursor=pointer]:
+              - /url: /marketing
+            - link "BRUVI LAB" [ref=f5e102] [cursor=pointer]:
+              - /url: /lab
+            - link "Loyalty" [ref=f5e107] [cursor=pointer]:
+              - /url: /loyalty
+            - link "Subscriptions" [ref=f5e112] [cursor=pointer]:
+              - /url: /subscriptions
+        - generic [ref=f5e117]:
+          - generic [ref=f5e118]: Business
+          - generic [ref=f5e120]:
+            - link "Finance" [ref=f5e121] [cursor=pointer]:
+              - /url: /finance
+            - link "Analytics" [ref=f5e128] [cursor=pointer]:
+              - /url: /analytics
+            - link "Staff" [ref=f5e133] [cursor=pointer]:
+              - /url: /staff
+            - link "Settings" [ref=f5e140] [cursor=pointer]:
+              - /url: /settings
+      - button "Staff profile menu" [ref=f5e149] [cursor=pointer]:
+        - generic [ref=f5e150]: KR
+        - generic [ref=f5e151]:
+          - generic [ref=f5e152]: Kavya R
+          - generic [ref=f5e153]: Chief Operations Officer
+    - generic [ref=f5e156]:
+      - banner [ref=f5e157]:
+        - button "Search orders, stores, products, customers ⌘K" [ref=f5e159] [cursor=pointer]:
+          - generic [ref=f5e160]: Search orders, stores, products, customers
+          - generic [ref=f5e165]: ⌘K
+        - generic [ref=f5e166]:
+          - button "All stores · 0" [ref=f5e168] [cursor=pointer]
+          - button "Today · Fri 2 Oct" [ref=f5e177] [cursor=pointer]
+          - button "Notifications" [ref=f5e183] [cursor=pointer]
+      - main [ref=f5e188]:
+        - generic [ref=f5e189]:
+          - generic [ref=f5e190]:
+            - generic [ref=f5e191]:
+              - generic [ref=f5e192]:
+                - generic [ref=f5e193]: Loyalty / Transactions
+                - heading "Points transactions" [level=1] [ref=f5e740]
+              - generic [ref=f5e195]:
+                - button "Export CSV" [ref=f5e741] [cursor=pointer]
+                - button "Manual adjustment" [ref=f5e742] [cursor=pointer]
+            - generic [ref=f5e198]:
+              - button "Overview" [ref=f5e199] [cursor=pointer]
+              - button "Rules" [ref=f5e200] [cursor=pointer]
+              - button "Rewards" [ref=f5e201] [cursor=pointer]
+              - button "Tiers" [ref=f5e202] [cursor=pointer]
+              - button "Transactions" [active] [ref=f5e203] [cursor=pointer]
+          - main [ref=f5e204]:
+            - generic [ref=f5e743]:
+              - generic [ref=f5e744]:
+                - generic [ref=f5e749]:
+                  - generic [ref=f5e750]: Unusual activity · 5 manual adjustments by Sameer K. (Shift lead, Bandra) today
+                  - generic [ref=f5e751]: +1,850 pts to 3 customers since 8:15 am · policy limit is 2 adjustments per staff per day
+                - generic [ref=f5e752]:
+                  - button "Show only these" [ref=f5e753] [cursor=pointer]
+                  - button "Freeze & review" [ref=f5e754] [cursor=pointer]
+                  - button "Dismiss alert" [ref=f5e756] [cursor=pointer]
+              - generic [ref=f5e760]:
+                - generic [ref=f5e761]:
+                  - textbox "Customer, phone, order ref" [ref=f5e766]
+                  - combobox [ref=f5e768] [cursor=pointer]:
+                    - 'option "Type: All" [selected]'
+                    - 'option "Type: Earn"'
+                    - 'option "Type: Redeem"'
+                    - 'option "Type: Adjust"'
+                    - 'option "Type: Expire"'
+                  - combobox [ref=f5e770] [cursor=pointer]:
+                    - 'option "Store: All 12" [selected]'
+                    - 'option "Store: Bandra"'
+                    - 'option "Store: Indiranagar"'
+                    - 'option "Store: Koramangala"'
+                    - 'option "Store: Lower Parel"'
+                  - combobox [ref=f5e772] [cursor=pointer]:
+                    - 'option "Actor: Anyone" [selected]'
+                    - 'option "Actor: Sameer K. (Flagged)"'
+                    - 'option "Actor: System"'
+                    - 'option "Actor: Customer"'
+                  - button "Today" [ref=f5e773] [cursor=pointer]
+                - generic [ref=f5e777]: Today +1.62 L / −71,400 pts
+              - generic [ref=f5e778]:
+                - generic [ref=f5e779]:
+                  - generic [ref=f5e780]: Time
+                  - generic [ref=f5e781]: Customer
+                  - generic [ref=f5e782]: Store
+                  - generic [ref=f5e783]: Type
+                  - generic [ref=f5e784]: Points
+                  - generic [ref=f5e785]: Reference
+                  - generic [ref=f5e786]: Balance
+                  - generic [ref=f5e787]: Actor
+                - generic [ref=f5e788]: No points transactions found matching your active filter criteria.
+                - generic [ref=f5e790]:
+                  - generic [ref=f5e791]: 1–25 of 3,184 transactions today
+                  - generic [ref=f5e792]:
+                    - button [disabled] [ref=f5e793]
+                    - generic [ref=f5e796]: Page 1 of 128
+                    - button [ref=f5e797] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=f5e17] [cursor=pointer]
+  - alert [ref=f5e21]
