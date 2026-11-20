@@ -1,0 +1,225 @@
+- generic [ref=f4e1]:
+  - generic [ref=f4e2]:
+    - complementary [ref=f4e22]:
+      - link "HQ" [ref=f4e24] [cursor=pointer]:
+        - /url: /
+      - generic [ref=f4e35]:
+        - link "Dashboard" [ref=f4e37] [cursor=pointer]:
+          - /url: /
+        - generic [ref=f4e42]:
+          - generic [ref=f4e43]: Operations
+          - generic [ref=f4e45]:
+            - link "Orders" [ref=f4e46] [cursor=pointer]:
+              - /url: /orders
+            - link "Stores" [ref=f4e51] [cursor=pointer]:
+              - /url: /stores
+        - generic [ref=f4e59]:
+          - generic [ref=f4e60]: Menu
+          - generic [ref=f4e62]:
+            - link "Catalog" [ref=f4e63] [cursor=pointer]:
+              - /url: /catalog
+            - link "Recipes" [ref=f4e68] [cursor=pointer]:
+              - /url: /recipes
+        - generic [ref=f4e73]:
+          - generic [ref=f4e74]: Supply
+          - generic [ref=f4e76]:
+            - link "Inventory" [ref=f4e77] [cursor=pointer]:
+              - /url: /inventory
+            - link "Warehouse" [ref=f4e82] [cursor=pointer]:
+              - /url: /warehouse
+        - generic [ref=f4e87]:
+          - generic [ref=f4e88]: Growth
+          - generic [ref=f4e90]:
+            - link "Customers" [ref=f4e91] [cursor=pointer]:
+              - /url: /customers
+            - link "Marketing" [ref=f4e97] [cursor=pointer]:
+              - /url: /marketing
+            - link "BRUVI LAB" [ref=f4e102] [cursor=pointer]:
+              - /url: /lab
+            - link "Loyalty" [ref=f4e107] [cursor=pointer]:
+              - /url: /loyalty
+            - link "Subscriptions" [ref=f4e112] [cursor=pointer]:
+              - /url: /subscriptions
+        - generic [ref=f4e117]:
+          - generic [ref=f4e118]: Business
+          - generic [ref=f4e120]:
+            - link "Finance" [ref=f4e121] [cursor=pointer]:
+              - /url: /finance
+            - link "Analytics" [ref=f4e128] [cursor=pointer]:
+              - /url: /analytics
+            - link "Staff" [ref=f4e133] [cursor=pointer]:
+              - /url: /staff
+            - link "Settings" [ref=f4e140] [cursor=pointer]:
+              - /url: /settings
+      - button "Staff profile menu" [ref=f4e149] [cursor=pointer]:
+        - generic [ref=f4e150]: KR
+        - generic [ref=f4e151]:
+          - generic [ref=f4e152]: Kavya R
+          - generic [ref=f4e153]: Chief Operations Officer
+    - generic [ref=f4e156]:
+      - banner [ref=f4e157]:
+        - button "Search orders, stores, products, customers ⌘K" [ref=f4e159] [cursor=pointer]:
+          - generic [ref=f4e160]: Search orders, stores, products, customers
+          - generic [ref=f4e165]: ⌘K
+        - generic [ref=f4e166]:
+          - button "All stores · 0" [ref=f4e168] [cursor=pointer]
+          - button "Today · Fri 2 Oct" [ref=f4e177] [cursor=pointer]
+          - button "Notifications" [ref=f4e183] [cursor=pointer]
+      - main [ref=f4e188]:
+        - generic [ref=f4e189]:
+          - generic [ref=f4e190]:
+            - generic [ref=f4e191]:
+              - generic [ref=f4e192]:
+                - generic [ref=f4e193]: Growth · BRUVI Rewards
+                - heading "Loyalty" [level=1] [ref=f4e194]
+              - generic [ref=f4e195]:
+                - button "Export report" [ref=f4e196] [cursor=pointer]
+                - button "Adjust points" [ref=f4e197] [cursor=pointer]
+            - generic [ref=f4e198]:
+              - button "Overview" [ref=f4e199] [cursor=pointer]
+              - button "Rules" [active] [ref=f4e200] [cursor=pointer]
+              - button "Rewards" [ref=f4e201] [cursor=pointer]
+              - button "Tiers" [ref=f4e202] [cursor=pointer]
+              - button "Transactions" [ref=f4e203] [cursor=pointer]
+          - main [ref=f4e204]:
+            - generic [ref=f4e390]:
+              - generic [ref=f4e391]:
+                - generic [ref=f4e392]:
+                  - generic [ref=f4e393]:
+                    - generic [ref=f4e394]:
+                      - heading "Earn rules" [level=2] [ref=f4e395]
+                      - paragraph [ref=f4e396]: Tier multipliers apply to app orders only · counter & kiosk earn base
+                    - button "+ Add earn rule" [ref=f4e397] [cursor=pointer]
+                  - generic [ref=f4e398]:
+                    - generic [ref=f4e399]: Rule
+                    - generic [ref=f4e400]: Earn
+                    - generic [ref=f4e401]: Applies to
+                    - generic [ref=f4e402]: Status
+                  - generic [ref=f4e403]:
+                    - generic [ref=f4e404] [cursor=pointer]:
+                      - generic [ref=f4e405]: Base spend earn
+                      - generic [ref=f4e407]: 1 pt / ₹20
+                      - generic [ref=f4e408]: All members · net spend
+                      - generic [ref=f4e409]: Active
+                    - generic [ref=f4e411] [cursor=pointer]:
+                      - generic [ref=f4e412]: Silver tier multiplier
+                      - generic [ref=f4e414]: 1×
+                      - generic [ref=f4e415]: All orders
+                      - generic [ref=f4e416]: Active
+                    - generic [ref=f4e418] [cursor=pointer]:
+                      - generic [ref=f4e419]: Gold tier multiplier
+                      - generic [ref=f4e421]: 1.25×
+                      - generic [ref=f4e422]: Gold · app only
+                      - generic [ref=f4e423]: Active
+                    - generic [ref=f4e425] [cursor=pointer]:
+                      - generic [ref=f4e426]: Platinum tier multiplier
+                      - generic [ref=f4e428]: 1.5×
+                      - generic [ref=f4e429]: Platinum · app only
+                      - generic [ref=f4e430]: Active
+                    - generic [ref=f4e432] [cursor=pointer]:
+                      - generic [ref=f4e433]:
+                        - generic [ref=f4e434]: BRUVI LAB 2× promo
+                        - generic [ref=f4e435]: Promo
+                      - generic [ref=f4e436]: 2×
+                      - generic [ref=f4e437]: LAB · 26 Sep – 10 Oct
+                      - generic [ref=f4e438]: Editing
+                    - generic [ref=f4e440] [cursor=pointer]:
+                      - generic [ref=f4e441]: Birthday bonus
+                      - generic [ref=f4e443]: +200 pts
+                      - generic [ref=f4e444]: Birthday month · 1×/yr
+                      - generic [ref=f4e445]: Active
+                    - generic [ref=f4e447] [cursor=pointer]:
+                      - generic [ref=f4e448]: Refer-a-friend
+                      - generic [ref=f4e450]: +200 pts
+                      - generic [ref=f4e451]: Referrer · 1st order
+                      - generic [ref=f4e452]: Active
+                    - generic [ref=f4e454] [cursor=pointer]:
+                      - generic [ref=f4e455]: LAB drink rating
+                      - generic [ref=f4e457]: +20 pts
+                      - generic [ref=f4e458]: All orders
+                      - generic [ref=f4e459]: Active
+                - generic [ref=f4e461]:
+                  - generic [ref=f4e462]:
+                    - generic [ref=f4e463]:
+                      - heading "Burn rules" [level=3] [ref=f4e464]
+                      - button "Edit" [ref=f4e465] [cursor=pointer]
+                    - generic [ref=f4e466]:
+                      - generic [ref=f4e467]:
+                        - generic [ref=f4e468]: Point value
+                        - generic [ref=f4e469]: 1 pt ≈ ₹0.10
+                      - generic [ref=f4e470]:
+                        - generic [ref=f4e471]: Minimum to redeem
+                        - generic [ref=f4e472]: 120 pts
+                      - generic [ref=f4e473]:
+                        - generic [ref=f4e474]: Rewards per order
+                        - generic [ref=f4e475]: Max 2
+                      - generic [ref=f4e476]:
+                        - generic [ref=f4e477]: Earn on redeemed items
+                        - generic [ref=f4e478]: "No"
+                  - generic [ref=f4e479]:
+                    - heading "Expiry & exclusions" [level=3] [ref=f4e481]
+                    - generic [ref=f4e487]:
+                      - generic [ref=f4e488]: Points expire 12 months after earning
+                      - generic [ref=f4e489]: Oldest points first · reminders 30 & 7 days before
+                    - generic [ref=f4e490]:
+                      - generic [ref=f4e491]: No points earned on
+                      - generic [ref=f4e492]:
+                        - generic [ref=f4e493]: Taxes (GST)
+                        - generic [ref=f4e494]: Wallet top-ups
+                        - generic [ref=f4e495]: Gift cards
+              - generic [ref=f4e496]:
+                - generic [ref=f4e497]:
+                  - generic [ref=f4e498]:
+                    - generic [ref=f4e499]: Edit earn rule
+                    - textbox "Rule Name" [ref=f4e500]: BRUVI LAB 2× promo
+                  - button "Close panel" [ref=f4e501] [cursor=pointer]
+                - generic [ref=f4e505]:
+                  - generic [ref=f4e506]:
+                    - generic [ref=f4e507]:
+                      - generic [ref=f4e508]: Multiplier
+                      - generic [ref=f4e509]:
+                        - spinbutton [ref=f4e510]: "2"
+                        - generic [ref=f4e511]: of base
+                    - generic [ref=f4e512]:
+                      - generic [ref=f4e513]: Applies to
+                      - combobox [ref=f4e515] [cursor=pointer]:
+                        - option "LAB category" [selected]
+                        - option "All items"
+                        - option "Cold brew category"
+                        - option "Hot coffee"
+                        - option "Bakery & food"
+                        - option "Coffee beans & merch"
+                  - generic [ref=f4e516]:
+                    - generic [ref=f4e517]:
+                      - generic [ref=f4e518]: Starts
+                      - textbox [ref=f4e522] [cursor=pointer]: 2026-09-26
+                    - generic [ref=f4e523]:
+                      - generic [ref=f4e524]: Ends
+                      - textbox [ref=f4e528] [cursor=pointer]: 2026-10-10
+                  - generic [ref=f4e529]:
+                    - generic [ref=f4e530]: Channels
+                    - generic [ref=f4e531]:
+                      - button "App" [ref=f4e532] [cursor=pointer]
+                      - button "Counter" [ref=f4e536] [cursor=pointer]
+                      - button "Kiosk" [ref=f4e540] [cursor=pointer]
+                      - button "Dine-in QR" [ref=f4e544] [cursor=pointer]
+                      - button "Delivery" [ref=f4e548] [cursor=pointer]
+                  - generic [ref=f4e550]:
+                    - generic [ref=f4e551]: Stores
+                    - combobox [ref=f4e553] [cursor=pointer]:
+                      - option "6 LAB stores" [selected]
+                      - option "All 12 stores"
+                      - option "Bengaluru stores only"
+                      - option "Mumbai stores only"
+                      - option "Delhi NCR stores only"
+                    - paragraph [ref=f4e554]: Indiranagar, Koramangala, Bandra, Lower Parel, Cyber Hub, Connaught Place
+                  - generic [ref=f4e555]:
+                    - generic [ref=f4e556]:
+                      - generic [ref=f4e557]: Stack with tier multiplier
+                      - generic [ref=f4e558]: "App orders: Gold 2.5×, Platinum 3× on LAB"
+                    - button [ref=f4e559] [cursor=pointer]
+                - generic [ref=f4e561]:
+                  - button "Cancel" [ref=f4e562] [cursor=pointer]
+                  - button "Save rule" [ref=f4e563] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=f4e17] [cursor=pointer]
+  - alert [ref=f4e21]

@@ -9,7 +9,7 @@ interface ProductImageProps {
   src?: string | null;
   alt: string;
   /** Rendered width hint for the Next.js optimizer, e.g. "40px". */
-  sizes: string;
+  sizes?: string;
   iconSize?: number;
   className?: string;
 }
@@ -19,7 +19,7 @@ interface ProductImageProps {
  * Served through the Next.js image optimizer so a 1024px storage original ships as a
  * right-sized WebP, and falls back to the coffee glyph when missing or unloadable.
  */
-export function ProductImage({ src, alt, sizes, iconSize = 18, className }: ProductImageProps) {
+export function ProductImage({ src, alt, sizes = "40px", iconSize = 18, className }: ProductImageProps) {
   const [failedSrc, setFailedSrc] = React.useState<string | null>(null);
 
   if (!src || failedSrc === src) {

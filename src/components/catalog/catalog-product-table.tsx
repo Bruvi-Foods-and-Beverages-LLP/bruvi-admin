@@ -9,8 +9,10 @@ import {
   selectAllVisibleProducts,
   clearSelection,
   setPage,
+  setLimit,
   fetchCatalogProducts,
 } from "@/store/slices/catalog-slice";
+import { Pagination } from "@/components/ui/pagination";
 import { CoffeeIcon } from "@/components/icons";
 import { ProductChannelsMatrix } from "./catalog-channel-icons";
 import {
@@ -351,73 +353,22 @@ export function CatalogProductTable() {
         </div>
       </div>
 
-      {/* 3. Pagination Footer Row (Figma 225:90683 - h: 48px, px-5, flex-between) */}
-      <div className="h-12 w-full flex items-center justify-between px-5 border-t border-[#dce2ea] bg-white select-none font-sans">
-        {/* Record Summary Text (Figma 225:90684) */}
-        <div className="text-[14px] leading-5 font-normal text-[#55647A]">
-          {total > 0
-            ? `${startRecord}–${endRecord} of ${total} products · ${counts.hiddenInStore || 0} hidden in a store · ${counts.draft || 0} draft`
-            : "0 products"}
-        </div>
-
-        {/* Page Buttons (Figma 225:90685 - h: 32px, gap: 4px, r: 12px) */}
-        {totalPages > 1 && (
-          <div className="flex items-center gap-1">
-            {/* Prev Button */}
-            <button
-              type="button"
-              onClick={() => {
-                const prev = Math.max(1, page - 1);
-                dispatch(setPage(prev));
-                dispatch(fetchCatalogProducts({ page: prev }));
-              }}
-              disabled={page <= 1 || isLoading}
-              className="h-8 w-8 rounded-[12px] border border-[#dce2ea] bg-white flex items-center justify-center text-[#55647A] hover:bg-[#f5f7fa] disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-colors"
-              aria-label="Previous page"
-            >
-              <ChevronLeft className="h-4 w-4 stroke-[2]" />
-            </button>
-
-            {/* Page Number Buttons */}
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => {
-              const isCurrent = p === page;
-              return (
-                <button
-                  key={p}
-                  type="button"
-                  onClick={() => {
-                    dispatch(setPage(p));
-                    dispatch(fetchCatalogProducts({ page: p }));
-                  }}
-                  className={cn(
-                    "h-8 w-8 rounded-[12px] text-[14px] leading-5 font-bold transition-all cursor-pointer flex items-center justify-center",
-                    isCurrent
-                      ? "bg-[#0F2340] text-white shadow-2xs"
-                      : "bg-transparent text-[#0F2340] hover:bg-[#f5f7fa]"
-                  )}
-                >
-                  {p}
-                </button>
-              );
-            })}
-
-            {/* Next Button */}
-            <button
-              type="button"
-              onClick={() => {
-                const next = Math.min(totalPages, page + 1);
-                dispatch(setPage(next));
-                dispatch(fetchCatalogProducts({ page: next }));
-              }}
-              disabled={page >= totalPages || isLoading}
-              className="h-8 w-8 rounded-[12px] border border-[#dce2ea] bg-white flex items-center justify-center text-[#55647A] hover:bg-[#f5f7fa] disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-colors"
-              aria-label="Next page"
-            >
-              <ChevronRight className="h-4 w-4 stroke-[2]" />
-            </button>
-          </div>
-        )}
-      </div>
+      {/* 3. Pagination footer (shared) */}
+      <Pagination
+        page={page}
+        pageSize={limit}
+        total={total}
+        label="products"
+        disabled={isLoading}
+        onPageChange={(p) => {
+          dispatch(setPage(p));
+          dispatch(fetchCatalogProducts({ page: p }));
+        }}
+        onPageSizeChange={(n) => {
+          dispatch(setLimit(n));
+          dispatch(fetchCatalogProducts({ page: 1, limit: n }));
+        }}
+      />
     </div>
   );
 }

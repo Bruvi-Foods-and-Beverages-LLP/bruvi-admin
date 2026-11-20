@@ -3,7 +3,7 @@
 import * as React from "react";
 import { usePathname } from "next/navigation";
 import { useAuthStore } from "@/stores/use-auth-store";
-import { SIDEBAR_NAV_SECTIONS, DASHBOARD_ITEM } from "@/config/sidebar-navigation";
+import { SIDEBAR_NAV_SECTIONS, DASHBOARD_ITEM, canAccessNavItem } from "@/config/sidebar-navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ShieldX, ArrowLeft, KeyRound } from "lucide-react";
@@ -48,11 +48,12 @@ export function RouteRbacGuard({ children }: RouteRbacGuardProps) {
     return pathname.startsWith(item.href);
   });
 
-  if (matchedItem?.requiredCapability && !hasPermission(matchedItem.requiredCapability)) {
+  if (matchedItem && !canAccessNavItem(matchedItem, hasPermission)) {
+    const needed = matchedItem.anyCapability?.join("' or '") ?? matchedItem.requiredCapability;
     return (
       <AccessRestrictedView
-        capability={matchedItem.requiredCapability}
-        reason={`Access to ${matchedItem.title} requires the '${matchedItem.requiredCapability}' corporate permission.`}
+        capability={matchedItem.requiredCapability ?? matchedItem.anyCapability?.[0]}
+        reason={`Access to ${matchedItem.title} requires the '${needed}' corporate permission.`}
       />
     );
   }

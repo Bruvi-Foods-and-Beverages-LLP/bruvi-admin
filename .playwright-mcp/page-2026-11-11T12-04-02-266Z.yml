@@ -1,0 +1,230 @@
+- generic [active] [ref=f1e1]:
+  - generic [ref=f1e2]:
+    - complementary [ref=f1e3]:
+      - link "HQ" [ref=f1e5] [cursor=pointer]:
+        - /url: /
+      - generic [ref=f1e16]:
+        - link "Dashboard" [ref=f1e18] [cursor=pointer]:
+          - /url: /
+        - generic [ref=f1e23]:
+          - generic [ref=f1e24]: Operations
+          - generic [ref=f1e26]:
+            - link "Orders" [ref=f1e27] [cursor=pointer]:
+              - /url: /orders
+            - link "Stores" [ref=f1e32] [cursor=pointer]:
+              - /url: /stores
+        - generic [ref=f1e40]:
+          - generic [ref=f1e41]: Menu
+          - generic [ref=f1e43]:
+            - link "Catalog" [ref=f1e44] [cursor=pointer]:
+              - /url: /catalog
+            - link "Recipes" [ref=f1e49] [cursor=pointer]:
+              - /url: /recipes
+        - generic [ref=f1e54]:
+          - generic [ref=f1e55]: Supply
+          - generic [ref=f1e57]:
+            - link "Inventory" [ref=f1e58] [cursor=pointer]:
+              - /url: /inventory
+            - link "Warehouse" [ref=f1e63] [cursor=pointer]:
+              - /url: /warehouse
+        - generic [ref=f1e68]:
+          - generic [ref=f1e69]: Growth
+          - generic [ref=f1e71]:
+            - link "Customers" [ref=f1e72] [cursor=pointer]:
+              - /url: /customers
+            - link "Marketing" [ref=f1e78] [cursor=pointer]:
+              - /url: /marketing
+            - link "BRUVI LAB" [ref=f1e83] [cursor=pointer]:
+              - /url: /lab
+            - link "Loyalty" [ref=f1e88] [cursor=pointer]:
+              - /url: /loyalty
+            - link "Subscriptions" [ref=f1e93] [cursor=pointer]:
+              - /url: /subscriptions
+        - generic [ref=f1e98]:
+          - generic [ref=f1e99]: Business
+          - generic [ref=f1e101]:
+            - link "Finance" [ref=f1e102] [cursor=pointer]:
+              - /url: /finance
+            - link "Analytics" [ref=f1e109] [cursor=pointer]:
+              - /url: /analytics
+            - link "Staff" [ref=f1e114] [cursor=pointer]:
+              - /url: /staff
+            - link "Settings" [ref=f1e121] [cursor=pointer]:
+              - /url: /settings
+      - button "Staff profile menu" [ref=f1e130] [cursor=pointer]:
+        - generic [ref=f1e131]: KR
+        - generic [ref=f1e132]:
+          - generic [ref=f1e133]: Kavya R
+          - generic [ref=f1e134]: Chief Operations Officer
+    - generic [ref=f1e137]:
+      - banner [ref=f1e138]:
+        - button "Search orders, stores, products, customers ⌘K" [ref=f1e140] [cursor=pointer]:
+          - generic [ref=f1e141]: Search orders, stores, products, customers
+          - generic [ref=f1e146]: ⌘K
+        - generic [ref=f1e147]:
+          - button "All stores · 0" [ref=f1e149] [cursor=pointer]
+          - button "Today · Fri 2 Oct" [ref=f1e158] [cursor=pointer]
+          - button "Notifications" [ref=f1e164] [cursor=pointer]
+      - main [ref=f1e169]:
+        - generic [ref=f1e170]:
+          - generic [ref=f1e171]:
+            - generic [ref=f1e172]:
+              - generic [ref=f1e173]:
+                - generic [ref=f1e174]: Growth / Marketing · November 2026
+                - heading "Campaigns overview" [level=1] [ref=f1e175]
+              - generic [ref=f1e176]:
+                - button "Export" [ref=f1e177] [cursor=pointer]
+                - button "New campaign" [ref=f1e182] [cursor=pointer]
+            - generic [ref=f1e185]:
+              - button "Overview" [ref=f1e186] [cursor=pointer]
+              - button "Campaigns" [ref=f1e187] [cursor=pointer]
+              - button "Audiences" [ref=f1e188] [cursor=pointer]
+              - button "Coupons" [ref=f1e189] [cursor=pointer]
+              - button "Push" [ref=f1e190] [cursor=pointer]
+          - main [ref=f1e191]:
+            - generic [ref=f1e192]:
+              - generic [ref=f1e210]:
+                - generic [ref=f1e211]:
+                  - generic [ref=f1e212]:
+                    - heading "November 2026 calendar" [level=2] [ref=f1e213]
+                    - generic [ref=f1e214]: Today Wed 11 Nov · Come back to Phin runs always-on (WhatsApp)
+                  - button "Open calendar →" [ref=f1e215] [cursor=pointer]
+                - generic [ref=f1e216]:
+                  - generic [ref=f1e217]: "1"
+                  - generic [ref=f1e218]: "2"
+                  - generic [ref=f1e219]: "3"
+                  - generic [ref=f1e220]: "4"
+                  - generic [ref=f1e221]: "5"
+                  - generic [ref=f1e222]: "6"
+                  - generic [ref=f1e223]: "7"
+                  - generic [ref=f1e224]: "8"
+                  - generic [ref=f1e225]: "9"
+                  - generic [ref=f1e226]: "10"
+                  - generic [ref=f1e227]: "11"
+                  - generic [ref=f1e228]: "12"
+                  - generic [ref=f1e229]: "13"
+                  - generic [ref=f1e230]: "14"
+                  - generic [ref=f1e231]: "15"
+                  - generic [ref=f1e232]: "16"
+                  - generic [ref=f1e233]: "17"
+                  - generic [ref=f1e234]: "18"
+                  - generic [ref=f1e235]: "19"
+                  - generic [ref=f1e236]: "20"
+                  - generic [ref=f1e237]: "21"
+                  - generic [ref=f1e238]: "22"
+                  - generic [ref=f1e239]: "23"
+                  - generic [ref=f1e240]: "24"
+                  - generic [ref=f1e241]: "25"
+                  - generic [ref=f1e242]: "26"
+                  - generic [ref=f1e243]: "27"
+                  - generic [ref=f1e244]: "28"
+                  - generic [ref=f1e245]: "29"
+                  - generic [ref=f1e246]: "30"
+                - generic [ref=f1e247]:
+                  - generic "Monsoon Matcha · push + in-app · 1–15 Nov (Targeting active iced matcha drinkers across Mumbai outlets)" [ref=f1e249]: Monsoon Matcha · push + in-app · 1–15 Nov
+                  - generic "Diwali Gift Cards · WhatsApp + push · 10 Nov (Early bird corporate gift card packs announcement)" [ref=f1e253]: Diwali Gift Cards · WhatsApp + push · 10 Nov
+                  - generic "LAB Batch 08 pilot · Pandan Coconut Cold Brew · 12 Nov (Experimental single-origin batch drop for Gold & Platinum members)" [ref=f1e257]: LAB Batch 08 pilot · Pandan Coconut Cold Brew · 12 Nov
+                  - 'generic "Today: Today Wed 11 Nov"'
+              - generic [ref=f1e259]:
+                - generic [ref=f1e261]:
+                  - generic [ref=f1e262]:
+                    - heading "Live now" [level=2] [ref=f1e263]
+                    - button "All campaigns →" [ref=f1e264] [cursor=pointer]
+                  - generic [ref=f1e265]:
+                    - generic [ref=f1e266]:
+                      - generic [ref=f1e267]:
+                        - generic [ref=f1e273]:
+                          - heading "Monsoon Matcha" [level=3] [ref=f1e274]
+                          - generic [ref=f1e275]: Push + in-app · 18,400
+                        - generic [ref=f1e276]: Live
+                      - generic [ref=f1e278]:
+                        - generic [ref=f1e279]: Day 11 of 15 · ends 15 Nov
+                        - generic [ref=f1e280]: +12% matcha orders
+                      - generic [ref=f1e283]:
+                        - generic [ref=f1e284]:
+                          - generic [ref=f1e285]: Opened
+                          - generic [ref=f1e286]: 19.6%
+                        - generic [ref=f1e287]:
+                          - generic [ref=f1e288]: Orders
+                          - generic [ref=f1e289]: 1,104
+                        - generic [ref=f1e290]:
+                          - generic [ref=f1e291]: Revenue
+                          - generic [ref=f1e292]: ₹2,86,900
+                    - generic [ref=f1e293]:
+                      - generic [ref=f1e294]:
+                        - generic [ref=f1e300]:
+                          - heading "Come back to Phin" [level=3] [ref=f1e301]
+                          - generic [ref=f1e302]: WhatsApp · Lapsed 45d · 49,700
+                        - generic [ref=f1e303]: Live
+                      - generic [ref=f1e305]:
+                        - generic [ref=f1e306]: Day 11 of 15 · ends 12 Nov
+                        - generic [ref=f1e307]: BREW50 · 1,980 redeemed
+                      - generic [ref=f1e310]:
+                        - generic [ref=f1e311]:
+                          - generic [ref=f1e312]: Read
+                          - generic [ref=f1e313]: 64.0%
+                        - generic [ref=f1e314]:
+                          - generic [ref=f1e315]: Orders
+                          - generic [ref=f1e316]: 2,410
+                        - generic [ref=f1e317]:
+                          - generic [ref=f1e318]: Revenue
+                          - generic [ref=f1e319]: ₹2,64,300
+                - generic [ref=f1e320]:
+                  - generic [ref=f1e321]:
+                    - heading "Channel performance" [level=2] [ref=f1e322]
+                    - generic [ref=f1e323]: Last 7 days · revenue MTD
+                  - generic [ref=f1e324]:
+                    - generic [ref=f1e325]:
+                      - generic [ref=f1e326]:
+                        - generic [ref=f1e327]: Push
+                        - generic [ref=f1e328]: Open 19.6%
+                      - generic [ref=f1e329]:
+                        - 'generic "Day 1: 45%" [ref=f1e330]'
+                        - 'generic "Day 2: 55%" [ref=f1e331]'
+                        - 'generic "Day 3: 48%" [ref=f1e332]'
+                        - 'generic "Day 4: 60%" [ref=f1e333]'
+                        - 'generic "Day 5: 60%" [ref=f1e334]'
+                        - 'generic "Day 6: 90%" [ref=f1e335]'
+                        - 'generic "Day 7: 100%" [ref=f1e336]'
+                      - generic [ref=f1e337]: ₹3.4 L
+                    - generic [ref=f1e338]:
+                      - generic [ref=f1e339]:
+                        - generic [ref=f1e340]: WhatsApp
+                        - generic [ref=f1e341]: Read 64.0%
+                      - generic [ref=f1e342]:
+                        - 'generic "Day 1: 20%" [ref=f1e343]'
+                        - 'generic "Day 2: 85%" [ref=f1e344]'
+                        - 'generic "Day 3: 70%" [ref=f1e345]'
+                        - 'generic "Day 4: 65%" [ref=f1e346]'
+                        - 'generic "Day 5: 100%" [ref=f1e347]'
+                        - 'generic "Day 6: 75%" [ref=f1e348]'
+                        - 'generic "Day 7: 68%" [ref=f1e349]'
+                      - generic [ref=f1e350]: ₹2.6 L
+                    - generic [ref=f1e351]:
+                      - generic [ref=f1e352]:
+                        - generic [ref=f1e353]: In-app
+                        - generic [ref=f1e354]: CTR 7.2%
+                      - generic [ref=f1e355]:
+                        - 'generic "Day 1: 32%" [ref=f1e356]'
+                        - 'generic "Day 2: 35%" [ref=f1e357]'
+                        - 'generic "Day 3: 30%" [ref=f1e358]'
+                        - 'generic "Day 4: 42%" [ref=f1e359]'
+                        - 'generic "Day 5: 40%" [ref=f1e360]'
+                        - 'generic "Day 6: 75%" [ref=f1e361]'
+                        - 'generic "Day 7: 85%" [ref=f1e362]'
+                      - generic [ref=f1e363]: ₹0.6 L
+                    - generic [ref=f1e364]:
+                      - generic [ref=f1e365]:
+                        - generic [ref=f1e366]: SMS
+                        - generic [ref=f1e367]: CTR 1.1%
+                      - generic [ref=f1e368]:
+                        - 'generic "Day 1: 12%" [ref=f1e369]'
+                        - 'generic "Day 2: 10%" [ref=f1e370]'
+                        - 'generic "Day 3: 12%" [ref=f1e371]'
+                        - 'generic "Day 4: 12%" [ref=f1e372]'
+                        - 'generic "Day 5: 15%" [ref=f1e373]'
+                        - 'generic "Day 6: 10%" [ref=f1e374]'
+                        - 'generic "Day 7: 12%" [ref=f1e375]'
+                      - generic [ref=f1e376]: ₹0.2 L
+  - button "Open Next.js Dev Tools" [ref=f1e382] [cursor=pointer]
+  - alert [ref=f1e386]

@@ -1,0 +1,241 @@
+- generic [ref=f4e1]:
+  - generic [ref=f4e2]:
+    - complementary [ref=f4e22]:
+      - link "HQ" [ref=f4e24] [cursor=pointer]:
+        - /url: /
+      - generic [ref=f4e35]:
+        - link "Dashboard" [ref=f4e37] [cursor=pointer]:
+          - /url: /
+        - generic [ref=f4e42]:
+          - generic [ref=f4e43]: Operations
+          - generic [ref=f4e45]:
+            - link "Orders" [ref=f4e46] [cursor=pointer]:
+              - /url: /orders
+            - link "Stores" [ref=f4e51] [cursor=pointer]:
+              - /url: /stores
+        - generic [ref=f4e59]:
+          - generic [ref=f4e60]: Menu
+          - generic [ref=f4e62]:
+            - link "Catalog" [ref=f4e63] [cursor=pointer]:
+              - /url: /catalog
+            - link "Recipes" [ref=f4e68] [cursor=pointer]:
+              - /url: /recipes
+        - generic [ref=f4e73]:
+          - generic [ref=f4e74]: Supply
+          - generic [ref=f4e76]:
+            - link "Inventory" [ref=f4e77] [cursor=pointer]:
+              - /url: /inventory
+            - link "Warehouse" [ref=f4e82] [cursor=pointer]:
+              - /url: /warehouse
+        - generic [ref=f4e87]:
+          - generic [ref=f4e88]: Growth
+          - generic [ref=f4e90]:
+            - link "Customers" [ref=f4e91] [cursor=pointer]:
+              - /url: /customers
+            - link "Marketing" [ref=f4e97] [cursor=pointer]:
+              - /url: /marketing
+            - link "BRUVI LAB" [ref=f4e102] [cursor=pointer]:
+              - /url: /lab
+            - link "Loyalty" [ref=f4e107] [cursor=pointer]:
+              - /url: /loyalty
+            - link "Subscriptions" [ref=f4e112] [cursor=pointer]:
+              - /url: /subscriptions
+        - generic [ref=f4e117]:
+          - generic [ref=f4e118]: Business
+          - generic [ref=f4e120]:
+            - link "Finance" [ref=f4e121] [cursor=pointer]:
+              - /url: /finance
+            - link "Analytics" [ref=f4e128] [cursor=pointer]:
+              - /url: /analytics
+            - link "Staff" [ref=f4e133] [cursor=pointer]:
+              - /url: /staff
+            - link "Settings" [ref=f4e140] [cursor=pointer]:
+              - /url: /settings
+      - button "Staff profile menu" [ref=f4e149] [cursor=pointer]:
+        - generic [ref=f4e150]: KR
+        - generic [ref=f4e151]:
+          - generic [ref=f4e152]: Kavya R
+          - generic [ref=f4e153]: Chief Operations Officer
+    - generic [ref=f4e156]:
+      - banner [ref=f4e157]:
+        - button "Search orders, stores, products, customers ⌘K" [ref=f4e159] [cursor=pointer]:
+          - generic [ref=f4e160]: Search orders, stores, products, customers
+          - generic [ref=f4e165]: ⌘K
+        - generic [ref=f4e166]:
+          - button "All stores · 0" [ref=f4e168] [cursor=pointer]
+          - button "Today · Fri 2 Oct" [ref=f4e177] [cursor=pointer]
+          - button "Notifications" [ref=f4e183] [cursor=pointer]
+      - main [ref=f4e188]:
+        - generic [ref=f4e189]:
+          - generic [ref=f4e190]:
+            - generic [ref=f4e191]:
+              - generic [ref=f4e192]:
+                - generic [ref=f4e193]: Growth · BRUVI Rewards
+                - heading "Loyalty" [level=1] [ref=f4e194]
+              - generic [ref=f4e195]:
+                - button "Export report" [ref=f4e196] [cursor=pointer]
+                - button "Adjust points" [ref=f4e197] [cursor=pointer]
+            - generic [ref=f4e198]:
+              - button "Overview" [active] [ref=f4e199] [cursor=pointer]
+              - button "Rules" [ref=f4e200] [cursor=pointer]
+              - button "Rewards" [ref=f4e201] [cursor=pointer]
+              - button "Tiers" [ref=f4e202] [cursor=pointer]
+              - button "Transactions" [ref=f4e203] [cursor=pointer]
+          - main [ref=f4e204]:
+            - generic [ref=f4e1228]:
+              - generic [ref=f4e1229]:
+                - generic [ref=f4e1230]:
+                  - generic [ref=f4e1231]: Loyalty members
+                  - generic [ref=f4e1232]: "19"
+                  - generic [ref=f4e1233]: ▲ 17 joined this month
+                - generic [ref=f4e1234]:
+                  - generic [ref=f4e1235]: Issued · 30 days
+                  - generic [ref=f4e1236]: "651"
+                  - generic [ref=f4e1237]: ▲ 4907.7% vs prior 30 days
+                - generic [ref=f4e1238]:
+                  - generic [ref=f4e1239]: Redeemed · 30 days
+                  - generic [ref=f4e1240]: "500"
+                  - generic [ref=f4e1241]: ≈ ₹50 in rewards
+                - generic [ref=f4e1242]:
+                  - generic [ref=f4e1243]: Points liability
+                  - generic [ref=f4e1244]: ₹161
+                  - generic [ref=f4e1245]: 1.6k pts open · 1 pt ≈ ₹0.10
+                - generic [ref=f4e1246]:
+                  - generic [ref=f4e1247]: Redemption rate
+                  - generic [ref=f4e1248]: 76.8%
+                  - generic [ref=f4e1249]: Target 45%
+              - generic [ref=f4e1250]:
+                - generic [ref=f4e1251]:
+                  - generic [ref=f4e1252]:
+                    - generic [ref=f4e1253]:
+                      - generic [ref=f4e1254]:
+                        - heading "Points issued vs redeemed" [level=3] [ref=f4e1255]
+                        - paragraph [ref=f4e1256]: Weekly, last 8 weeks · points activity
+                      - generic [ref=f4e1257]:
+                        - generic [ref=f4e1258]: Issued
+                        - generic [ref=f4e1261]: Redeemed
+                    - generic [ref=f4e1264]:
+                      - generic [ref=f4e1265]:
+                        - generic [ref=f4e1266]: "500"
+                        - generic [ref=f4e1267]: "250"
+                        - generic [ref=f4e1268]: "0"
+                      - generic [ref=f4e1269]:
+                        - generic [ref=f4e1270] [cursor=pointer]:
+                          - generic [ref=f4e1271]:
+                            - 'generic "Issued: 0 pts"'
+                            - 'generic "Redeemed: 0 pts"'
+                          - generic [ref=f4e1272]: 15 Sept
+                        - generic [ref=f4e1273] [cursor=pointer]:
+                          - generic [ref=f4e1274]:
+                            - 'generic "Issued: 0 pts"'
+                            - 'generic "Redeemed: 0 pts"'
+                          - generic [ref=f4e1275]: 22 Sept
+                        - generic [ref=f4e1276] [cursor=pointer]:
+                          - generic [ref=f4e1277]:
+                            - 'generic "Issued: 13 pts" [ref=f4e1278]'
+                            - 'generic "Redeemed: 0 pts"'
+                          - generic [ref=f4e1279]: 29 Sept
+                        - generic [ref=f4e1280] [cursor=pointer]:
+                          - generic [ref=f4e1281]:
+                            - 'generic "Issued: 0 pts"'
+                            - 'generic "Redeemed: 0 pts"'
+                          - generic [ref=f4e1282]: 6 Oct
+                        - generic [ref=f4e1283] [cursor=pointer]:
+                          - generic [ref=f4e1284]:
+                            - 'generic "Issued: 0 pts"'
+                            - 'generic "Redeemed: 0 pts"'
+                          - generic [ref=f4e1285]: 13 Oct
+                        - generic [ref=f4e1286] [cursor=pointer]:
+                          - generic [ref=f4e1287]:
+                            - 'generic "Issued: 264 pts" [ref=f4e1288]'
+                            - 'generic "Redeemed: 500 pts" [ref=f4e1289]'
+                          - generic [ref=f4e1290]: 20 Oct
+                        - generic [ref=f4e1291] [cursor=pointer]:
+                          - generic [ref=f4e1292]:
+                            - 'generic "Issued: 42 pts" [ref=f4e1293]'
+                            - 'generic "Redeemed: 0 pts"'
+                          - generic [ref=f4e1294]: 27 Oct
+                        - generic [ref=f4e1295] [cursor=pointer]:
+                          - generic [ref=f4e1296]:
+                            - 'generic "Issued: 345 pts" [ref=f4e1297]'
+                            - 'generic "Redeemed: 0 pts"'
+                          - generic [ref=f4e1298]: 3 Nov
+                  - generic [ref=f4e1299]:
+                    - generic [ref=f4e1300]:
+                      - generic [ref=f4e1301]:
+                        - heading "Top rewards redeemed" [level=3] [ref=f4e1302]
+                        - paragraph [ref=f4e1303]: Last 30 days · 500 redeemed
+                      - button "All rewards →" [ref=f4e1304] [cursor=pointer]
+                    - generic [ref=f4e1305]:
+                      - generic [ref=f4e1306]: Reward
+                      - generic [ref=f4e1307]: Cost
+                      - generic [ref=f4e1308]: Redeemed
+                      - generic [ref=f4e1309]: Share of points
+                    - generic [ref=f4e1310]:
+                      - generic [ref=f4e1311]:
+                        - generic [ref=f4e1312]: Free extra shot
+                        - generic [ref=f4e1319]: 120 pts
+                        - generic [ref=f4e1320]: 6,420
+                        - generic [ref=f4e1321]: 69%
+                      - generic [ref=f4e1325]:
+                        - generic [ref=f4e1326]: Any Vietnamese, Regular
+                        - generic [ref=f4e1333]: 600 pts
+                        - generic [ref=f4e1334]: 2,180
+                        - generic [ref=f4e1335]: 24%
+                      - generic [ref=f4e1339]:
+                        - generic [ref=f4e1340]: Bánh Mì Paneer
+                        - generic [ref=f4e1347]: 900 pts
+                        - generic [ref=f4e1348]: "610"
+                        - generic [ref=f4e1349]: 7%
+                      - generic [ref=f4e1353]:
+                        - generic [ref=f4e1354]: BRUVI Canvas Tote
+                        - generic [ref=f4e1361]: 1,200 pts
+                        - generic [ref=f4e1362]: "42"
+                        - generic [ref=f4e1363]: 0%
+                - generic [ref=f4e1366]:
+                  - generic [ref=f4e1367]:
+                    - generic [ref=f4e1368]:
+                      - heading "Tier distribution" [level=3] [ref=f4e1369]
+                      - button "Tiers →" [ref=f4e1370] [cursor=pointer]
+                    - generic [ref=f4e1371]:
+                      - generic "Silver 95%" [ref=f4e1372]
+                      - generic "Gold 0%"
+                      - generic "Platinum 5%" [ref=f4e1373]
+                    - generic [ref=f4e1374]:
+                      - generic [ref=f4e1375]:
+                        - generic [ref=f4e1377]: Silver
+                        - generic [ref=f4e1378]: 0–999
+                        - generic [ref=f4e1379]: "18"
+                        - generic [ref=f4e1380]: 95%
+                      - generic [ref=f4e1381]:
+                        - generic [ref=f4e1383]: Gold
+                        - generic [ref=f4e1384]: 1,000–1,999
+                        - generic [ref=f4e1385]: "0"
+                        - generic [ref=f4e1386]: 0%
+                      - generic [ref=f4e1387]:
+                        - generic [ref=f4e1389]: Platinum
+                        - generic [ref=f4e1390]: 2,000+
+                        - generic [ref=f4e1391]: "1"
+                        - generic [ref=f4e1392]: 5%
+                  - generic [ref=f4e1393]:
+                    - generic [ref=f4e1394]:
+                      - heading "Expiring in next 30 days" [level=3] [ref=f4e1395]
+                      - generic [ref=f4e1396]:
+                        - generic [ref=f4e1397]: 659 pts
+                        - generic [ref=f4e1398]: ≈ ₹66 · 4 members
+                    - generic [ref=f4e1399]:
+                      - generic [ref=f4e1400]:
+                        - generic [ref=f4e1401]: Next 7 days
+                        - generic [ref=f4e1402]: 1 members
+                        - generic [ref=f4e1403]: "92"
+                      - generic [ref=f4e1404]:
+                        - generic [ref=f4e1405]: 8–14 days
+                        - generic [ref=f4e1406]: 1 members
+                        - generic [ref=f4e1407]: "84"
+                      - generic [ref=f4e1408]:
+                        - generic [ref=f4e1409]: 15–30 days
+                        - generic [ref=f4e1410]: 1 members
+                        - generic [ref=f4e1411]: "163"
+                    - button "Send \"points expiring\" push" [ref=f4e1412] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=f4e17] [cursor=pointer]
+  - alert [ref=f4e21]

@@ -111,8 +111,8 @@ export function OrdersTable() {
                 </div>
 
                 {/* 4. Channel */}
-                <div className="w-[80px] font-sans font-normal text-[14px] leading-5 text-[#3f4b5e] truncate [font-variation-settings:'wght'_400]" title={order.channel}>
-                  {order.channel}
+                <div className="w-[80px] font-sans font-normal text-[14px] leading-5 text-[#3f4b5e] truncate [font-variation-settings:'wght'_400]" title={order.tableLabel ? `${order.channel} · ${order.tableLabel}` : order.channel}>
+                  {order.tableLabel || order.channel}
                 </div>
 
                 {/* 5. Customer */}

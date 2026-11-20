@@ -1,0 +1,180 @@
+- generic [ref=f4e1]:
+  - generic [ref=f4e2]:
+    - complementary [ref=f4e22]:
+      - link "HQ" [ref=f4e24] [cursor=pointer]:
+        - /url: /
+      - generic [ref=f4e35]:
+        - link "Dashboard" [ref=f4e37] [cursor=pointer]:
+          - /url: /
+        - generic [ref=f4e42]:
+          - generic [ref=f4e43]: Operations
+          - generic [ref=f4e45]:
+            - link "Orders" [ref=f4e46] [cursor=pointer]:
+              - /url: /orders
+            - link "Stores" [ref=f4e51] [cursor=pointer]:
+              - /url: /stores
+        - generic [ref=f4e59]:
+          - generic [ref=f4e60]: Menu
+          - generic [ref=f4e62]:
+            - link "Catalog" [ref=f4e63] [cursor=pointer]:
+              - /url: /catalog
+            - link "Recipes" [ref=f4e68] [cursor=pointer]:
+              - /url: /recipes
+        - generic [ref=f4e73]:
+          - generic [ref=f4e74]: Supply
+          - generic [ref=f4e76]:
+            - link "Inventory" [ref=f4e77] [cursor=pointer]:
+              - /url: /inventory
+            - link "Warehouse" [ref=f4e82] [cursor=pointer]:
+              - /url: /warehouse
+        - generic [ref=f4e87]:
+          - generic [ref=f4e88]: Growth
+          - generic [ref=f4e90]:
+            - link "Customers" [ref=f4e91] [cursor=pointer]:
+              - /url: /customers
+            - link "Marketing" [ref=f4e97] [cursor=pointer]:
+              - /url: /marketing
+            - link "BRUVI LAB" [ref=f4e102] [cursor=pointer]:
+              - /url: /lab
+            - link "Loyalty" [ref=f4e107] [cursor=pointer]:
+              - /url: /loyalty
+            - link "Subscriptions" [ref=f4e112] [cursor=pointer]:
+              - /url: /subscriptions
+        - generic [ref=f4e117]:
+          - generic [ref=f4e118]: Business
+          - generic [ref=f4e120]:
+            - link "Finance" [ref=f4e121] [cursor=pointer]:
+              - /url: /finance
+            - link "Analytics" [ref=f4e128] [cursor=pointer]:
+              - /url: /analytics
+            - link "Staff" [ref=f4e133] [cursor=pointer]:
+              - /url: /staff
+            - link "Settings" [ref=f4e140] [cursor=pointer]:
+              - /url: /settings
+      - button "Staff profile menu" [ref=f4e149] [cursor=pointer]:
+        - generic [ref=f4e150]: KR
+        - generic [ref=f4e151]:
+          - generic [ref=f4e152]: Kavya R
+          - generic [ref=f4e153]: Chief Operations Officer
+    - generic [ref=f4e156]:
+      - banner [ref=f4e157]:
+        - button "Search orders, stores, products, customers ⌘K" [ref=f4e159] [cursor=pointer]:
+          - generic [ref=f4e160]: Search orders, stores, products, customers
+          - generic [ref=f4e165]: ⌘K
+        - generic [ref=f4e166]:
+          - button "All stores · 0" [ref=f4e168] [cursor=pointer]
+          - button "Today · Fri 2 Oct" [ref=f4e177] [cursor=pointer]
+          - button "Notifications" [ref=f4e183] [cursor=pointer]
+      - main [ref=f4e188]:
+        - generic [ref=f4e189]:
+          - generic [ref=f4e190]:
+            - generic [ref=f4e191]:
+              - generic [ref=f4e192]:
+                - generic [ref=f4e193]: Growth · BRUVI Rewards
+                - heading "Loyalty" [level=1] [ref=f4e194]
+              - generic [ref=f4e195]:
+                - button "Export report" [ref=f4e196] [cursor=pointer]
+                - button "Adjust points" [ref=f4e197] [cursor=pointer]
+            - generic [ref=f4e198]:
+              - button "Overview" [ref=f4e199] [cursor=pointer]
+              - button "Rules" [ref=f4e200] [cursor=pointer]
+              - button "Rewards" [active] [ref=f4e201] [cursor=pointer]
+              - button "Tiers" [ref=f4e202] [cursor=pointer]
+              - button "Transactions" [ref=f4e203] [cursor=pointer]
+          - main [ref=f4e204]:
+            - generic [ref=f4e564]:
+              - generic [ref=f4e565]:
+                - textbox "Search rewards by name or description..." [ref=f4e570]
+                - generic [ref=f4e571]:
+                  - button "All Types" [ref=f4e572] [cursor=pointer]
+                  - button "DRINK" [ref=f4e573] [cursor=pointer]
+                  - button "FOOD" [ref=f4e574] [cursor=pointer]
+                  - button "ADD ON" [ref=f4e575] [cursor=pointer]
+                  - button "MERCH" [ref=f4e576] [cursor=pointer]
+                  - button "All Status" [ref=f4e578] [cursor=pointer]
+                  - button "LIVE" [ref=f4e579] [cursor=pointer]
+                  - button "DRAFT" [ref=f4e580] [cursor=pointer]
+                  - button "ARCHIVED" [ref=f4e581] [cursor=pointer]
+              - generic [ref=f4e582]:
+                - generic [ref=f4e583]:
+                  - generic [ref=f4e584]:
+                    - generic [ref=f4e589]:
+                      - generic [ref=f4e590]: BRONZE
+                      - generic [ref=f4e591]: LIVE
+                    - heading "Free extra shot" [level=3] [ref=f4e592]
+                    - paragraph [ref=f4e593]: Any espresso or phin drip shot add-on to your beverage
+                    - generic [ref=f4e594]:
+                      - generic [ref=f4e595]: 120pts
+                      - generic [ref=f4e596]: ≈ ₹12.00 INR cost
+                    - generic [ref=f4e597]:
+                      - generic [ref=f4e598]: Valid 7 days
+                      - generic [ref=f4e599]: 6420 claims
+                  - generic [ref=f4e600]:
+                    - button "Edit" [ref=f4e601] [cursor=pointer]
+                    - button "Archive" [ref=f4e605] [cursor=pointer]
+                - generic [ref=f4e610]:
+                  - generic [ref=f4e611]:
+                    - generic [ref=f4e616]:
+                      - generic [ref=f4e617]: BRONZE
+                      - generic [ref=f4e618]: LIVE
+                    - heading "Any Vietnamese, Regular" [level=3] [ref=f4e619]
+                    - paragraph [ref=f4e620]: Regular size Vietnamese traditional phin coffee, hot or iced
+                    - generic [ref=f4e621]:
+                      - generic [ref=f4e622]: 600pts
+                      - generic [ref=f4e623]: ≈ ₹60.00 INR cost
+                    - generic [ref=f4e624]:
+                      - generic [ref=f4e625]: Valid 7 days
+                      - generic [ref=f4e626]: 2180 claims
+                  - generic [ref=f4e627]:
+                    - button "Edit" [ref=f4e628] [cursor=pointer]
+                    - button "Archive" [ref=f4e632] [cursor=pointer]
+                - generic [ref=f4e637]:
+                  - generic [ref=f4e638]:
+                    - generic [ref=f4e645]:
+                      - generic [ref=f4e646]: BRONZE
+                      - generic [ref=f4e647]: LIVE
+                    - heading "Bánh Mì Paneer" [level=3] [ref=f4e648]
+                    - paragraph [ref=f4e649]: Crisp baguette with grilled paneer, pickled daikon & herbs
+                    - generic [ref=f4e650]:
+                      - generic [ref=f4e651]: 900pts
+                      - generic [ref=f4e652]: ≈ ₹90.00 INR cost
+                    - generic [ref=f4e653]:
+                      - generic [ref=f4e654]: Valid 7 days
+                      - generic [ref=f4e655]: 610 claims
+                  - generic [ref=f4e656]:
+                    - button "Edit" [ref=f4e657] [cursor=pointer]
+                    - button "Archive" [ref=f4e661] [cursor=pointer]
+                - generic [ref=f4e666]:
+                  - generic [ref=f4e667]:
+                    - generic [ref=f4e674]:
+                      - generic [ref=f4e675]: SILVER
+                      - generic [ref=f4e676]: LIVE
+                    - heading "BRUVI Canvas Tote" [level=3] [ref=f4e677]
+                    - paragraph [ref=f4e678]: Heavyweight organic cotton canvas tote with embroidered logo
+                    - generic [ref=f4e679]:
+                      - generic [ref=f4e680]: 1,200pts
+                      - generic [ref=f4e681]: ≈ ₹120.00 INR cost
+                    - generic [ref=f4e682]:
+                      - generic [ref=f4e683]: Valid 30 days
+                      - generic [ref=f4e684]: 42 claims
+                  - generic [ref=f4e685]:
+                    - button "Edit" [ref=f4e686] [cursor=pointer]
+                    - button "Archive" [ref=f4e690] [cursor=pointer]
+                - generic [ref=f4e695]:
+                  - generic [ref=f4e696]:
+                    - generic [ref=f4e703]:
+                      - generic [ref=f4e704]: GOLD
+                      - generic [ref=f4e705]: LIVE
+                    - heading "Any Specialty drink, Large" [level=3] [ref=f4e706]
+                    - paragraph [ref=f4e707]: Any large specialty latte, tonic, or seasonal drink
+                    - generic [ref=f4e708]:
+                      - generic [ref=f4e709]: 1,500pts
+                      - generic [ref=f4e710]: ≈ ₹150.00 INR cost
+                    - generic [ref=f4e711]:
+                      - generic [ref=f4e712]: Valid 14 days
+                      - generic [ref=f4e713]: 0 claims
+                  - generic [ref=f4e714]:
+                    - button "Edit" [ref=f4e715] [cursor=pointer]
+                    - button "Archive" [ref=f4e719] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=f4e17] [cursor=pointer]
+  - alert [ref=f4e21]

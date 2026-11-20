@@ -19,6 +19,8 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import type { RefundPreviewResponse, RefundQuoteResponse } from "@/features/orders/types";
+import { formatPaise, formatRate } from "@/lib/utils/money";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -37,52 +39,100 @@ export default function OrderRefundPage({ params }: PageProps) {
   const dispatch = useAppDispatch();
   const { selectedOrder, isLoading, error } = useAppSelector((state) => state.orders);
 
-  // Form state
-  const [itemSelections, setItemSelections] = React.useState<Record<string, ItemRefundSelection>>(() => {
-    if (selectedOrder && selectedOrder.items?.length > 0) {
-      const initialMap: Record<string, ItemRefundSelection> = {};
-      selectedOrder.items.forEach((item, index) => {
-        initialMap[item.id] = {
-          selected: index === 0,
-          quantity: 1,
-        };
-      });
-      return initialMap;
-    }
-    return {};
-  });
+  // Server quote: what is still refundable and the exact paise per line.
+  const [quote, setQuote] = React.useState<RefundQuoteResponse | null>(null);
+  const [quoteError, setQuoteError] = React.useState<string | null>(null);
+  const [itemSelections, setItemSelections] = React.useState<Record<string, ItemRefundSelection>>({});
   const [reason, setReason] = React.useState("Item quality / preparation issue");
-  const [note, setNote] = React.useState(
-    "Customer found salted cream split, remade one cup on the house"
-  );
+  const [note, setNote] = React.useState("");
   const [refundMethod, setRefundMethod] = React.useState<"UPI" | "WALLET">("UPI");
+  const [includeDeliveryFee, setIncludeDeliveryFee] = React.useState(false);
+  const [includeTip, setIncludeTip] = React.useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = React.useState(false);
-  const [isProcessing, setIsProcessing] = React.useState(false);
   const [successResult, setSuccessResult] = React.useState<{
     refundId: string;
     amount: number;
   } | null>(null);
 
   React.useEffect(() => {
+    let alive = true;
+    OrdersApi.getRefundQuote(orderId)
+      .then((q) => {
+        if (!alive) return;
+        setQuote(q);
+        // Wallet-paid orders can only go back to the wallet.
+        if (!q.destinations.includes("ORIGINAL")) setRefundMethod("WALLET");
+        const firstRefundable = q.items.find((i) => i.refundableQuantity > 0);
+        setItemSelections((prev) => {
+          if (Object.keys(prev).length > 0) return prev;
+          const map: Record<string, ItemRefundSelection> = {};
+          q.items.forEach((i) => {
+            map[i.orderItemId] = { selected: i.orderItemId === firstRefundable?.orderItemId, quantity: 1 };
+          });
+          return map;
+        });
+      })
+      .catch((err: unknown) => {
+        if (alive) setQuoteError(err instanceof Error ? err.message : "Could not load the refund quote");
+      });
+    return () => {
+      alive = false;
+    };
+  }, [orderId]);
+
+  React.useEffect(() => {
     dispatch(fetchOrderById(orderId));
   }, [dispatch, orderId]);
 
-  // Initialize item selections once order loads
+  // Exact amounts and GST reversal come from the server preview (the same engine that makes the
+  // refund), never from maths in the browser.
+  const [preview, setPreview] = React.useState<RefundPreviewResponse | null>(null);
+  const [previewError, setPreviewError] = React.useState<string | null>(null);
+  const previewItems = React.useMemo(
+    () =>
+      Object.entries(itemSelections)
+        .filter(([itemId, sel]) => {
+          const max = quote?.items.find((i) => i.orderItemId === itemId)?.refundableQuantity ?? 0;
+          return sel.selected && sel.quantity > 0 && max > 0;
+        })
+        .map(([itemId, sel]) => ({
+          orderItemId: itemId,
+          qty: Math.min(sel.quantity, quote?.items.find((i) => i.orderItemId === itemId)?.refundableQuantity ?? 0),
+        })),
+    [itemSelections, quote],
+  );
+  const previewOrderId = quote?.orderId;
   React.useEffect(() => {
-    if (selectedOrder && selectedOrder.items?.length > 0) {
-      setItemSelections((prev) => {
-        if (Object.keys(prev).length > 0) return prev;
-        const initialMap: Record<string, ItemRefundSelection> = {};
-        selectedOrder.items.forEach((item, index) => {
-          initialMap[item.id] = {
-            selected: index === 0,
-            quantity: 1,
-          };
-        });
-        return initialMap;
-      });
+    if (!previewOrderId || (previewItems.length === 0 && !includeDeliveryFee && !includeTip)) {
+      setPreview(null);
+      setPreviewError(null);
+      return;
     }
-  }, [selectedOrder]);
+    let alive = true;
+    const t = setTimeout(() => {
+      OrdersApi.previewRefund(previewOrderId, {
+        items: previewItems,
+        includeDeliveryFee,
+        includeTip,
+        destination: "WALLET",
+        reasonCode: "PREVIEW",
+      })
+        .then((p) => {
+          if (!alive) return;
+          setPreview(p);
+          setPreviewError(null);
+        })
+        .catch((err: unknown) => {
+          if (!alive) return;
+          setPreview(null);
+          setPreviewError(err instanceof Error ? err.message : "Could not price this refund");
+        });
+    }, 250);
+    return () => {
+      alive = false;
+      clearTimeout(t);
+    };
+  }, [previewOrderId, previewItems, includeDeliveryFee, includeTip]);
 
   if (isLoading && !selectedOrder) {
     return (
@@ -156,65 +206,45 @@ export default function OrderRefundPage({ params }: PageProps) {
     });
   };
 
-  // Calculate refund totals dynamically
-  // 1. Calculate sum of selected items
-  let selectedItemsSubtotal = 0;
-  const selectedLines: { id: string; name: string; qty: number; lineTotal: number }[] = [];
+  // Selection limits come from the server quote; every amount comes from the server preview.
+  const quoteItems = new Map((quote?.items ?? []).map((i) => [i.orderItemId, i]));
+  const maxQtyFor = (itemId: string) => quoteItems.get(itemId)?.refundableQuantity ?? 0;
+  const previewByLine = new Map((preview?.items ?? []).map((i) => [i.orderItemId, i]));
 
+  const selectedLines: { id: string; name: string; qty: number; lineTotal: number }[] = [];
   order.items.forEach((item) => {
     const sel = itemSelections[item.id];
-    if (sel?.selected && sel.quantity > 0) {
-      const lineTotal = item.unitPrice * sel.quantity;
-      selectedItemsSubtotal += lineTotal;
+    if (sel?.selected && sel.quantity > 0 && maxQtyFor(item.id) > 0) {
+      const qty = Math.min(sel.quantity, maxQtyFor(item.id));
       selectedLines.push({
         id: item.id,
         name: item.productName,
-        qty: sel.quantity,
-        lineTotal,
+        qty,
+        lineTotal: (previewByLine.get(item.id)?.payablePaise ?? 0) / 100,
       });
     }
   });
+  const deliveryFeePaise = quote?.deliveryFeePaise ?? 0;
+  const tipPaise = quote?.tipPaise ?? 0;
+  // The server refunds delivery fee and tip at most once in total (it re-checks this).
+  const extrasLeftPaise = Math.max(0, deliveryFeePaise + tipPaise - (quote?.extrasRefundedPaise ?? 0));
+  const extrasPaise = (includeDeliveryFee ? deliveryFeePaise : 0) + (includeTip ? tipPaise : 0);
+  const canAddDeliveryFee = includeDeliveryFee || extrasPaise + deliveryFeePaise <= extrasLeftPaise;
+  const canAddTip = includeTip || extrasPaise + tipPaise <= extrasLeftPaise;
 
-  // 2. Prorate promo discount if applicable
-  // In order A-047 Figma design: 1x Salted Cream Cold Brew = 390.00, Promo BREW50 prorated = -20.10, Taxable = 369.90, GST 5% = +18.50, Total = 388.40
-  const orderSubtotal = order.subtotal || order.totalAmount;
-  const promoRatio = orderSubtotal > 0 ? selectedItemsSubtotal / orderSubtotal : 0;
-  const proratedDiscount = order.promoDiscount
-    ? Math.round(order.promoDiscount * promoRatio * 100) / 100
-    : 0;
-
-  const taxableValue = Math.max(0, selectedItemsSubtotal - proratedDiscount);
-  // 5% GST
-  const gstRefund = Math.round(taxableValue * 0.05 * 100) / 100;
-  const refundTotal = taxableValue + gstRefund;
-  const orderTotalAfterRefund = Math.max(0, order.totalAmount - refundTotal);
+  const refundPaise = preview?.totalPaise ?? 0;
+  const gstReversal = preview?.gst ?? null;
+  const gstRates = (order.gst?.rates ?? []).filter((r) => r.taxPaise > 0);
+  const refundTotal = refundPaise / 100;
+  const alreadyRefundedPaise = preview?.refundedBeforePaise ?? quote?.refundedPaise ?? 0;
+  const orderTotalPaise = preview?.orderTotalPaise ?? quote?.totalPaise ?? 0;
+  const orderTotalAfterPaise = preview?.remainingAfterPaise ?? Math.max(0, orderTotalPaise - alreadyRefundedPaise);
+  const overLimit = !!quote && refundPaise > quote.approvalLimitPaise;
+  const blockedByLimit = overLimit && !quote?.canOverride;
+  const originalAllowed = quote?.destinations.includes("ORIGINAL") ?? false;
+  const originalLabel = quote?.payment?.methodLabel || "Original payment method";
 
   const selectedCount = selectedLines.length;
-
-  // Process refund handler
-  const handleProcessRefund = async () => {
-    if (selectedCount === 0 || refundTotal <= 0) return;
-
-    try {
-      setIsProcessing(true);
-      const res = await OrdersApi.processRefund(order.orderNumber, {
-        refundAmount: refundTotal,
-        reason,
-        note,
-        method: refundMethod === "UPI" ? "Original UPI" : "BRUVI wallet",
-        items: selectedLines.map((l) => ({ id: l.id, quantity: l.qty })),
-      });
-
-      setSuccessResult({
-        refundId: res.refundId || "RF-30431",
-        amount: refundTotal,
-      });
-    } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : "Refund failed. Please try again.");
-    } finally {
-      setIsProcessing(false);
-    }
-  };
 
   return (
     <div className="flex flex-col gap-6 w-full max-w-[1136px] mx-auto pb-16">
@@ -290,6 +320,7 @@ export default function OrderRefundPage({ params }: PageProps) {
                         <button
                           type="button"
                           onClick={() => handleToggleItem(item.id)}
+                          disabled={maxQtyFor(item.id) === 0}
                           aria-label={`Select ${item.productName}`}
                           className={cn(
                             "w-6 h-6 rounded-[4px] shrink-0 flex items-center justify-center transition-colors cursor-pointer",
@@ -320,6 +351,11 @@ export default function OrderRefundPage({ params }: PageProps) {
                               {item.modifiers.join(" · ")}
                             </span>
                           )}
+                          {(quoteItems.get(item.id)?.refundedQuantity ?? 0) > 0 && (
+                            <span className="text-[12px] font-medium text-[#8a5a00] mt-1">
+                              {quoteItems.get(item.id)!.refundedQuantity} of {item.quantity} already refunded
+                            </span>
+                          )}
                         </div>
                       </div>
 
@@ -330,7 +366,7 @@ export default function OrderRefundPage({ params }: PageProps) {
                           <div className="h-9 w-[104px] border border-[#7f8ca0] rounded-[12px] flex items-center justify-between px-2 bg-white">
                             <button
                               type="button"
-                              onClick={() => handleQtyChange(item.id, -1, item.quantity)}
+                              onClick={() => handleQtyChange(item.id, -1, maxQtyFor(item.id))}
                               disabled={selection.quantity <= 1}
                               aria-label="Decrease quantity"
                               className="w-6 h-6 flex items-center justify-center text-[#0f2340] hover:bg-[#f5f7fa] disabled:opacity-30 rounded transition-colors cursor-pointer disabled:cursor-not-allowed"
@@ -342,8 +378,8 @@ export default function OrderRefundPage({ params }: PageProps) {
                             </span>
                             <button
                               type="button"
-                              onClick={() => handleQtyChange(item.id, 1, item.quantity)}
-                              disabled={selection.quantity >= item.quantity}
+                              onClick={() => handleQtyChange(item.id, 1, maxQtyFor(item.id))}
+                              disabled={selection.quantity >= maxQtyFor(item.id)}
                               aria-label="Increase quantity"
                               className="w-6 h-6 flex items-center justify-center text-[#0f2340] hover:bg-[#f5f7fa] disabled:opacity-30 rounded transition-colors cursor-pointer disabled:cursor-not-allowed"
                             >
@@ -359,11 +395,12 @@ export default function OrderRefundPage({ params }: PageProps) {
                             isChecked ? "text-[#0f2340]" : "text-[#55647a]"
                           )}
                         >
-                          ₹
-                          {(isChecked
-                            ? item.unitPrice * selection.quantity
-                            : item.unitPrice * item.quantity
-                          ).toFixed(2)}
+                          {/* Server numbers: the preview for a selected line, else what is left on it */}
+                          {formatPaise(
+                            isChecked
+                              ? (previewByLine.get(item.id)?.payablePaise ?? 0)
+                              : (quoteItems.get(item.id)?.remainingRefundPaise ?? 0),
+                          )}
                         </span>
                       </div>
                     </div>
@@ -402,7 +439,7 @@ export default function OrderRefundPage({ params }: PageProps) {
                   <ChevronDown className="w-4 h-4 text-[#3f4b5e] absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
                 </div>
                 <span className="text-[12px] font-medium text-[#3f4b5e]">
-                  Tagged to {order.storeName} quality report
+                  Saved as the refund reason
                 </span>
               </div>
 
@@ -423,7 +460,7 @@ export default function OrderRefundPage({ params }: PageProps) {
                   className="h-[52px] w-full rounded-[12px] border-2 border-[#2f5690] px-4 text-[14px] font-medium text-[#0f2340] bg-white focus:outline-none focus:ring-1 focus:ring-[#2f5690] shadow-2xs"
                 />
                 <span className="text-[12px] font-medium text-[#3f4b5e]">
-                  Shown on the refund receipt
+                  Saved with the refund in the payment log
                 </span>
               </div>
             </div>
@@ -437,9 +474,10 @@ export default function OrderRefundPage({ params }: PageProps) {
                 {/* Method 1: Original UPI */}
                 <button
                   type="button"
-                  onClick={() => setRefundMethod("UPI")}
+                  onClick={() => originalAllowed && setRefundMethod("UPI")}
+                  disabled={!originalAllowed}
                   className={cn(
-                    "rounded-[12px] p-[18px] text-left transition-all flex items-start gap-3 cursor-pointer",
+                    "rounded-[12px] p-[18px] text-left transition-all flex items-start gap-3 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed",
                     refundMethod === "UPI"
                       ? "border-2 border-[#1c3a66] bg-[#f8fafc]/40"
                       : "border border-[#7f8ca0] bg-white hover:border-[#1c3a66]/50"
@@ -459,10 +497,12 @@ export default function OrderRefundPage({ params }: PageProps) {
                   </div>
                   <div className="flex flex-col gap-0.5">
                     <span className="text-[14px] font-bold text-[#0f2340]">
-                      Original UPI
+                      {originalLabel}
                     </span>
                     <span className="text-[12px] font-medium text-[#3f4b5e] leading-snug">
-                      Ref 4290 7712 0034 · 3–5 working days via Razorpay
+                      {originalAllowed
+                        ? "Back to the customer's bank via Razorpay · 5–7 working days"
+                        : "Paid from BRUVI Wallet · refunds go back to the wallet"}
                     </span>
                   </div>
                 </button>
@@ -519,10 +559,10 @@ export default function OrderRefundPage({ params }: PageProps) {
                 <button
                   type="button"
                   onClick={() => setIsConfirmModalOpen(true)}
-                  disabled={selectedCount === 0 || refundTotal <= 0}
+                  disabled={refundPaise <= 0 || !!previewError || blockedByLimit || !quote?.refundable}
                   className="h-12 px-6 rounded-[12px] bg-[#1c3a66] hover:bg-[#0f2340] active:scale-[0.99] text-[14px] font-bold text-white transition-all shadow-2xs cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center"
                 >
-                  Process refund · ₹{refundTotal.toFixed(2)}
+                  Process refund · {formatPaise(refundPaise)}
                 </button>
               </div>
             </div>
@@ -556,38 +596,84 @@ export default function OrderRefundPage({ params }: PageProps) {
                 </span>
               )}
 
-              {/* Promo deduction (prorated) */}
-              {selectedLines.length > 0 && proratedDiscount > 0 && (
-                <div className="flex justify-between items-center text-[14px]">
-                  <span className="font-bold text-[#3f4b5e]">
-                    Promo {order.promoCode?.replace("Promo ", "") || "BREW50"} (prorated)
+              {/* GST reversed by this refund (credit note), from the server preview */}
+              {gstReversal && gstReversal.taxPaise > 0 && (
+                <>
+                  <div className="flex justify-between items-center text-[14px]">
+                    <span className="font-bold text-[#0f2340]">Taxable value</span>
+                    <span className="font-bold text-[#0f2340]">{formatPaise(gstReversal.taxablePaise)}</span>
+                  </div>
+                  {gstReversal.igstPaise > 0 ? (
+                    <div className="flex justify-between items-center text-[14px]">
+                      <span className="font-bold text-[#3f4b5e]">
+                        IGST{gstRates.length === 1 ? ` ${formatRate(gstRates[0].igstRatePercent)}` : ""} reversed
+                      </span>
+                      <span className="font-bold text-[#3f4b5e]">{formatPaise(gstReversal.igstPaise)}</span>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="flex justify-between items-center text-[14px]">
+                        <span className="font-bold text-[#3f4b5e]">
+                          CGST{gstRates.length === 1 ? ` ${formatRate(gstRates[0].cgstRatePercent)}` : ""} reversed
+                        </span>
+                        <span className="font-bold text-[#3f4b5e]">{formatPaise(gstReversal.cgstPaise)}</span>
+                      </div>
+                      <div className="flex justify-between items-center text-[14px]">
+                        <span className="font-bold text-[#3f4b5e]">
+                          SGST{gstRates.length === 1 ? ` ${formatRate(gstRates[0].sgstRatePercent)}` : ""} reversed
+                        </span>
+                        <span className="font-bold text-[#3f4b5e]">{formatPaise(gstReversal.sgstPaise)}</span>
+                      </div>
+                    </>
+                  )}
+                  <span className="text-[12px] text-[#7f8ca0]">
+                    A GST credit note is issued with this refund.
                   </span>
-                  <span className="font-bold text-[#3f4b5e]">
-                    −₹{proratedDiscount.toFixed(2)}
-                  </span>
-                </div>
+                </>
               )}
-
-              {/* Taxable value */}
-              {selectedLines.length > 0 && (
-                <div className="flex justify-between items-center text-[14px]">
-                  <span className="font-bold text-[#0f2340]">Taxable value</span>
-                  <span className="font-bold text-[#0f2340]">
-                    ₹{taxableValue.toFixed(2)}
-                  </span>
-                </div>
-              )}
-
-              {/* GST 5% refund */}
-              {selectedLines.length > 0 && (
-                <div className="flex justify-between items-center text-[14px]">
-                  <span className="font-bold text-[#0f2340]">GST 5% refund</span>
-                  <span className="font-bold text-[#0f2340]">
-                    +₹{gstRefund.toFixed(2)}
-                  </span>
-                </div>
+              {previewError && (
+                <span className="text-[12px] font-bold text-[#b42318]">{previewError}</span>
               )}
             </div>
+
+            {deliveryFeePaise > 0 && (
+              <label
+                className={cn(
+                  "flex justify-between items-center text-[14px]",
+                  canAddDeliveryFee ? "cursor-pointer" : "cursor-not-allowed opacity-60",
+                )}
+              >
+                <span className="flex items-center gap-2 font-bold text-[#0f2340]">
+                  <input
+                    type="checkbox"
+                    checked={includeDeliveryFee}
+                    disabled={!canAddDeliveryFee}
+                    onChange={(e) => setIncludeDeliveryFee(e.target.checked)}
+                  />
+                  Delivery fee{!canAddDeliveryFee && " (already refunded)"}
+                </span>
+                <span className="font-bold text-[#0f2340]">₹{(deliveryFeePaise / 100).toFixed(2)}</span>
+              </label>
+            )}
+            {tipPaise > 0 && (
+              <label
+                className={cn(
+                  "flex justify-between items-center text-[14px]",
+                  canAddTip ? "cursor-pointer" : "cursor-not-allowed opacity-60",
+                )}
+              >
+                <span className="flex items-center gap-2 font-bold text-[#0f2340]">
+                  <input
+                    type="checkbox"
+                    checked={includeTip}
+                    disabled={!canAddTip}
+                    onChange={(e) => setIncludeTip(e.target.checked)}
+                  />
+                  Tip{!canAddTip && " (already refunded)"}
+                </span>
+                <span className="font-bold text-[#0f2340]">₹{(tipPaise / 100).toFixed(2)}</span>
+              </label>
+            )}
 
             {/* Divider */}
             <div className="border-t border-[#dce2ea] my-1" />
@@ -598,7 +684,7 @@ export default function OrderRefundPage({ params }: PageProps) {
                 Refund to customer
               </span>
               <span className="font-display font-black text-[24px] text-[#0f2340] tracking-tight">
-                ₹{refundTotal.toFixed(2)}
+                {formatPaise(refundPaise)}
               </span>
             </div>
 
@@ -608,22 +694,32 @@ export default function OrderRefundPage({ params }: PageProps) {
                 Order total after refund
               </span>
               <span className="text-[12px] font-bold text-[#3f4b5e]">
-                ₹{order.totalAmount.toFixed(2)} − ₹{refundTotal.toFixed(2)} = ₹
-                {orderTotalAfterRefund.toFixed(2)}
+                {formatPaise(orderTotalPaise)}
+                {alreadyRefundedPaise > 0 ? ` − ${formatPaise(alreadyRefundedPaise)} earlier` : ""} −{" "}
+                {formatPaise(refundPaise)} = {formatPaise(orderTotalAfterPaise)}
               </span>
             </div>
           </div>
 
           {/* Card 2: Approval Limit (Figma 225:101968, 400x86) */}
-          <div className="bg-[#e3f4ea] rounded-[16px] p-4 flex gap-3 items-start border border-[#c3e8d2]">
-            <ShieldCheck className="h-5 w-5 text-[#1f7a4d] shrink-0 mt-0.5" />
+          <div
+            className={cn(
+              "rounded-[16px] p-4 flex gap-3 items-start border",
+              overLimit ? "bg-[#fff4e0] border-[#f3d39a]" : "bg-[#e3f4ea] border-[#c3e8d2]",
+            )}
+          >
+            <ShieldCheck className={cn("h-5 w-5 shrink-0 mt-0.5", overLimit ? "text-[#8a5a00]" : "text-[#1f7a4d]")} />
             <div className="flex flex-col gap-0.5">
               <span className="text-[14px] font-bold text-[#0f2340] leading-tight">
-                Within your approval limit
+                {!overLimit
+                  ? "Within your approval limit"
+                  : blockedByLimit
+                    ? "Needs admin approval"
+                    : "Above the limit · approved by your role"}
               </span>
               <span className="text-[12px] font-medium text-[#3f4b5e] leading-relaxed mt-0.5">
-                HQ can approve refunds up to ₹2,000 per order. Above that, Finance approval is
-                required.
+                Refunds up to ₹{((quote?.approvalLimitPaise ?? 0) / 100).toLocaleString("en-IN")} per order can be
+                processed by store staff. Above that, an admin must process it.
               </span>
             </div>
           </div>
@@ -634,11 +730,15 @@ export default function OrderRefundPage({ params }: PageProps) {
               REFUNDS ON THIS ORDER
             </h3>
             <p className="text-[14px] font-normal text-[#0f2340] leading-snug">
-              None yet · last refund A-019, 22 Sep · ₹221 to wallet
+              {alreadyRefundedPaise > 0
+                ? `${formatPaise(alreadyRefundedPaise)} already refunded on this order`
+                : "None yet"}
             </p>
             <div className="border-t border-[#dce2ea] my-1" />
             <span className="text-[12px] font-medium text-[#3f4b5e] leading-snug">
-              Will be logged as RF-30431 · {order.storeName} · approved by Kavya R.
+              {quoteError
+                ? quoteError
+                : `Logged under your account · ${order.storeName}`}
             </span>
           </div>
         </div>
@@ -649,12 +749,14 @@ export default function OrderRefundPage({ params }: PageProps) {
         isOpen={isConfirmModalOpen}
         onClose={() => setIsConfirmModalOpen(false)}
         order={order}
-        mode={refundTotal >= order.totalAmount ? "cancel_and_refund" : "refund_only"}
+        mode="refund_only"
         refundAmount={refundTotal}
-        items={Object.entries(itemSelections)
-          .filter(([_, sel]) => sel.selected && sel.quantity > 0)
-          .map(([itemId, sel]) => ({ orderItemId: itemId, qty: sel.quantity }))}
+        items={previewItems}
         destination={refundMethod === "WALLET" ? "WALLET" : "ORIGINAL"}
+        reasonCode={reason}
+        note={note || undefined}
+        includeDeliveryFee={includeDeliveryFee}
+        includeTip={includeTip}
         onSuccess={(refundId, amount) => {
           setIsConfirmModalOpen(false);
           setSuccessResult({ refundId, amount });
@@ -673,7 +775,7 @@ export default function OrderRefundPage({ params }: PageProps) {
                 Refund Processed Successfully
               </h3>
               <p className="text-[14px] text-[#3f4b5e] leading-relaxed">
-                Refund <span className="font-bold text-[#0f2340]">{successResult.refundId}</span>{" "}
+                Refund <span className="font-bold text-[#0f2340]">{successResult.refundId || "—"}</span>{" "}
                 for{" "}
                 <span className="font-bold text-[#0f2340]">
                   ₹{successResult.amount.toFixed(2)}

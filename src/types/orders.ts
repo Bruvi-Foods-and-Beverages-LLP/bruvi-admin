@@ -19,7 +19,7 @@ export type OrderTab =
 
 export type OrderChannel = "Counter" | "Kiosk K1" | "App" | "QR dine-in";
 
-export type PaymentMethod = "UPI" | "Card" | "Cash";
+export type PaymentMethod = "UPI" | "Card" | "Netbanking" | "Wallet" | "—";
 
 export interface OrderItemModifier {
   name: string;
@@ -59,42 +59,67 @@ export interface PaymentGatewayEvent {
   status?: "success" | "pending" | "failed";
 }
 
-export interface PaymentRiskCheck {
+export interface PaymentRefundRow {
   id: string;
-  label: string;
-  passed: boolean;
+  refundNumber: string;
+  amount: number;
+  /** GST credit note issued for this refund (null when no GST was reversed). */
+  creditNoteNumber?: string | null;
+  /** GST reversed by this refund, paise. */
+  gstReversal?: { taxablePaise: number | null; cgstPaise: number | null; sgstPaise: number | null; igstPaise: number | null; taxPaise: number };
+  destination: "ORIGINAL" | "WALLET";
+  status: "PENDING" | "PROCESSING" | "SUCCEEDED" | "FAILED";
+  reasonCode: string;
+  note?: string | null;
+  providerRefundId?: string | null;
+  lastError?: string | null;
+  createdAt: string;
 }
 
-export interface PaymentSettlement {
-  batchId: string;
-  cycle: string;
-  batchCloses: string;
-  expectedCredit: string;
-  account: string;
-  reconciled: boolean;
-  reconciledText: string;
-}
-
+/** Real payment data for one order: the paying attempt, money and refunds. */
 export interface PaymentDetail {
   orderId: string;
   orderNumber: string;
+  /** GST charged on the order, as persisted by the backend GST engine. */
+  gst?: GstView | null;
+  invoiceNumber?: string | null;
+  /** Captured amount in rupees (order total when nothing was captured). */
   amount: number;
-  status: "Captured" | "Authorized" | "Refunded" | "Partially Refunded" | "Failed";
+  status: "Captured" | "Authorized" | "Pending" | "Refunded" | "Partially Refunded" | "Failed";
+  /** "UPI", "Card", "Netbanking", "BRUVI Wallet". */
   method: string;
+  /** "UPI · asha@okaxis", "Visa •••• 4242". */
+  methodLabel: string;
+  provider: string | null;
   storeName: string;
   timestamp: string;
-  razorpayPaymentId: string;
-  gatewayFeeText: string;
+  razorpayPaymentId: string | null;
+  razorpayOrderId: string | null;
+  /** Gateway fee incl. GST, rupees; null until Razorpay reports it. */
+  gatewayFee: number | null;
+  gatewayTax: number | null;
+  refundedToSource: number;
+  refundedToWallet: number;
+  /** Captured − fee − refunds sent back to the source, rupees. */
   netToSettle: number;
-  upiRrn: string;
-  payerVpa: string;
-  posTerminalId: string;
-  settlementBatch: string;
-  expectedCreditDate: string;
+  upiRrn: string | null;
+  payerVpa: string | null;
+  cardLast4: string | null;
+  cardNetwork: string | null;
+  bank: string | null;
   gatewayEvents: PaymentGatewayEvent[];
   rawPayload: string;
-  riskChecks: PaymentRiskCheck[];
-  settlement: PaymentSettlement;
+  refunds: PaymentRefundRow[];
+  /** ₹0 order: no gateway; the BRUVI payment id (`free_…`). */
+  isZeroPayment: boolean;
+  paymentId: string | null;
+  /** ₹0 order: what covered the bill (coupon, BRUVI Club benefit), in rupees. */
+  benefits: {
+    itemTotal: number;
+    discount: number;
+    coupon: { code: string; discount: number } | null;
+    membership: { planName: string | null; discount: number; freeDrinks: string[] } | null;
+  } | null;
   razorpayDashboardUrl?: string;
 }
 
@@ -171,22 +196,26 @@ export interface Order {
   storeName: string; // e.g. "Indiranagar", "Bandra", "Cyber Hub", "Koramangala"
   storeId: string;
   channel: OrderChannel;
+  /** PICKUP | DINE_IN | DELIVERY */
+  serviceType?: string;
+  /** Dine-in table, e.g. "Table 7" */
+  tableLabel?: string;
   customerName: string; // e.g. "Saisubbireddy", "Walk-in", "Guest", "Ishaan Kapoor", "Table 4"
   customerPhone?: string;
   customerEmail?: string;
   itemCount: number;
   items: OrderItem[];
   subtotal: number;
-  promoCode?: string;
   promoDiscount?: number;
   taxAmount: number;
-  taxBreakdown?: string;
-  discountAmount?: number;
+  deliveryFee?: number;
+  tip?: number;
+  /** Exact paise from the server; display these, never the rounded rupee fields. */
+  money?: OrderMoney;
+  /** Server GST breakdown (detail only). */
+  gst?: GstView;
   totalAmount: number; // e.g. 725, 420, 966
   paymentMethod: PaymentMethod;
-  paymentGatewayText?: string;
-  paymentReference?: string;
-  settlementText?: string;
   paymentStatus: "PAID" | "PENDING" | "REFUNDED" | "PARTIALLY_REFUNDED";
   status: OrderStatus;
   makeTime?: string; // e.g. "4:48", "9:12", "4:21", "14:00", "3:55" or "—"
@@ -233,4 +262,53 @@ export interface OrdersListResponse {
   totalPages: number;
   counts: OrdersCountSummary;
   updatedAt: string;
+}
+
+/** One GST rate on a bill, from the backend GST engine. */
+export interface GstRateView {
+  ratePercent: number;
+  cgstRatePercent: number;
+  sgstRatePercent: number;
+  igstRatePercent: number;
+  taxablePaise: number;
+  cgstPaise: number;
+  sgstPaise: number;
+  igstPaise: number;
+  taxPaise: number;
+}
+
+/** The GST breakdown persisted on an order (never recomputed by the panel). */
+export interface GstView {
+  version: number | null;
+  legacy: boolean;
+  pricesIncludeGst: boolean;
+  interState: boolean;
+  supplierGstin: string | null;
+  supplierLegalName: string | null;
+  placeOfSupplyStateCode: string | null;
+  sacCode: string;
+  invoiceNumber: string | null;
+  invoiceReady: boolean;
+  rates: GstRateView[];
+  taxablePaise: number;
+  cgstPaise: number;
+  sgstPaise: number;
+  igstPaise: number;
+  taxPaise: number;
+  deliveryFeeTaxPaise: number;
+  itemsTaxablePaise: number;
+  itemsTaxPaise: number;
+  deliveryFeeTaxablePaise: number;
+  payablePaise: number;
+}
+
+/** Exact order amounts in paise, straight from the order row. */
+export interface OrderMoney {
+  itemTotalPaise: number;
+  discountPaise: number;
+  deliveryFeePaise: number;
+  tipPaise: number;
+  taxPaise: number;
+  totalPaise: number;
+  refundedPaise: number;
 }

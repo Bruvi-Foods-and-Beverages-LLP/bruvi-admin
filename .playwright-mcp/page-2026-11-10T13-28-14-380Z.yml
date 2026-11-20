@@ -1,0 +1,126 @@
+- generic [ref=f7e1]:
+  - generic [ref=f7e2]:
+    - complementary [ref=f7e3]:
+      - link "HQ" [ref=f7e5] [cursor=pointer]:
+        - /url: /
+      - generic [ref=f7e16]:
+        - link "Dashboard" [ref=f7e18] [cursor=pointer]:
+          - /url: /
+        - generic [ref=f7e23]:
+          - generic [ref=f7e24]: Operations
+          - generic [ref=f7e26]:
+            - link "Orders" [ref=f7e27] [cursor=pointer]:
+              - /url: /orders
+            - link "Stores" [ref=f7e32] [cursor=pointer]:
+              - /url: /stores
+        - generic [ref=f7e40]:
+          - generic [ref=f7e41]: Menu
+          - generic [ref=f7e43]:
+            - link "Catalog" [ref=f7e44] [cursor=pointer]:
+              - /url: /catalog
+            - link "Recipes" [ref=f7e49] [cursor=pointer]:
+              - /url: /recipes
+        - generic [ref=f7e54]:
+          - generic [ref=f7e55]: Supply
+          - generic [ref=f7e57]:
+            - link "Inventory" [ref=f7e58] [cursor=pointer]:
+              - /url: /inventory
+            - link "Warehouse" [ref=f7e63] [cursor=pointer]:
+              - /url: /warehouse
+        - generic [ref=f7e68]:
+          - generic [ref=f7e69]: Growth
+          - generic [ref=f7e71]:
+            - link "Customers" [ref=f7e72] [cursor=pointer]:
+              - /url: /customers
+            - link "Marketing" [ref=f7e78] [cursor=pointer]:
+              - /url: /marketing
+            - link "BRUVI LAB" [ref=f7e83] [cursor=pointer]:
+              - /url: /lab
+            - link "Loyalty" [ref=f7e88] [cursor=pointer]:
+              - /url: /loyalty
+            - link "Subscriptions" [ref=f7e93] [cursor=pointer]:
+              - /url: /subscriptions
+        - generic [ref=f7e98]:
+          - generic [ref=f7e99]: Business
+          - generic [ref=f7e101]:
+            - link "Finance" [ref=f7e102] [cursor=pointer]:
+              - /url: /finance
+            - link "Analytics" [ref=f7e109] [cursor=pointer]:
+              - /url: /analytics
+            - link "Staff" [ref=f7e114] [cursor=pointer]:
+              - /url: /staff
+            - link "Settings" [ref=f7e121] [cursor=pointer]:
+              - /url: /settings
+      - button "Staff profile menu" [ref=f7e130] [cursor=pointer]:
+        - generic [ref=f7e131]: KR
+        - generic [ref=f7e132]:
+          - generic [ref=f7e133]: Kavya R
+          - generic [ref=f7e134]: Chief Operations Officer
+    - generic [ref=f7e137]:
+      - banner [ref=f7e138]:
+        - button "Search orders, stores, products, customers ⌘K" [ref=f7e140] [cursor=pointer]:
+          - generic [ref=f7e141]: Search orders, stores, products, customers
+          - generic [ref=f7e146]: ⌘K
+        - generic [ref=f7e147]:
+          - button "All stores · 0" [ref=f7e149] [cursor=pointer]
+          - button "Today · Fri 2 Oct" [ref=f7e158] [cursor=pointer]
+          - button "Notifications" [ref=f7e164] [cursor=pointer]
+      - main [ref=f7e169]:
+        - generic [ref=f7e170]:
+          - generic [ref=f7e171]:
+            - generic [ref=f7e172]:
+              - generic [ref=f7e173]:
+                - generic [ref=f7e174]: Loyalty / Transactions
+                - heading "Points transactions" [level=1] [ref=f7e821]
+              - generic [ref=f7e176]:
+                - button "Export CSV" [ref=f7e822] [cursor=pointer]
+                - button "Manual adjustment" [ref=f7e823] [cursor=pointer]
+            - generic [ref=f7e179]:
+              - button "Overview" [ref=f7e180] [cursor=pointer]
+              - button "Rules" [ref=f7e181] [cursor=pointer]
+              - button "Rewards" [ref=f7e182] [cursor=pointer]
+              - button "Tiers" [ref=f7e183] [cursor=pointer]
+              - button "Transactions" [active] [ref=f7e184] [cursor=pointer]
+          - main [ref=f7e185]:
+            - generic [ref=f7e824]:
+              - generic [ref=f7e825]:
+                - generic [ref=f7e826]:
+                  - textbox "Customer, phone, order ref" [ref=f7e831]
+                  - combobox [ref=f7e833] [cursor=pointer]:
+                    - 'option "Type: All" [selected]'
+                    - 'option "Type: Earn"'
+                    - 'option "Type: Redeem"'
+                    - 'option "Type: Adjust"'
+                    - 'option "Type: Expire"'
+                  - combobox [ref=f7e835] [cursor=pointer]:
+                    - 'option "Store: All 12" [selected]'
+                    - 'option "Store: Bandra"'
+                    - 'option "Store: Indiranagar"'
+                    - 'option "Store: Koramangala"'
+                    - 'option "Store: Lower Parel"'
+                  - combobox [ref=f7e837] [cursor=pointer]:
+                    - 'option "Actor: Anyone" [selected]'
+                    - 'option "Actor: Sameer K. (Flagged)"'
+                    - 'option "Actor: System"'
+                    - 'option "Actor: Customer"'
+                  - button "Today" [ref=f7e838] [cursor=pointer]
+                - generic [ref=f7e840]: Today +0 pts / −0 pts
+              - generic [ref=f7e841]:
+                - generic [ref=f7e842]:
+                  - generic [ref=f7e843]: Time
+                  - generic [ref=f7e844]: Customer
+                  - generic [ref=f7e845]: Store
+                  - generic [ref=f7e846]: Type
+                  - generic [ref=f7e847]: Points
+                  - generic [ref=f7e848]: Reference
+                  - generic [ref=f7e849]: Balance
+                  - generic [ref=f7e850]: Actor
+                - generic [ref=f7e851]: No points transactions found matching your active filter criteria.
+                - generic [ref=f7e853]:
+                  - generic [ref=f7e854]: 0 transactions
+                  - generic [ref=f7e855]:
+                    - button [disabled] [ref=f7e856]
+                    - generic [ref=f7e859]: Page 1 of 1
+                    - button [disabled] [ref=f7e860]
+  - button "Open Next.js Dev Tools" [ref=f7e278] [cursor=pointer]
+  - alert [ref=f7e282]

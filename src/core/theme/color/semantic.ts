@@ -21,6 +21,9 @@ export const SemanticColors = {
   textMuted: AppPalette.gray600,
   textInverse: AppPalette.white,
   textInverseSecondary: AppPalette.sky300,
+  /** Figma color/text-inverse-muted: captions on navy cards. */
+  textInverseMuted: "#9FB6D6",
+  onPrimary: AppPalette.white,
   textBrand: AppPalette.navy800,
 
   // Borders & Dividers

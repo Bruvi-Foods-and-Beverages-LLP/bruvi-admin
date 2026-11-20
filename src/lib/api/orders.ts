@@ -11,6 +11,8 @@ import {
   BackendOrderDetail,
   CancelQuoteResponse,
   RefundQuoteResponse,
+  RefundPreviewResponse,
+  RefundRequestPayload,
 } from '@/features/orders/types';
 import { AdminOrderMapper } from '@/features/orders/mappers';
 
@@ -162,20 +164,22 @@ export const OrdersApi = {
   },
 
   /**
-   * Submit itemized refund
+   * Exact refund amounts and GST reversal (credit note) computed by the server; moves no money.
    */
-  async createRefund(id: string, payload: any): Promise<any> {
-    return apiClient.post(`/admin/orders/${id}/refunds`, payload, {
-      headers: {
-        'x-idempotency-key': crypto.randomUUID(),
-      },
-    });
+  async previewRefund(id: string, payload: RefundRequestPayload): Promise<RefundPreviewResponse> {
+    return apiClient.post<RefundPreviewResponse>(`/admin/orders/${id}/refund-preview`, payload);
   },
 
-  async processRefund(idOrPayload: any, maybePayload?: any): Promise<any> {
-    const id = typeof idOrPayload === 'string' ? idOrPayload : (idOrPayload.orderId || idOrPayload.orderNumber || idOrPayload.id);
-    const payload = maybePayload || idOrPayload;
-    return this.createRefund(id, payload);
+  /**
+   * Submit a refund. `idempotencyKey` must stay the same for every retry of the same refund
+   * (create it once per refund form), so a double click or a network retry never refunds twice.
+   */
+  async createRefund(id: string, payload: RefundRequestPayload, idempotencyKey: string): Promise<any> {
+    return apiClient.post(`/admin/orders/${id}/refunds`, payload, {
+      headers: {
+        'x-idempotency-key': idempotencyKey,
+      },
+    });
   },
 
   /**

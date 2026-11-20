@@ -1,0 +1,197 @@
+- generic [active] [ref=f2e1]:
+  - generic [ref=f2e2]:
+    - complementary [ref=f2e3]:
+      - link "HQ" [ref=f2e5] [cursor=pointer]:
+        - /url: /
+      - generic [ref=f2e16]:
+        - link "Dashboard" [ref=f2e18] [cursor=pointer]:
+          - /url: /
+        - generic [ref=f2e23]:
+          - generic [ref=f2e24]: Operations
+          - generic [ref=f2e26]:
+            - link "Orders" [ref=f2e27] [cursor=pointer]:
+              - /url: /orders
+            - link "Stores" [ref=f2e32] [cursor=pointer]:
+              - /url: /stores
+        - generic [ref=f2e40]:
+          - generic [ref=f2e41]: Menu
+          - generic [ref=f2e43]:
+            - link "Catalog" [ref=f2e44] [cursor=pointer]:
+              - /url: /catalog
+            - link "Recipes" [ref=f2e49] [cursor=pointer]:
+              - /url: /recipes
+        - generic [ref=f2e54]:
+          - generic [ref=f2e55]: Supply
+          - generic [ref=f2e57]:
+            - link "Inventory" [ref=f2e58] [cursor=pointer]:
+              - /url: /inventory
+            - link "Warehouse" [ref=f2e63] [cursor=pointer]:
+              - /url: /warehouse
+        - generic [ref=f2e68]:
+          - generic [ref=f2e69]: Growth
+          - generic [ref=f2e71]:
+            - link "Customers" [ref=f2e72] [cursor=pointer]:
+              - /url: /customers
+            - link "Marketing" [ref=f2e78] [cursor=pointer]:
+              - /url: /marketing
+            - link "BRUVI LAB" [ref=f2e83] [cursor=pointer]:
+              - /url: /lab
+            - link "Loyalty" [ref=f2e88] [cursor=pointer]:
+              - /url: /loyalty
+            - link "Subscriptions" [ref=f2e93] [cursor=pointer]:
+              - /url: /subscriptions
+        - generic [ref=f2e98]:
+          - generic [ref=f2e99]: Business
+          - generic [ref=f2e101]:
+            - link "Finance" [ref=f2e102] [cursor=pointer]:
+              - /url: /finance
+            - link "Analytics" [ref=f2e109] [cursor=pointer]:
+              - /url: /analytics
+            - link "Staff" [ref=f2e114] [cursor=pointer]:
+              - /url: /staff
+            - link "Settings" [ref=f2e121] [cursor=pointer]:
+              - /url: /settings
+      - button "Staff profile menu" [ref=f2e130] [cursor=pointer]:
+        - generic [ref=f2e131]: KR
+        - generic [ref=f2e132]:
+          - generic [ref=f2e133]: Kavya R
+          - generic [ref=f2e134]: Chief Operations Officer
+    - generic [ref=f2e137]:
+      - banner [ref=f2e138]:
+        - button "Search orders, stores, products, customers ⌘K" [ref=f2e140] [cursor=pointer]:
+          - generic [ref=f2e141]: Search orders, stores, products, customers
+          - generic [ref=f2e146]: ⌘K
+        - generic [ref=f2e147]:
+          - button "All stores · 0" [ref=f2e149] [cursor=pointer]
+          - button "Today · Fri 2 Oct" [ref=f2e158] [cursor=pointer]
+          - button "Notifications" [ref=f2e164] [cursor=pointer]
+      - main [ref=f2e169]:
+        - generic [ref=f2e170]:
+          - generic [ref=f2e171]:
+            - generic [ref=f2e172]:
+              - generic [ref=f2e173]: BRUVI LAB / Lab products / New batch
+              - generic [ref=f2e174]:
+                - heading "Create Lab product" [level=1] [ref=f2e175]
+                - generic [ref=f2e176]: Batch 08 · Draft
+            - generic [ref=f2e178]:
+              - button "Preview in app" [ref=f2e179] [cursor=pointer]
+              - button "Schedule pilot" [ref=f2e180] [cursor=pointer]
+          - generic [ref=f2e182]:
+            - generic [ref=f2e183]:
+              - generic [ref=f2e184]:
+                - generic [ref=f2e185]:
+                  - heading "Product & story" [level=2] [ref=f2e186]
+                  - paragraph [ref=f2e187]: What customers see on the app LAB shelf, kiosk and menu boards.
+                - generic [ref=f2e188]:
+                  - generic [ref=f2e189]:
+                    - generic [ref=f2e190]: Product name *
+                    - textbox "e.g. Pandan Coconut Cold Brew" [ref=f2e192]
+                  - generic [ref=f2e193]:
+                    - generic [ref=f2e194]: Batch no.
+                    - generic [ref=f2e195]:
+                      - textbox "08" [ref=f2e196]
+                      - generic [ref=f2e197]: auto
+                  - generic [ref=f2e198]:
+                    - generic [ref=f2e199]: Price *
+                    - generic [ref=f2e200]:
+                      - generic [ref=f2e201]: ₹
+                      - spinbutton "280" [ref=f2e202]
+                - generic [ref=f2e203]:
+                  - generic [ref=f2e204]:
+                    - generic [ref=f2e205]: Story copy
+                    - generic [ref=f2e206]: 0 / 220
+                  - textbox "Slow-steeped Dak Lak cold brew over pandan-infused coconut milk. Grassy, vanilla-sweet and nutty — our nod to Saigon’s street-side pandan waffles. Only two stores, two weeks." [ref=f2e208]
+                - generic [ref=f2e209]:
+                  - generic [ref=f2e210]: Hero image
+                  - generic [ref=f2e211] [cursor=pointer]:
+                    - generic [ref=f2e216]:
+                      - generic [ref=f2e217]: Upload hero image from your computer
+                      - generic [ref=f2e219]: Drag & drop image file or click to browse · High resolution 1:1 recommended
+                    - button "Upload" [ref=f2e220]
+              - generic [ref=f2e221]:
+                - generic [ref=f2e222]:
+                  - heading "Pilot window & recipe" [level=2] [ref=f2e223]
+                  - paragraph [ref=f2e224]: Limited runs sell out by design. Item auto-hides when the cap or end date is reached.
+                - generic [ref=f2e225]:
+                  - generic [ref=f2e226]:
+                    - generic [ref=f2e227]: Pilot dates
+                    - generic [ref=f2e228]:
+                      - textbox [ref=f2e229] [cursor=pointer]
+                      - generic [ref=f2e230]: –
+                      - textbox [ref=f2e231] [cursor=pointer]
+                    - generic [ref=f2e234]: 15 days · starts 2 days after Batch 07 ends
+                  - generic [ref=f2e235]:
+                    - generic [ref=f2e236]: Limited quantity
+                    - generic [ref=f2e237]:
+                      - spinbutton [ref=f2e238]: "900"
+                      - generic [ref=f2e239]: cups
+                    - generic [ref=f2e240]: ≈ 30 per store per day
+                - generic [ref=f2e241]:
+                  - generic [ref=f2e242]: Pilot stores
+                  - button "+ Add store" [ref=f2e244] [cursor=pointer]
+                - generic [ref=f2e246]:
+                  - generic [ref=f2e251]:
+                    - generic [ref=f2e252]: Recipe · Pandan Coconut Cold Brew v3
+                    - generic [ref=f2e253]: Cold brew 120 ml · pandan coconut milk 80 ml · ice 150 g · cost ₹62.40 → margin 0.0%
+                  - button "Open recipe →" [ref=f2e254] [cursor=pointer]
+              - generic [ref=f2e255]:
+                - generic [ref=f2e256]:
+                  - generic [ref=f2e257]:
+                    - heading "Feedback questions" [level=2] [ref=f2e258]
+                    - paragraph [ref=f2e259]: Asked in the app 30 min after pickup. Answers earn 10 pts.
+                  - button "+ Add question" [ref=f2e260] [cursor=pointer]
+                - generic [ref=f2e261]:
+                  - generic [ref=f2e262]:
+                    - generic [ref=f2e263]: 1 · How sweet was it?
+                    - generic [ref=f2e264]: Slider · 1–5 · required
+                  - generic [ref=f2e266]:
+                    - generic [ref=f2e267]:
+                      - generic [ref=f2e269] [cursor=pointer]
+                      - slider [ref=f2e270] [cursor=pointer]: "3"
+                    - generic [ref=f2e271]:
+                      - generic [ref=f2e272]: Not sweet
+                      - generic [ref=f2e273]: Just right
+                      - generic [ref=f2e274]: Too sweet
+                - generic [ref=f2e275]:
+                  - generic [ref=f2e276]:
+                    - generic [ref=f2e277]: 2 · Would you buy this again?
+                    - generic [ref=f2e278]: Yes / No · feeds the promote-to-menu decision (bar 60%)
+                  - generic [ref=f2e279]:
+                    - button "Yes" [ref=f2e280] [cursor=pointer]
+                    - button "No" [ref=f2e281] [cursor=pointer]
+            - generic [ref=f2e282]:
+              - generic [ref=f2e284]:
+                - generic [ref=f2e285]:
+                  - generic [ref=f2e286]: App teaser preview
+                  - generic [ref=f2e287]: Shows from 9 Oct
+                - generic [ref=f2e288]:
+                  - generic [ref=f2e289]:
+                    - generic [ref=f2e290]: Upload hero image from system
+                    - generic [ref=f2e295]: BRUVI LAB · Batch 08
+                  - generic [ref=f2e297]:
+                    - generic [ref=f2e298]: Coming Select pilot dates
+                    - heading "Pandan Coconut Cold Brew" [level=3] [ref=f2e299]
+                    - paragraph [ref=f2e300]: Grassy, vanilla-sweet and nutty. Only at Indiranagar & Bandra, only 900 cups.
+                    - generic [ref=f2e301]:
+                      - generic [ref=f2e302]: ₹280
+                      - button "Notify me" [ref=f2e303] [cursor=pointer]
+              - generic [ref=f2e304]:
+                - generic [ref=f2e305]:
+                  - heading "Ready to pilot" [level=3] [ref=f2e306]
+                  - generic [ref=f2e307]: 1 of 6
+                - generic [ref=f2e308]:
+                  - generic [ref=f2e309] [cursor=pointer]: Recipe approval pending (set recipe & cost)
+                  - generic [ref=f2e312] [cursor=pointer]: Price, dates & pilot stores required
+                  - generic [ref=f2e315] [cursor=pointer]: Feedback questions configured
+                  - generic [ref=f2e320] [cursor=pointer]: Confirm ingredient vendor PO
+                  - generic [ref=f2e323] [cursor=pointer]: Final hero photo (upload from system)
+                  - generic [ref=f2e326] [cursor=pointer]: Barista training at 0 store
+          - generic [ref=f2e329]:
+            - generic [ref=f2e330]:
+              - generic [ref=f2e332]: Unsaved changes
+              - generic [ref=f2e333]: · Batch 08 Draft
+            - generic [ref=f2e334]:
+              - button "Cancel" [ref=f2e335] [cursor=pointer]
+              - button "Save draft" [ref=f2e336] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=f2e342] [cursor=pointer]
+  - alert [ref=f2e346]

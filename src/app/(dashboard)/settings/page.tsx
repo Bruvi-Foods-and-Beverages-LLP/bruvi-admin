@@ -1,5 +1,6 @@
 import { ComingSoonModule } from "@/components/feedback/coming-soon-module";
 import type { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "HQ Settings & Policies · BRUVI HQ",
@@ -8,6 +9,16 @@ export const metadata: Metadata = {
 
 export default function SettingsPage() {
   return (
+    <div className="flex flex-col gap-6">
+      <Link
+        href="/settings/gst"
+        className="w-full max-w-[880px] mx-auto rounded-[16px] border border-[#dce2ea] bg-white p-5 flex flex-col gap-1 hover:bg-[#f5f7fa] transition-colors"
+      >
+        <span className="text-label text-[#0f2340]">GST</span>
+        <span className="text-body-s text-[#3f4b5e]">
+          Restaurant rate (5% or 18%), tax-inclusive menu prices, delivery fee treatment and who invoices.
+        </span>
+      </Link>
     <ComingSoonModule
       title="HQ Settings & Policies"
       category="Business"
@@ -20,6 +31,7 @@ export default function SettingsPage() {
         "Audit trail logs for all recipe price and catalog mutations",
       ]}
     />
+    </div>
   );
 }
 

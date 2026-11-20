@@ -2,9 +2,14 @@
 
 import * as React from "react";
 import { Order } from "@/types/orders";
-import { Switch } from "@/components/ui/switch";
-import { AlertTriangle, AlertOctagon, CheckCircle2, Loader2 } from "lucide-react";
+import {
+  AlertTriangle,
+  AlertOctagon,
+  CheckCircle2,
+  Loader2,
+} from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import { formatPaise, formatRate } from "@/lib/utils/money";
 
 import { OrdersApi } from "@/lib/api/orders";
 
@@ -16,6 +21,11 @@ export interface OrderCancelRefundModalProps {
   refundAmount?: number;
   items?: Array<{ orderItemId: string; qty: number }>;
   destination?: "ORIGINAL" | "WALLET";
+  /** Reason chosen on the refund page; the modal's own reasons are used otherwise. */
+  reasonCode?: string;
+  note?: string;
+  includeDeliveryFee?: boolean;
+  includeTip?: boolean;
   onSuccess?: (refundId: string, amount: number) => void;
 }
 
@@ -27,15 +37,25 @@ export function OrderCancelRefundModal({
   refundAmount,
   items,
   destination = "ORIGINAL",
+  reasonCode,
+  note,
+  includeDeliveryFee,
+  includeTip,
   onSuccess,
 }: OrderCancelRefundModalProps) {
   const [selectedReason, setSelectedReason] = React.useState("Customer left");
-  const [notifyCustomer, setNotifyCustomer] = React.useState(true);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [successInfo, setSuccessInfo] = React.useState<{
     refundId: string;
     amount: number;
   } | null>(null);
+
+  // One idempotency key per opened refund: retries and double clicks reuse it, so the server
+  // returns the refund it already made instead of refunding twice.
+  const refundKeyRef = React.useRef<string | null>(null);
+  React.useEffect(() => {
+    refundKeyRef.current = isOpen ? crypto.randomUUID() : null;
+  }, [isOpen]);
 
   // Close on Escape key
   React.useEffect(() => {
@@ -52,18 +72,31 @@ export function OrderCancelRefundModal({
 
   // Determine amounts
   const isFullRefund = mode === "cancel_and_refund" || !refundAmount;
-  const totalRefund = isFullRefund ? order.totalAmount : refundAmount;
+  // Exact paise from the server: a full refund is everything not refunded yet.
+  const money = order.money;
+  const remainingPaise = money ? money.totalPaise - money.refundedPaise : Math.round(order.totalAmount * 100);
+  const totalRefund = isFullRefund ? remainingPaise / 100 : refundAmount;
 
   // Summary items breakdown string
   const itemsSummary =
     order.items
-      ?.map((item) => `${item.quantity}× ${item.productName} ₹${item.totalPrice}`)
+      ?.map(
+        (item) => `${item.quantity}× ${item.productName} ₹${item.totalPrice}`,
+      )
       .join(" + ") || `${order.itemCount} items`;
 
-  const subtotal = order.subtotal || order.totalAmount - (order.taxAmount || 0);
-  const taxAmount = order.taxAmount || Math.round(subtotal * 0.05 * 100) / 100;
-  const roundOff =
-    order.totalAmount - (subtotal + taxAmount - (order.promoDiscount || 0));
+  // Every line below is a stored amount; nothing is derived, so there is no "round-off".
+  const gst = order.gst;
+  const gstRates = (gst?.rates ?? []).filter((r) => r.taxPaise > 0).map((r) => formatRate(r.ratePercent)).join(" + ");
+  const gstLabel = `GST${gstRates ? ` ${gstRates}` : ""}${gst?.pricesIncludeGst ? " (included)" : ""}`;
+  const breakdown: Array<{ label: string; paise: number }> = money
+    ? [
+        { label: "Discount", paise: -money.discountPaise },
+        { label: "Delivery fee", paise: money.deliveryFeePaise },
+        { label: "Tip", paise: money.tipPaise },
+        { label: "Already refunded", paise: -money.refundedPaise },
+      ].filter((l) => l.paise !== 0)
+    : [];
 
   // Reasons list (from Figma 225:102344)
   const reasons = ["Customer left", "Kitchen issue", "Duplicate", "Other"];
@@ -77,41 +110,43 @@ export function OrderCancelRefundModal({
 
   const firstItem = order.items?.[0];
   const wasteHeader = firstItem
-    ? `${firstItem.quantity}× ${firstItem.productName} already made → logged as waste`
-    : "Items already made → logged as waste";
-
-  const wasteSubtext =
-    order.orderNumber === "Q-31"
-      ? "Recipe cost ₹112.60 (2 × ₹56.30). Bạc Xỉu and Bánh Mì Paneer tickets are voided on KDS."
-      : `Recipe cost ~₹${(order.subtotal * 0.25).toFixed(2)}. Unfinished item tickets are voided immediately on KDS stations.`;
-
-  const customerPhone = order.customerPhone || "+91 99••• ••087";
-  const customerTarget =
-    order.channel === "QR dine-in" ? order.customerName : order.customerName;
+    ? `${firstItem.quantity}× ${firstItem.productName} may already be made`
+    : "Items may already be made";
 
   const handleConfirm = async () => {
     setIsSubmitting(true);
     try {
-      let refundId = "RF-30431";
+      let refundId = "";
 
       if (mode === "cancel_and_refund") {
-        await OrdersApi.cancelOrder(
+        const res: any = await OrdersApi.cancelOrder(
           order.id,
           selectedReason,
-          `Cancelled via confirmation modal: ${selectedReason}. Notified: ${notifyCustomer ? "Yes" : "No"}`
+          `Cancelled from admin: ${selectedReason}`,
         );
+        refundId =
+          res?.refund?.refund_number ||
+          res?.refund_number ||
+          res?.refundNumber ||
+          "";
       } else {
         const refundPayload = {
-          items: items || (order.items || []).map((it) => ({ orderItemId: it.id, qty: it.quantity })),
-          includeDeliveryFee: isFullRefund,
+          items:
+            items ||
+            (order.items || []).map((it) => ({
+              orderItemId: it.id,
+              qty: it.quantity,
+            })),
+          includeDeliveryFee: includeDeliveryFee ?? isFullRefund,
+          includeTip: includeTip ?? false,
           destination,
-          reasonCode: selectedReason,
-          note: `Refund via confirmation modal: ${selectedReason}. Notified: ${notifyCustomer ? "Yes" : "No"}`,
+          reasonCode: reasonCode || selectedReason,
+          note: note || `Refund from admin: ${reasonCode || selectedReason}`,
         };
-        const res = await OrdersApi.createRefund(order.id, refundPayload);
-        if (res?.refund_number) {
-          refundId = res.refund_number;
-        }
+        const key = refundKeyRef.current ?? (refundKeyRef.current = crypto.randomUUID());
+        const res = await OrdersApi.createRefund(order.id, refundPayload, key);
+        refundId =
+          res?.refund_number || res?.refundNumber || res?.refund_id || "";
       }
 
       setSuccessInfo({
@@ -123,7 +158,11 @@ export function OrderCancelRefundModal({
         onSuccess(refundId, totalRefund);
       }
     } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : "Error processing cancellation or refund.");
+      alert(
+        err instanceof Error
+          ? err.message
+          : "Error processing cancellation or refund.",
+      );
       setIsSubmitting(false);
     }
   };
@@ -144,12 +183,20 @@ export function OrderCancelRefundModal({
             </div>
             <div className="flex flex-col gap-1.5">
               <h3 className="text-[22px] font-extrabold text-[#0f2340]">
-                {mode === "cancel_and_refund" ? "Order Cancelled & Refunded" : "Refund Processed"}
+                {mode === "cancel_and_refund"
+                  ? "Order Cancelled & Refunded"
+                  : "Refund Processed"}
               </h3>
               <p className="text-[14px] text-[#3f4b5e] max-w-sm leading-relaxed">
-                Refund <span className="font-bold text-[#0f2340]">{successInfo.refundId}</span> of{" "}
-                <span className="font-bold text-[#0f2340]">₹{successInfo.amount.toFixed(2)}</span> has been recorded.
-                {notifyCustomer && " Customer and store stations have been notified."}
+                Refund{" "}
+                <span className="font-bold text-[#0f2340]">
+                  {successInfo.refundId || "—"}
+                </span>{" "}
+                of{" "}
+                <span className="font-bold text-[#0f2340]">
+                  ₹{successInfo.amount.toFixed(2)}
+                </span>{" "}
+                has been recorded.
               </p>
             </div>
             <button
@@ -179,49 +226,55 @@ export function OrderCancelRefundModal({
                 </h2>
                 <p className="text-[14px] font-normal leading-[20px] text-[#3f4b5e]">
                   {order.customerName} · {order.storeName}
-                  {order.isDelayed || order.status.includes("Delayed") ? " · delayed" : ""}. Refund goes back to the original{" "}
-                  {order.paymentMethod} payment.
+                  {order.isDelayed || order.status.includes("Delayed")
+                    ? " · delayed"
+                    : ""}
+                  .{" "}
+                  {destination === "WALLET"
+                    ? "Refund goes to the customer's BRUVI Wallet."
+                    : `Refund goes back to the original ${order.paymentMethod ?? ""} payment.`}
                 </p>
               </div>
             </div>
 
             {/* 2. Body Frame (Figma 225:102341, 560x423) */}
             <div className="p-6 flex flex-col gap-4">
-              {/* Reason Selector (Figma 225:102342) */}
-              <div className="flex flex-col gap-2">
-                <label className="text-[14px] font-bold text-[#0f2340]">Reason</label>
-                <div className="flex flex-wrap gap-2">
-                  {reasons.map((r) => {
-                    const isActive = selectedReason === r;
-                    return (
-                      <button
-                        key={r}
-                        type="button"
-                        onClick={() => setSelectedReason(r)}
-                        className={cn(
-                          "h-9 px-[14px] rounded-[18px] text-[14px] font-bold transition-all cursor-pointer flex items-center justify-center",
-                          isActive
-                            ? "bg-[#0f2340] text-white"
-                            : "bg-white text-[#0f2340] border border-[#dce2ea] hover:border-[#1c3a66]"
-                        )}
-                      >
-                        {r}
-                      </button>
-                    );
-                  })}
+              {/* Reason Selector (Figma 225:102342); the refund page picks its own reason. */}
+              {!reasonCode && (
+                <div className="flex flex-col gap-2">
+                  <label className="text-[14px] font-bold text-[#0f2340]">
+                    Reason
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {reasons.map((r) => {
+                      const isActive = selectedReason === r;
+                      return (
+                        <button
+                          key={r}
+                          type="button"
+                          onClick={() => setSelectedReason(r)}
+                          className={cn(
+                            "h-9 px-[14px] rounded-[18px] text-[14px] font-bold transition-all cursor-pointer flex items-center justify-center",
+                            isActive
+                              ? "bg-[#0f2340] text-white"
+                              : "bg-white text-[#0f2340] border border-[#dce2ea] hover:border-[#1c3a66]",
+                          )}
+                        >
+                          {r}
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
+              )}
 
-              {/* Waste Notice Banner (Figma 225:102353, 512x78) */}
-              {hasPreparedItems && (
+              {/* Waste Notice Banner (Figma 225:102353, 512x78): cancelling only */}
+              {mode === "cancel_and_refund" && hasPreparedItems && (
                 <div className="bg-[#fef4e6] border border-[#fed7aa] rounded-[16px] p-3 flex gap-3 items-start">
                   <AlertTriangle className="w-5 h-5 text-[#9a5b00] shrink-0 mt-0.5" />
                   <div className="flex flex-col gap-0.5 min-w-0">
                     <span className="text-[14px] font-bold text-[#0f2340] leading-tight">
                       {wasteHeader}
-                    </span>
-                    <span className="text-[12px] font-medium text-[#3f4b5e] leading-snug">
-                      {wasteSubtext}
                     </span>
                   </div>
                 </div>
@@ -229,32 +282,33 @@ export function OrderCancelRefundModal({
 
               {/* Breakdown Box (Figma 225:102363, 512x149) */}
               <div className="bg-[#f5f7fa] rounded-[16px] p-4 flex flex-col gap-2">
-                {/* Items line */}
-                <div className="flex justify-between items-start text-[14px] gap-2">
-                  <span className="text-[#3f4b5e] line-clamp-1 flex-1 min-w-0">
-                    {itemsSummary}
-                  </span>
-                  <span className="font-bold text-[#0f2340] shrink-0">
-                    ₹{subtotal.toFixed(2)}
-                  </span>
-                </div>
+                {/* Order lines describe a full refund; a partial one is itemised on the refund page. */}
+                {isFullRefund && (
+                  <>
+                    <div className="flex justify-between items-start text-[14px] gap-2">
+                      <span className="text-[#3f4b5e] line-clamp-1 flex-1 min-w-0">
+                        {itemsSummary}
+                      </span>
+                      <span className="font-bold text-[#0f2340] shrink-0">
+                        {money ? formatPaise(money.itemTotalPaise) : `₹${order.subtotal.toFixed(2)}`}
+                      </span>
+                    </div>
 
-                {/* GST line */}
-                <div className="flex justify-between items-center text-[14px]">
-                  <span className="text-[#3f4b5e]">GST 5%</span>
-                  <span className="font-bold text-[#0f2340]">
-                    ₹{taxAmount.toFixed(2)}
-                  </span>
-                </div>
+                    {breakdown.map((line) => (
+                      <div key={line.label} className="flex justify-between items-center text-[14px]">
+                        <span className="text-[#3f4b5e]">{line.label}</span>
+                        <span className="font-bold text-[#0f2340]">{formatPaise(line.paise)}</span>
+                      </div>
+                    ))}
 
-                {/* Round-off (as charged) */}
-                {Math.abs(roundOff) > 0.01 && (
-                  <div className="flex justify-between items-center text-[14px]">
-                    <span className="text-[#3f4b5e]">Round-off (as charged)</span>
-                    <span className="font-bold text-[#0f2340]">
-                      {roundOff > 0 ? `+₹${roundOff.toFixed(2)}` : `−₹${Math.abs(roundOff).toFixed(2)}`}
-                    </span>
-                  </div>
+                    {/* GST as charged (reversed on the credit note for this refund) */}
+                    <div className="flex justify-between items-center text-[14px]">
+                      <span className="text-[#3f4b5e]">{gstLabel}</span>
+                      <span className="font-bold text-[#0f2340]">
+                        {money ? formatPaise(money.taxPaise) : `₹${(order.taxAmount || 0).toFixed(2)}`}
+                      </span>
+                    </div>
+                  </>
                 )}
 
                 {/* Full Refund Total */}
@@ -266,24 +320,6 @@ export function OrderCancelRefundModal({
                     ₹{totalRefund.toFixed(2)}
                   </span>
                 </div>
-              </div>
-
-              {/* Notify table & customer Switch (Figma 225:102376, 512x36) */}
-              <div className="flex items-center justify-between gap-4 py-1">
-                <div className="flex flex-col gap-0.5 min-w-0">
-                  <span className="text-[14px] font-bold text-[#0f2340]">
-                    Notify table & customer
-                  </span>
-                  <span className="text-[12px] font-medium text-[#3f4b5e] truncate">
-                    SMS to {customerPhone} and alert floor staff for {customerTarget}
-                  </span>
-                </div>
-
-                <Switch
-                  checked={notifyCustomer}
-                  onCheckedChange={setNotifyCustomer}
-                  aria-label="Notify table and customer"
-                />
               </div>
             </div>
 
@@ -312,8 +348,8 @@ export function OrderCancelRefundModal({
                 ) : (
                   <span>
                     {mode === "cancel_and_refund"
-                      ? `Cancel & refund ₹${Math.round(totalRefund)}`
-                      : `Confirm & refund ₹${Math.round(totalRefund)}`}
+                      ? `Cancel & refund ₹${totalRefund.toFixed(2)}`
+                      : `Confirm & refund ₹${totalRefund.toFixed(2)}`}
                   </span>
                 )}
               </button>

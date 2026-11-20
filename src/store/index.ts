@@ -8,6 +8,13 @@ import dashboardReducer from "./slices/dashboard-slice";
 import catalogReducer from "./slices/catalog-slice";
 import modifierGroupsReducer from "./slices/modifier-groups-slice";
 import ordersReducer from "./slices/orders-slice";
+import customersReducer from "./slices/customers-slice";
+import storeOverridesReducer from "./slices/store-overrides-slice";
+import pricingReducer from "./slices/pricing-slice";
+import loyaltyReducer from "./slices/loyalty-slice";
+import marketingReducer from "./slices/marketing-slice";
+import labReducer from "./slices/lab-slice";
+import membershipReducer from "./slices/membership-slice";
 
 export const store = configureStore({
   reducer: {
@@ -18,7 +25,14 @@ export const store = configureStore({
     dashboard: dashboardReducer,
     catalog: catalogReducer,
     orders: ordersReducer,
+    customers: customersReducer,
     modifierGroups: modifierGroupsReducer,
+    storeOverrides: storeOverridesReducer,
+    pricing: pricingReducer,
+    loyalty: loyaltyReducer,
+    marketing: marketingReducer,
+    lab: labReducer,
+    membership: membershipReducer,
   },
   devTools:
     process.env.NODE_ENV !== "production" ||

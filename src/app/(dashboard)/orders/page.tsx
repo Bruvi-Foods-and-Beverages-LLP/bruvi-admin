@@ -3,6 +3,7 @@
 import * as React from "react";
 import { useAppDispatch } from "@/store";
 import { fetchOrders } from "@/store/slices/orders-slice";
+import { useOrderEvents } from "@/hooks/use-order-events";
 import { OrdersPageHeader } from "@/components/orders/orders-page-header";
 import { OrdersTabBar } from "@/components/orders/orders-tab-bar";
 import { OrdersFilterToolbar } from "@/components/orders/orders-filter-toolbar";
@@ -16,23 +17,43 @@ import { OrdersPaginationFooter } from "@/components/orders/orders-pagination-fo
 export default function OrdersPage() {
   const dispatch = useAppDispatch();
 
-  // Load initial orders stream
+  // Live updates: the backend pushes every order change (SSE), so the list refreshes the
+  // moment a customer pays or picks up. Bursts are coalesced into one refetch.
+  const pushTimer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const onOrderEvent = React.useCallback(() => {
+    if (pushTimer.current) return;
+    pushTimer.current = setTimeout(() => {
+      pushTimer.current = null;
+      dispatch(fetchOrders());
+    }, 250);
+  }, [dispatch]);
+  const { connected } = useOrderEvents(onOrderEvent);
+
   React.useEffect(() => {
     dispatch(fetchOrders());
+  }, [dispatch]);
 
-    // Near-live refresh: customer actions (e.g. "I've picked it up") show up within
-    // seconds. Skipped while the tab is hidden and refreshed as soon as it is visible.
+  // Fallback polling: every 3 s without the live stream, every 30 s with it. Skipped while
+  // the tab is hidden and refreshed as soon as it is visible again.
+  React.useEffect(() => {
     const refresh = () => {
       if (document.visibilityState === "visible") dispatch(fetchOrders());
     };
-    const interval = setInterval(refresh, 3000);
+    const interval = setInterval(refresh, connected ? 30_000 : 3_000);
     document.addEventListener("visibilitychange", refresh);
 
     return () => {
       clearInterval(interval);
       document.removeEventListener("visibilitychange", refresh);
     };
-  }, [dispatch]);
+  }, [dispatch, connected]);
+
+  React.useEffect(
+    () => () => {
+      if (pushTimer.current) clearTimeout(pushTimer.current);
+    },
+    [],
+  );
 
   return (
     <div className="flex flex-col gap-6 w-full max-w-[1136px] mx-auto pb-10">

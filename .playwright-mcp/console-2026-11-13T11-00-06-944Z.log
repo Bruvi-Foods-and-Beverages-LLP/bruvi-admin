@@ -1,0 +1,6 @@
+[    1322ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[    1362ms] [LOG] [HMR] connected @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[    1565ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[    1621ms] [LOG] [Fast Refresh] done in 156ms @ http://localhost:3001/_next/static/chunks/0fsu_next_dist_1cq5894bmxvch._.js:719
+[    5852ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_VariableFont_wdth%2Cwght-s.p.09nwgo1rywamy.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/lab/new:0
+[    5852ms] [WARNING] The resource http://localhost:3001/_next/static/media/Archivo_Italic_VariableFont_wdth%2Cwght-s.p.3cp-88p9nhsl1.ttf was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3001/lab/new:0
