@@ -31,6 +31,12 @@ async function handler(
   const headers = new Headers(request.headers);
   headers.set("x-forwarded-host", request.headers.get("host") || "localhost");
   headers.delete("host");
+  // Remove incoming accept-encoding so Node fetch manages decoding cleanly without
+  // leaking compressed (zstd/br/gzip) binary payloads through NextResponse
+  headers.delete("accept-encoding");
+  if (["GET", "HEAD"].includes(request.method)) {
+    headers.delete("content-length");
+  }
 
   // Enterprise Token Ingestion:
   // If no explicit Authorization header was provided in the request,
@@ -58,6 +64,8 @@ async function handler(
     responseHeaders.delete("content-length");
     responseHeaders.delete("transfer-encoding");
     responseHeaders.delete("connection");
+    // Strip upstream CSP so it doesn't conflict with Next.js edge middleware CSP
+    responseHeaders.delete("content-security-policy");
 
     // Live event streams (SSE) pass through untouched: no-transform stops any compression
     // layer from buffering them, and X-Accel-Buffering keeps nginx from holding events back.

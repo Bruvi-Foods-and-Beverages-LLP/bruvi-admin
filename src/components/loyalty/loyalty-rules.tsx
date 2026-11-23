@@ -7,71 +7,157 @@ import {
   fetchLoyaltyRules,
   updateLoyaltyRule,
   createLoyaltyRule,
-  setIsCreatingNewRule,
 } from "@/store/slices/loyalty-slice";
 import type { LoyaltyRule } from "@/types/loyalty";
 
 export function LoyaltyRules() {
   const dispatch = useAppDispatch();
-  const { earnRules, burnRules, isLoading, isCreatingNewRule } = useAppSelector((state) => state.loyalty);
+  const { earnRules, burnRules, isLoading } = useAppSelector((state) => state.loyalty);
 
-  const rules = earnRules;
+  // Exact 6 default rules matching Figma node 474:246374 specifications
+  const defaultEarnRules: LoyaltyRule[] = useMemo(
+    () => [
+      {
+        id: "rule_base_spend",
+        name: "Base earn",
+        description: "Earn 1 pt per ₹20 net spend on all orders",
+        rule_type: "BASE_EARN",
+        category: "EARN",
+        rate_value: 1.0,
+        is_active: true,
+        conditions: {
+          applies_to: "All members · net spend",
+          channels: ["App", "Counter", "Kiosk", "Dine-in QR", "Delivery"],
+          stores: "All stores",
+        },
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      },
+      {
+        id: "rule_tier_gold",
+        name: "Gold tier multiplier",
+        description: "1.25× multiplier on app orders (6.25 pts / ₹100)",
+        rule_type: "TIER_MULTIPLIER",
+        category: "TIER",
+        rate_value: 1.25,
+        is_active: true,
+        conditions: {
+          applies_to: "Gold · app only",
+          channels: ["App"],
+          stores: "All stores",
+        },
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      },
+      {
+        id: "rule_tier_platinum",
+        name: "Platinum tier multiplier",
+        description: "1.5× multiplier on app orders (7.5 pts / ₹100)",
+        rule_type: "TIER_MULTIPLIER",
+        category: "TIER",
+        rate_value: 1.5,
+        is_active: true,
+        conditions: {
+          applies_to: "Platinum · app only",
+          channels: ["App"],
+          stores: "All stores",
+        },
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      },
+      {
+        id: "rule_lab_promo",
+        name: "Double points on LAB items",
+        description: "Double points on all limited-run LAB items",
+        rule_type: "CATEGORY_PROMO",
+        category: "EARN",
+        rate_value: 2.0,
+        is_active: true,
+        conditions: {
+          applies_to: "LAB · 26 Sep – 10 Oct",
+          starts_at: "2026-09-26",
+          ends_at: "2026-10-10",
+          channels: ["App", "Counter", "Kiosk", "Dine-in QR"],
+          stores: "6 LAB stores",
+          stores_summary:
+            "Indiranagar, Koramangala, Bandra, Lower Parel, Cyber Hub, Connaught Place",
+          stack_with_tier: true,
+          is_promo: true,
+        },
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      },
+      {
+        id: "rule_birthday",
+        name: "Birthday bonus",
+        description: "Free drink voucher + 200 bonus points on birthday month",
+        rule_type: "BONUS_EVENT",
+        category: "BONUS",
+        rate_value: 200,
+        is_active: true,
+        conditions: {
+          applies_to: "Birthday month · 1×/yr",
+          channels: ["App"],
+          stores: "All stores",
+        },
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      },
+      {
+        id: "rule_referral",
+        name: "Referral bonus",
+        description: "Earn 300 pts when referred friend completes first order",
+        rule_type: "BONUS_EVENT",
+        category: "BONUS",
+        rate_value: 300,
+        is_active: true,
+        conditions: {
+          applies_to: "Referrer · 1st order",
+          channels: ["App"],
+          stores: "All stores",
+        },
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      },
+    ],
+    [],
+  );
+
+  const rules = earnRules.length > 0 ? earnRules : defaultEarnRules;
 
   // Selected rule for right-panel editing
-  const [selectedRuleId, setSelectedRuleId] = useState<string>("");
+  const [selectedRuleId, setSelectedRuleId] = useState<string>("rule_lab_promo");
   const [isCreatingNew, setIsCreatingNew] = useState<boolean>(false);
 
   // Form state for right side panel
   const [formData, setFormData] = useState({
-    name: "New earn rule",
-    rateValue: 1.0,
-    appliesTo: "All members · net spend",
+    name: "Double points on LAB",
+    rateValue: 2.0,
+    appliesTo: "LAB category",
     startsAt: "2026-09-26",
     endsAt: "2026-10-10",
     channels: ["App", "Counter", "Kiosk", "Dine-in QR"],
-    stores: "All stores",
-    storesSummary: "All Bruvi coffee stores nationwide",
+    stores: "6 LAB stores",
+    storesSummary: "Indiranagar, Koramangala, Bandra, Lower Parel, Cyber Hub, Connaught Place",
     stackWithTier: true,
     isActive: true,
   });
 
   const [isDirty, setIsDirty] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
-  const [isEditingBurnRules, setIsEditingBurnRules] = useState(false);
 
-  const burnRulesState = useMemo(() => {
-    return {
-      pointValue: burnRules ? `1 pt ≈ ₹${burnRules.pointValueInr.toFixed(2)}` : "1 pt ≈ ₹0.10",
-      minRedeem: burnRules ? `${burnRules.minRedeemPoints} pts` : "120 pts",
-      maxRewards: burnRules ? `Max ${burnRules.maxRewardsPerOrder}` : "Max 2",
-      earnOnRedeemed: "No",
-    };
-  }, [burnRules]);
+  // Burn rules state
+  const [burnRulesState, setBurnRulesState] = useState({
+    pointValue: "1 pt ≈ ₹0.10",
+    minRedeem: "120 pts (Extra shot)",
+    maxRewards: "Max 2",
+    earnOnRedeemed: "No",
+  });
+  const [isEditingBurnRules, setIsEditingBurnRules] = useState(false);
 
   useEffect(() => {
     dispatch(fetchLoyaltyRules());
   }, [dispatch]);
-
-  const handleStartCreate = React.useCallback(() => {
-    setIsCreatingNew(true);
-    setSelectedRuleId("");
-  }, []);
-
-  // Handle header "New rule" trigger
-  useEffect(() => {
-    if (isCreatingNewRule) {
-      handleStartCreate();
-      dispatch(setIsCreatingNewRule(false));
-    }
-  }, [isCreatingNewRule, dispatch, handleStartCreate]);
-
-  // Set initial selected rule when rules load
-  useEffect(() => {
-    if (rules.length > 0 && !selectedRuleId && !isCreatingNew) {
-      const preferred = rules.find((r) => r.id === "rule_lab_promo") || rules[0];
-      setSelectedRuleId(preferred.id);
-    }
-  }, [rules, selectedRuleId, isCreatingNew]);
 
   // Load selected rule into form
   useEffect(() => {
@@ -115,6 +201,11 @@ export function LoyaltyRules() {
   const handleSelectRule = (rule: LoyaltyRule) => {
     setIsCreatingNew(false);
     setSelectedRuleId(rule.id);
+  };
+
+  const handleStartCreate = () => {
+    setIsCreatingNew(true);
+    setSelectedRuleId("");
   };
 
   const handleChannelToggle = (channelName: string) => {
@@ -267,26 +358,25 @@ export function LoyaltyRules() {
                 (rule.id === "rule_base_spend"
                   ? "All members · net spend"
                   : rule.id === "rule_tier_gold"
-                  ? "Gold · app only"
-                  : rule.id === "rule_tier_platinum"
-                  ? "Platinum · app only"
-                  : rule.id === "rule_lab_promo"
-                  ? "LAB · 26 Sep – 10 Oct"
-                  : rule.id === "rule_birthday"
-                  ? "Birthday month · 1×/yr"
-                  : rule.id === "rule_referral"
-                  ? "Referrer · 1st order"
-                  : "All orders");
+                    ? "Gold · app only"
+                    : rule.id === "rule_tier_platinum"
+                      ? "Platinum · app only"
+                      : rule.id === "rule_lab_promo"
+                        ? "LAB · 26 Sep – 10 Oct"
+                        : rule.id === "rule_birthday"
+                          ? "Birthday month · 1×/yr"
+                          : rule.id === "rule_referral"
+                            ? "Referrer · 1st order"
+                            : "All orders");
 
               return (
                 <div
                   key={rule.id}
                   onClick={() => handleSelectRule(rule)}
-                  className={`h-12 flex items-center gap-4 cursor-pointer transition-all ${
-                    isSelected
-                      ? "bg-[#e8f5fd] border-l-[3px] border-l-[#1c3a66] pl-[17px] pr-5"
-                      : "hover:bg-[#f8fafc] px-5"
-                  }`}
+                  className={`h-12 px-5 flex items-center gap-4 cursor-pointer transition-colors ${isSelected
+                    ? "bg-[#f2f6fb] ring-1 ring-inset ring-[#1c3a66]"
+                    : "hover:bg-[#f8fafc]"
+                    }`}
                 >
                   {/* Column 1: Rule Name + optional Promo badge (w 278px) */}
                   <div className="w-[278px] shrink-0 flex items-center gap-2 overflow-hidden">
@@ -313,7 +403,7 @@ export function LoyaltyRules() {
                   {/* Column 4: Status (w 96px, pill badge) */}
                   <div className="w-[96px] shrink-0 flex items-center">
                     {isSelected ? (
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-[12px] bg-[#e4f0fa] text-[#22629e] text-[12px] font-bold leading-[16px] font-manrope">
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-[12px] bg-[#e8f1fd] text-[#1c64f2] text-[12px] font-bold leading-[16px] font-manrope">
                         Editing
                       </span>
                     ) : rule.is_active ? (
@@ -574,11 +664,10 @@ export function LoyaltyRules() {
                     key={channel}
                     type="button"
                     onClick={() => handleChannelToggle(channel)}
-                    className={`h-9 px-3 rounded-[18px] text-[14px] font-bold leading-[20px] font-manrope transition-all flex items-center gap-1.5 cursor-pointer ${
-                      isSelected
-                        ? "bg-[#1c3a66] text-white shadow-2xs"
-                        : "border border-[#bcc6d3] text-[#3f4b5e] hover:bg-gray-50 bg-white"
-                    }`}
+                    className={`h-9 px-3 rounded-[18px] text-[14px] font-bold leading-[20px] font-manrope transition-all flex items-center gap-1.5 cursor-pointer ${isSelected
+                      ? "bg-[#1c3a66] text-white shadow-2xs"
+                      : "border border-[#bcc6d3] text-[#3f4b5e] hover:bg-gray-50 bg-white"
+                      }`}
                   >
                     {isSelected && <Check className="w-3.5 h-3.5 stroke-[2.5]" />}
                     <span>{channel}</span>
@@ -631,14 +720,12 @@ export function LoyaltyRules() {
                 setFormData((prev) => ({ ...prev, stackWithTier: !prev.stackWithTier }));
                 setIsDirty(true);
               }}
-              className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                formData.stackWithTier ? "bg-[#1c3a66]" : "bg-[#dce2ea]"
-              }`}
+              className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${formData.stackWithTier ? "bg-[#1c3a66]" : "bg-[#dce2ea]"
+                }`}
             >
               <span
-                className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                  formData.stackWithTier ? "translate-x-5" : "translate-x-0"
-                }`}
+                className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${formData.stackWithTier ? "translate-x-5" : "translate-x-0"
+                  }`}
               />
             </button>
           </div>
