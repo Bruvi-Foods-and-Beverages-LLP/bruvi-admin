@@ -9,8 +9,8 @@ const envSchema = z.object({
   NEXT_PUBLIC_APP_URL: z.string().url().default("http://localhost:3001"),
   NEXT_PUBLIC_APP_ENV: z.enum(["development", "staging", "production", "test"]).default("staging"),
   APP_ENV: z.enum(["development", "staging", "production", "test"]).default("staging"),
-  NEXT_PUBLIC_SUPABASE_URL: z.string().url().default("https://cjqmnpiqhrxzuoaqzvxm.supabase.co"),
-  NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1).default("sb_publishable_t7Wkay3rmk9cmon4T1W0fQ_C5QyWfUu"),
+  NEXT_PUBLIC_SUPABASE_URL: z.string().url().optional(),
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().optional(),
   BACKEND_API_URL: z.string().url().default("https://staging.bruvi.in/v1"),
   // Server-only; not sent by the BFF today. No baked-in default: the backend ignores weak values anyway.
   INTERNAL_API_SECRET: z.string().default(""),
