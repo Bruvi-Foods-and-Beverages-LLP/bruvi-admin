@@ -120,14 +120,13 @@ The repository follows a multi-tier branch deployment model:
 | :--- | :--- | :--- |
 | `development` | Development (`dev-admin.bruvi.com`) | Active feature development and fast integration testing. |
 | `staging` | Staging (`staging-admin.bruvi.com`) | Release candidates, QA validation, and pre-production testing. |
-| `production` | Production (`admin.bruvi.com`) | Live enterprise deployment serving active outlets and operations. |
-| `main` | Default Repository Trunk | Stable release coordination and synced production state. |
+| `production` | Production (`admin.bruvi.com`) | Default branch & live enterprise deployment serving active outlets and operations. |
 
 ### Pull Request & Promotion Workflow
 1. Feature branches branch off `development`.
 2. PRs are reviewed and merged into `development`.
 3. Tested versions in `development` are promoted to `staging` for QA sign-off.
-4. Validated releases are promoted to `production` and fast-forwarded to `main`.
+4. Validated releases are promoted to `production`.
 
 ---
 
