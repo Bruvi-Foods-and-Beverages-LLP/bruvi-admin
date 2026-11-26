@@ -1,37 +1,12 @@
-import { ComingSoonModule } from "@/components/feedback/coming-soon-module";
 import type { Metadata } from "next";
-import Link from "next/link";
+import { SettingsGeneralView } from "@/components/settings/settings-general-view";
 
 export const metadata: Metadata = {
-  title: "HQ Settings & Policies · BRUVI HQ",
-  description: "Global corporate configuration, tax rules, hardware peripherals, and security.",
+  title: "General Settings · BRUVI HQ",
+  description:
+    "Company profile, admin display scaling, order channel prefixes, and default business hours.",
 };
 
 export default function SettingsPage() {
-  return (
-    <div className="flex flex-col gap-6">
-      <Link
-        href="/settings/gst"
-        className="w-full max-w-[880px] mx-auto rounded-[16px] border border-[#dce2ea] bg-white p-5 flex flex-col gap-1 hover:bg-[#f5f7fa] transition-colors"
-      >
-        <span className="text-label text-[#0f2340]">GST</span>
-        <span className="text-body-s text-[#3f4b5e]">
-          Restaurant rate (5% or 18%), tax-inclusive menu prices, delivery fee treatment and who invoices.
-        </span>
-      </Link>
-    <ComingSoonModule
-      title="HQ Settings & Policies"
-      category="Business"
-      iconName="sun"
-      description="Corporate system preferences: multi-entity GSTIN numbers, currency formats, thermal kitchen printer ESC/POS configurations, and cryptographic security."
-      features={[
-        "Global company profile & FSSAI / legal tax entity management",
-        "Peripheral hardware drivers (Thermal receipt printers, Bluetooth scales)",
-        "Enterprise RBAC permission matrix & API key provisioning",
-        "Audit trail logs for all recipe price and catalog mutations",
-      ]}
-    />
-    </div>
-  );
+  return <SettingsGeneralView />;
 }
-

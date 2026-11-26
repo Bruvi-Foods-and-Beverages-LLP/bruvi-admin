@@ -9,7 +9,7 @@ export interface UploadImageOptions {
 
 export const StorageApi = {
   /**
-   * Upload an image file through the authenticated admin proxy to Supabase Cloud Storage
+   * Upload an image file through the authenticated admin proxy to AWS S3 Cloud Storage
    */
   async uploadImage(
     file: File,

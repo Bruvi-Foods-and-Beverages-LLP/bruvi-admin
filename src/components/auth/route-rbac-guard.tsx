@@ -3,10 +3,12 @@
 import * as React from "react";
 import { usePathname } from "next/navigation";
 import { useAuthStore } from "@/stores/use-auth-store";
-import { SIDEBAR_NAV_SECTIONS, DASHBOARD_ITEM, canAccessNavItem } from "@/config/sidebar-navigation";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { ShieldX, ArrowLeft, KeyRound } from "lucide-react";
+import {
+  SIDEBAR_NAV_SECTIONS,
+  DASHBOARD_ITEM,
+  canAccessNavItem,
+} from "@/config/sidebar-navigation";
+import { NoPermissionView } from "@/components/feedback/no-permission-view";
 
 export interface RouteRbacGuardProps {
   children: React.ReactNode;
@@ -23,17 +25,40 @@ export function RouteRbacGuard({ children }: RouteRbacGuardProps) {
     return <>{children}</>;
   }
 
+  const roleSlug = (user?.role ?? "staff").toLowerCase();
+
   // 1. Check Store Creation route (Strictly SUPER_ADMIN or ADMIN)
   if (pathname === "/stores/new" && !hasRole(["SUPER_ADMIN", "ADMIN"])) {
     return (
-      <AccessRestrictedView reason="Store creation requires HQ Operations or Super Administrator privileges." />
+      <NoPermissionView
+        overline="OPERATIONS / STORES"
+        pageTitle="Stores"
+        resourceName="Store Creation"
+        description="Creating a new outlet requires HQ Operations or Super Administrator privileges. Your current role can view and manage assigned store operations."
+        errorCode="STORE-CREATE-DENIED"
+        roleSlug={roleSlug}
+        pathname={pathname}
+        primaryReturnHref="/stores"
+        primaryReturnLabel="Go to Stores"
+      />
     );
   }
 
   // 2. Check Store Edit route
-  if (pathname.includes("/edit") && !hasRole(["SUPER_ADMIN", "ADMIN", "STORE_MANAGER"])) {
+  if (
+    pathname.includes("/edit") &&
+    !hasRole(["SUPER_ADMIN", "ADMIN", "STORE_MANAGER"])
+  ) {
     return (
-      <AccessRestrictedView reason="Store modifications require General Manager or HQ Administrator privileges." />
+      <NoPermissionView
+        overline="OPERATIONS / EDIT"
+        pageTitle="Restricted action"
+        resourceName="this edit view"
+        description="Modifying store configuration requires General Manager or HQ Administrator privileges."
+        errorCode="EDIT-ACTION-DENIED"
+        roleSlug={roleSlug}
+        pathname={pathname}
+      />
     );
   }
 
@@ -49,56 +74,31 @@ export function RouteRbacGuard({ children }: RouteRbacGuardProps) {
   });
 
   if (matchedItem && !canAccessNavItem(matchedItem, hasPermission)) {
-    const needed = matchedItem.anyCapability?.join("' or '") ?? matchedItem.requiredCapability;
+    const needed =
+      matchedItem.anyCapability?.[0] ??
+      matchedItem.requiredCapability ??
+      "VIEW";
+    const errorCode = `${needed.toUpperCase().replace(/[^A-Z0-9]+/g, "-")}-DENIED`;
+    const sectionLabel = matchedItem.category?.toUpperCase() || "WORKSPACE";
+
     return (
-      <AccessRestrictedView
-        capability={matchedItem.requiredCapability ?? matchedItem.anyCapability?.[0]}
-        reason={`Access to ${matchedItem.title} requires the '${needed}' corporate permission.`}
+      <NoPermissionView
+        overline={`${sectionLabel} / ${matchedItem.title.toUpperCase()}`}
+        pageTitle={matchedItem.title}
+        resourceName={matchedItem.title}
+        description={
+          matchedItem.title === "Finance"
+            ? "Finance shows network revenue, payments, settlements and tax for all 12 stores. Your current role covers your own assigned store’s sales and shift reports."
+            : `${matchedItem.title} requires the '${needed}' capability. Your current role (${roleSlug}) does not include this permission.`
+        }
+        errorCode={errorCode}
+        roleSlug={roleSlug}
+        pathname={pathname}
+        primaryReturnHref="/"
+        primaryReturnLabel="Go to Dashboard"
       />
     );
   }
 
   return <>{children}</>;
 }
-
-function AccessRestrictedView({
-  capability,
-  reason,
-}: {
-  capability?: string;
-  reason?: string;
-}) {
-  return (
-    <div className="min-h-[70vh] flex flex-col items-center justify-center p-6 text-center">
-      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-red-100 text-red-600 shadow-md mb-6">
-        <ShieldX className="h-8 w-8" />
-      </div>
-      <h1 className="font-serif text-3xl font-bold text-gray-900 mb-2">403 · Access Restricted</h1>
-      <p className="max-w-md text-xs text-text-muted mb-4">
-        {reason ||
-          "Your current staff role does not possess the cryptographic capabilities or permissions required to view or mutate this operational resource."}
-      </p>
-      <div className="rounded-lg bg-white border border-border p-4 max-w-sm w-full text-left text-xs mb-8 shadow-xs">
-        <div className="flex items-center space-x-2 text-text font-semibold mb-1">
-          <KeyRound className="h-4 w-4 text-brand-navy" />
-          <span>Elevated Access Required</span>
-        </div>
-        {capability && (
-          <p className="text-[11px] font-mono text-[#55647A] mb-1">
-            Missing capability: <strong>{capability}</strong>
-          </p>
-        )}
-        <p className="text-[11px] text-text-muted">
-          Contact your Store General Manager or HQ Operations team to request an updated role assignment.
-        </p>
-      </div>
-      <Button asChild>
-        <Link href="/">
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          <span>Return to Executive Cockpit</span>
-        </Link>
-      </Button>
-    </div>
-  );
-}
-

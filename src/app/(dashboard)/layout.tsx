@@ -6,11 +6,13 @@ import { SessionTimeoutModal } from "@/components/feedback/session-timeout-modal
 import { AuthGuard } from "@/components/auth/auth-guard";
 import { RouteRbacGuard } from "@/components/auth/route-rbac-guard";
 import { SupportLiveWatcher } from "@/components/customers/support/support-live-watcher";
+import { AdminPreferencesHydrator } from "@/components/settings/admin-preferences-hydrator";
 import { ReactNode } from "react";
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
     <AuthGuard>
+      <AdminPreferencesHydrator />
       <div className="flex h-screen w-screen overflow-hidden bg-bg-subtle text-text">
         {/* Collapsible Enterprise Sidebar */}
         <Sidebar />

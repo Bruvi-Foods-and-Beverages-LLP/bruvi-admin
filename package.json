@@ -4,7 +4,7 @@
   "description": "Bruvi Coffee Enterprise HQ Admin & Multi-Store ERP Portal",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3001",
+    "dev": "next dev -p 3031",
     "build": "next build",
     "start": "next start -p 3001",
     "lint": "eslint",
@@ -23,6 +23,7 @@
     "react-dom": "19.3.0",
     "react-easy-crop": "6.2.4",
     "react-redux": "^9.3.0",
+    "recharts": "^3.11.1",
     "tailwind-merge": "^3.7.0",
     "zod": "^4.6.7",
     "zustand": "^5.0.16"
