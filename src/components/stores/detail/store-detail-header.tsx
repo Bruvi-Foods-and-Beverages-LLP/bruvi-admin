@@ -19,6 +19,8 @@ interface StoreDetailHeaderProps {
   onSaveHours?: () => void;
   onCopyHours?: () => void;
   isSavingHours?: boolean;
+  onRunDiagnostics?: () => void;
+  onPairNewDevice?: () => void;
 }
 
 export function StoreDetailHeader({
@@ -32,6 +34,8 @@ export function StoreDetailHeader({
   onSaveHours,
   onCopyHours,
   isSavingHours = false,
+  onRunDiagnostics,
+  onPairNewDevice,
 }: StoreDetailHeaderProps) {
   const isBusy = store.status === "Busy mode" || isAppOrdersPaused;
 
@@ -136,6 +140,25 @@ export function StoreDetailHeader({
               className="flex h-9 items-center gap-2 rounded-[12px] bg-primary hover:bg-navy-900 px-4 text-label text-white transition-all cursor-pointer shadow-2xs font-bold disabled:opacity-50"
             >
               <span>{isPushing ? "Pushing..." : "Push to devices"}</span>
+            </button>
+          </div>
+        ) : activeTab === "devices" ? (
+          /* Devices Tab Actions (Figma Node 474:224709: Run diagnostics + Pair new device) */
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={onRunDiagnostics}
+              className="flex h-9 items-center justify-center rounded-[12px] border-[1.5px] border-border-input bg-surface px-4 text-label text-text hover:bg-gray-50 hover:border-text transition-all cursor-pointer shadow-2xs font-bold"
+            >
+              Run diagnostics
+            </button>
+
+            <button
+              type="button"
+              onClick={onPairNewDevice}
+              className="flex h-9 items-center gap-2 rounded-[12px] bg-primary hover:bg-navy-900 px-4 text-label text-white transition-all cursor-pointer shadow-2xs font-bold"
+            >
+              <span>Pair new device</span>
             </button>
           </div>
         ) : (

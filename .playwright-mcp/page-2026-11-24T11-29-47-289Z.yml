@@ -1,0 +1,103 @@
+- generic [active] [ref=f1e1]:
+  - generic [ref=f1e2]:
+    - complementary [ref=f1e3]:
+      - link "HQ" [ref=f1e5] [cursor=pointer]:
+        - /url: /
+      - generic [ref=f1e16]:
+        - link "Dashboard" [ref=f1e18] [cursor=pointer]:
+          - /url: /
+        - generic [ref=f1e23]:
+          - generic [ref=f1e24]: Operations
+          - generic [ref=f1e26]:
+            - link "Orders" [ref=f1e27] [cursor=pointer]:
+              - /url: /orders
+            - link "Stores" [ref=f1e32] [cursor=pointer]:
+              - /url: /stores
+        - generic [ref=f1e40]:
+          - generic [ref=f1e41]: Menu
+          - generic [ref=f1e43]:
+            - link "Catalog" [ref=f1e44] [cursor=pointer]:
+              - /url: /catalog
+            - link "Recipes" [ref=f1e49] [cursor=pointer]:
+              - /url: /recipes
+        - generic [ref=f1e54]:
+          - generic [ref=f1e55]: Supply
+          - generic [ref=f1e57]:
+            - link "Inventory" [ref=f1e58] [cursor=pointer]:
+              - /url: /inventory
+            - link "Warehouse" [ref=f1e63] [cursor=pointer]:
+              - /url: /warehouse
+        - generic [ref=f1e68]:
+          - generic [ref=f1e69]: Growth
+          - generic [ref=f1e71]:
+            - link "Customers" [ref=f1e72] [cursor=pointer]:
+              - /url: /customers
+            - link "Marketing" [ref=f1e78] [cursor=pointer]:
+              - /url: /marketing
+            - link "BRUVI LAB" [ref=f1e83] [cursor=pointer]:
+              - /url: /lab
+            - link "Loyalty" [ref=f1e88] [cursor=pointer]:
+              - /url: /loyalty
+            - link "Subscriptions" [ref=f1e93] [cursor=pointer]:
+              - /url: /subscriptions
+        - generic [ref=f1e98]:
+          - generic [ref=f1e99]: Business
+          - generic [ref=f1e101]:
+            - link "Finance" [ref=f1e102] [cursor=pointer]:
+              - /url: /finance
+            - link "Analytics" [ref=f1e109] [cursor=pointer]:
+              - /url: /analytics
+            - link "Staff" [ref=f1e114] [cursor=pointer]:
+              - /url: /staff
+            - link "Settings" [ref=f1e121] [cursor=pointer]:
+              - /url: /settings
+      - button "Staff profile menu" [ref=f1e130] [cursor=pointer]:
+        - generic [ref=f1e131]: AD
+        - generic [ref=f1e132]:
+          - generic [ref=f1e133]: Admin
+          - generic [ref=f1e134]: SUPER_ADMIN
+    - generic [ref=f1e137]:
+      - banner [ref=f1e138]:
+        - button "Search orders, stores, products, customers ⌘K" [ref=f1e140] [cursor=pointer]:
+          - generic [ref=f1e141]: Search orders, stores, products, customers
+          - generic [ref=f1e146]: ⌘K
+        - generic [ref=f1e147]:
+          - button "All stores · 0" [ref=f1e149] [cursor=pointer]
+          - button "Today · Fri 2 Oct" [ref=f1e158] [cursor=pointer]
+          - button "Notifications" [ref=f1e164] [cursor=pointer]
+      - main [ref=f1e169]:
+        - generic [ref=f1e170]:
+          - generic [ref=f1e171]:
+            - generic [ref=f1e172]:
+              - generic [ref=f1e173]: Menu / Recipes
+              - heading "Recipes" [level=1] [ref=f1e174]
+            - generic [ref=f1e175]:
+              - button "Export costing" [ref=f1e176] [cursor=pointer]
+              - button "New recipe" [ref=f1e178] [cursor=pointer]
+          - generic [ref=f1e180]:
+            - generic [ref=f1e181]:
+              - textbox "Search recipes, SKUs, ingredients" [ref=f1e186]
+              - button "All · 0" [ref=f1e187] [cursor=pointer]
+              - button "Drafts · 0" [ref=f1e189] [cursor=pointer]
+              - 'button "Category: All" [ref=f1e192] [cursor=pointer]'
+              - 'button "Station: All" [ref=f1e197] [cursor=pointer]'
+              - 'button "Owner: All" [ref=f1e202] [cursor=pointer]'
+              - button "Clear" [ref=f1e206] [cursor=pointer]
+            - generic [ref=f1e207]: Avg margin 0.0% · target 75%
+          - generic [ref=f1e210]:
+            - generic [ref=f1e211]:
+              - generic [ref=f1e212]: Recipe
+              - generic [ref=f1e213]: Version
+              - generic [ref=f1e214]: Sizes
+              - generic [ref=f1e215]: Cost/serve
+              - generic [ref=f1e216]: Margin
+              - generic [ref=f1e217]: Changed
+              - generic [ref=f1e218]: Owner
+              - generic [ref=f1e219]: Status
+            - generic [ref=f1e220]:
+              - generic [ref=f1e221]: 0 recipes · updated
+              - generic [ref=f1e222]:
+                - button "Previous" [disabled] [ref=f1e223]
+                - button "Next" [disabled] [ref=f1e224]
+  - button "Open Next.js Dev Tools" [ref=f1e230] [cursor=pointer]
+  - alert [ref=f1e234]

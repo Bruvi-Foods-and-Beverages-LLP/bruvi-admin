@@ -18,9 +18,12 @@ import { LiveChannelsCard } from "@/components/stores/detail/overview/live-chann
 import { StoreLocationCard } from "@/components/stores/detail/overview/store-location-card";
 import { StoreMenuTab } from "@/components/stores/detail/menu/store-menu-tab";
 import { StoreHoursTab } from "@/components/stores/detail/hours/store-hours-tab";
+import { StoreDevicesTab } from "@/components/stores/detail/devices/store-devices-tab";
+import { StoreStaffTab } from "@/components/stores/detail/staff/store-staff-tab";
 import { StoreDetailSkeleton } from "@/components/stores/detail/store-detail-skeleton";
 import { pushStoreMenuToDevices } from "@/store/slices/store-menu-slice";
 import { saveStoreHours, setCopyModalOpen } from "@/store/slices/store-hours-slice";
+import { runDiagnostics, setAddDeviceModalOpen } from "@/store/slices/store-devices-slice";
 import { StoreIcon } from "@/components/icons";
 import { AlertCircle, ArrowLeft } from "lucide-react";
 
@@ -154,6 +157,10 @@ export default function StoreDetailPage({ params }: PageProps) {
             onSaveHours={handleSaveHours}
             onCopyHours={handleCopyHours}
             isSavingHours={isSavingHours}
+            onRunDiagnostics={() =>
+              dispatch(runDiagnostics(overview.store.code || overview.store.id))
+            }
+            onPairNewDevice={() => dispatch(setAddDeviceModalOpen(true))}
           />
 
           {/* Tabs Navigation (Figma Node 225:86611) */}
@@ -207,19 +214,11 @@ export default function StoreDetailPage({ params }: PageProps) {
           ) : activeTab === "menu" ? (
             /* Figma Node 225:88099: Store Menu Tab View */
             <StoreMenuTab store={overview.store} />
+          ) : activeTab === "devices" ? (
+            /* Figma Node 474:224709: Store Devices Tab View */
+            <StoreDevicesTab store={overview.store} />
           ) : (
-            /* Placeholder for future tabs (Hours, Devices, Staff) */
-            <div className="p-12 rounded-[16px] bg-surface border border-border text-center flex flex-col items-center justify-center">
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gray-50 border border-border text-text-muted mb-3">
-                <StoreIcon className="h-7 w-7" />
-              </div>
-              <h3 className="text-heading-s text-text capitalize">
-                {activeTab} Management
-              </h3>
-              <p className="text-body-s text-text-muted max-w-sm mt-1">
-                The {activeTab} configuration interface for {overview.store.name} will be released in the upcoming update.
-              </p>
-            </div>
+            <StoreStaffTab store={overview.store} />
           )}
         </>
       )}

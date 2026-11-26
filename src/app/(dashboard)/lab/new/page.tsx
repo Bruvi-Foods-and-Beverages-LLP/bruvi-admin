@@ -392,9 +392,8 @@ export default function CreateLabProductPage() {
         id: "6",
         label: trainingDone
           ? `Barista training at all ${selectedStoreIds.length} stores`
-          : `Barista training at ${selectedStoreIds.length} store${
-              selectedStoreIds.length > 1 ? "s" : ""
-            }`,
+          : `Barista training at ${selectedStoreIds.length} store${selectedStoreIds.length > 1 ? "s" : ""
+          }`,
         completed: trainingDone,
       },
     ];
@@ -904,11 +903,10 @@ export default function CreateLabProductPage() {
                             buyAgainSelection === "yes" ? null : "yes"
                           )
                         }
-                        className={`h-9 px-[17.5px] rounded-[18px] border-[1.5px] text-[14px] font-bold font-sans transition-colors cursor-pointer ${
-                          buyAgainSelection === "yes"
+                        className={`h-9 px-[17.5px] rounded-[18px] border-[1.5px] text-[14px] font-bold font-sans transition-colors cursor-pointer ${buyAgainSelection === "yes"
                             ? "border-[#1C3A66] bg-[#1C3A66] text-white"
                             : "border-[#BCC6D3] bg-white text-[#0F2340] hover:bg-[#F5F7FA]"
-                        }`}
+                          }`}
                       >
                         Yes
                       </button>
@@ -919,11 +917,10 @@ export default function CreateLabProductPage() {
                             buyAgainSelection === "no" ? null : "no"
                           )
                         }
-                        className={`h-9 px-[17.5px] rounded-[18px] border-[1.5px] text-[14px] font-bold font-sans transition-colors cursor-pointer ${
-                          buyAgainSelection === "no"
+                        className={`h-9 px-[17.5px] rounded-[18px] border-[1.5px] text-[14px] font-bold font-sans transition-colors cursor-pointer ${buyAgainSelection === "no"
                             ? "border-[#1C3A66] bg-[#1C3A66] text-white"
                             : "border-[#BCC6D3] bg-white text-[#0F2340] hover:bg-[#F5F7FA]"
-                        }`}
+                          }`}
                       >
                         No
                       </button>
@@ -1122,11 +1119,10 @@ export default function CreateLabProductPage() {
                         key={opt.type}
                         type="button"
                         onClick={() => setNewQType(opt.type as any)}
-                        className={`h-8 rounded-[8px] text-[12px] font-bold transition-colors cursor-pointer border ${
-                          newQType === opt.type
+                        className={`h-8 rounded-[8px] text-[12px] font-bold transition-colors cursor-pointer border ${newQType === opt.type
                             ? "bg-[#1C3A66] text-white border-[#1C3A66]"
                             : "bg-white text-[#3F4B5E] border-[#DCE2EA] hover:bg-[#EBEFF4]"
-                        }`}
+                          }`}
                       >
                         {opt.label}
                       </button>
@@ -1223,12 +1219,11 @@ export default function CreateLabProductPage() {
               price={price}
               description={
                 storyCopy
-                  ? `${storyCopy.slice(0, 75)}... Only at ${
-                      selectedStoreIds
-                        .map((id) => availableStores.find((s) => s.id === id)?.shortName)
-                        .filter(Boolean)
-                        .join(" & ") || "Selected Pilot Stores"
-                    }, only ${cupQuantity} cups.`
+                  ? `${storyCopy.slice(0, 75)}... Only at ${selectedStoreIds
+                    .map((id) => availableStores.find((s) => s.id === id)?.shortName)
+                    .filter(Boolean)
+                    .join(" & ") || "Selected Pilot Stores"
+                  }, only ${cupQuantity} cups.`
                   : ""
               }
               imagePath={heroImageUrl}

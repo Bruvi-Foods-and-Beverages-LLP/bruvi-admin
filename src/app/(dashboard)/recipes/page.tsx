@@ -1,25 +1,35 @@
-import { ComingSoonModule } from "@/components/feedback/coming-soon-module";
-import type { Metadata } from "next";
+"use client";
 
-export const metadata: Metadata = {
-  title: "Recipes & BOM · BRUVI HQ",
-  description: "Standard Operating Procedures (SOP), bill of materials, and barista prep steps.",
-};
+import * as React from "react";
+import { RecipesPageHeader } from "@/components/recipes/recipes-page-header";
+import { RecipesFilterBar } from "@/components/recipes/recipes-filter-bar";
+import { RecipesTable } from "@/components/recipes/recipes-table";
+import { CreateRecipeModal } from "@/components/recipes/create-recipe-modal";
 
+/**
+ * Recipes & BOM Management Page (Figma 474:229593)
+ * Exact 1136px grid, 24px vertical rhythm, token adherence,
+ * dynamic search, filtering, and cost/margin tracking.
+ */
 export default function RecipesPage() {
+  const [isCreateOpen, setIsCreateOpen] = React.useState(false);
+
   return (
-    <ComingSoonModule
-      title="Recipes & BOM"
-      category="Menu"
-      iconName="file"
-      description="Standard Operating Procedures (SOP), yield tracking, ingredient grammage precision, and barista beverage preparation protocols across bar stations."
-      features={[
-        "Beverage Bill of Materials (BOM) with gram-level precision",
-        "Barista preparation workflow guides & station timers",
-        "Sub-recipe nesting (cold foams, syrups, and condensed bases)",
-        "Automated yield loss and waste variance tracking",
-      ]}
-    />
+    <div className="flex flex-col gap-6 w-full max-w-[1136px] mx-auto pb-12">
+      {/* 1. Header (Figma 474:229633) */}
+      <RecipesPageHeader onNewRecipeClick={() => setIsCreateOpen(true)} />
+
+      {/* 2. Standalone Filter Bar (Figma 474:229642) */}
+      <RecipesFilterBar />
+
+      {/* 3. High-Density Recipe Table Card (Figma 474:229672) */}
+      <RecipesTable />
+
+      {/* 4. Create Recipe Master Modal */}
+      <CreateRecipeModal
+        isOpen={isCreateOpen}
+        onClose={() => setIsCreateOpen(false)}
+      />
+    </div>
   );
 }
-

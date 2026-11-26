@@ -9,8 +9,6 @@ const envSchema = z.object({
   NEXT_PUBLIC_APP_URL: z.string().url().default("http://localhost:3001"),
   NEXT_PUBLIC_APP_ENV: z.enum(["development", "staging", "production", "test"]).default("staging"),
   APP_ENV: z.enum(["development", "staging", "production", "test"]).default("staging"),
-  NEXT_PUBLIC_SUPABASE_URL: z.string().url().optional(),
-  NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().optional(),
   BACKEND_API_URL: z.string().url().default("https://staging.bruvi.in/v1"),
   // Server-only; not sent by the BFF today. No baked-in default: the backend ignores weak values anyway.
   INTERNAL_API_SECRET: z.string().default(""),
@@ -24,10 +22,6 @@ const parseEnv = () => {
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     NEXT_PUBLIC_APP_ENV: process.env.NEXT_PUBLIC_APP_ENV || process.env.APP_ENV,
     APP_ENV: process.env.APP_ENV || process.env.NEXT_PUBLIC_APP_ENV,
-    NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
-    NEXT_PUBLIC_SUPABASE_ANON_KEY:
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
-      process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
     BACKEND_API_URL: process.env.BACKEND_API_URL,
     INTERNAL_API_SECRET: process.env.INTERNAL_API_SECRET,
     NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,

@@ -1,0 +1,45 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]: HQ
+        - generic [ref=e15]: Brew | Vibe | Repeat
+      - generic [ref=e16]:
+        - generic [ref=e17]:
+          - heading "Sign in to BRUVI HQ" [level=1] [ref=e18]
+          - paragraph [ref=e19]: Use your @bruvi.coffee Google Workspace account, or your work email and HQ password.
+        - generic [ref=e20]:
+          - button "Continue with Google Workspace" [ref=e21] [cursor=pointer]
+          - generic [ref=e25]: or sign in with your work email
+          - generic [ref=e29]:
+            - generic [ref=e30]:
+              - generic [ref=e31]: Work email
+              - textbox "Work email" [ref=e34]:
+                - /placeholder: kavya.r@bruvi.coffee
+            - generic [ref=e35]:
+              - generic [ref=e36]:
+                - generic [ref=e37]: Password
+                - link "Forgot password?" [ref=e40] [cursor=pointer]:
+                  - /url: /forgot-password
+              - generic [ref=e41]:
+                - textbox "Password" [ref=e42]:
+                  - /placeholder: ••••••••••••••
+                - button "Show password" [ref=e44] [cursor=pointer]
+            - generic [ref=e48] [cursor=pointer]:
+              - checkbox [checked] [ref=e49]
+              - generic [ref=e52]:
+                - generic [ref=e53]: Remember this device
+                - generic [ref=e54]: Keeps your email filled in. Don’t tick on shared store PCs.
+            - button "Sign in" [ref=e55] [cursor=pointer]
+        - paragraph [ref=e61]: 2-step verification is required for every HQ account. Trouble signing in? Ask an HQ Admin.
+      - generic [ref=e62]:
+        - generic [ref=e63]: © 2026 BRUVI Coffee · HQ Admin v1.0
+        - generic [ref=e64]: ·
+        - link "Privacy" [ref=e65] [cursor=pointer]:
+          - /url: "#privacy"
+        - link "Help centre" [ref=e66] [cursor=pointer]:
+          - /url: "#help"
+        - generic [ref=e67]: ·
+        - generic [ref=e68]: Authorised BRUVI staff only · sign-ins are logged
+  - button "Open Next.js Dev Tools" [ref=e74] [cursor=pointer]
+  - alert [ref=e78]
